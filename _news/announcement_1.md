@@ -1,8 +1,15 @@
 ---
 layout: post
-date: 2015-10-22 15:59:00-0400
-inline: true
+date: 2025-06-01 15:59:00-0400
+inline: false
+title: Workshop Accepted at ICSR 2025!
 related_posts: false
 ---
 
-A simple inline announcement.
+Workshop Accepted at ICSR 2025! 
+
+---
+
+aaaaaaaaaaaaaaaaaa
+aaaaaaaaaaaaaaaaa
+aaaaaaaaaaaaaaaa

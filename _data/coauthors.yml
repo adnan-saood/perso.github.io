@@ -1,34 +1,23 @@
-"adams":
-  - firstname: ["Edwin", "E.", "E. P.", "Edwin Plimpton"]
-    url: https://en.wikipedia.org/wiki/Edwin_Plimpton_Adams
+"Tapus":
+  - firstname: ["Adriana", "A.", "Adriana Tapus"]
+    url: https://scholar.google.com/citations?user=lPDGYhwAAAAJ&hl=en
 
-"podolsky":
-  - firstname: ["Boris", "B.", "B. Y.", "Boris Yakovlevich"]
-    url: https://en.wikipedia.org/wiki/Boris_Podolsky
+"Hatem":
+  - firstname: ["Iyad", "I.", "Iyad Hatem"]
+    url: https://scholar.google.com/citations?user=6ItHzb8AAAAJ&hl=en
 
-"rosen":
-  - firstname: ["Nathan", "N."]
-    url: https://en.wikipedia.org/wiki/Nathan_Rosen
+"Vappou":
+  - firstname: ["Jonathan", "J.", "Jonathan Vappou"]
+    url: https://scholar.google.com/citations?user=Wo1vWYoAAAAJ&hl=en
 
-"bach":
-  - firstname: ["Johann Sebastian", "J. S."]
-    url: https://en.wikipedia.org/wiki/Johann_Sebastian_Bach
+"Nageotte":
+  - firstname: ["Florent", "F.", "Florent Nageotte"]
+    url: https://scholar.google.fr/citations?user=GKn71PIAAAAJ&hl=fr
 
-  - firstname: ["Carl Philipp Emanuel", "C. P. E."]
-    url: https://en.wikipedia.org/wiki/Carl_Philipp_Emanuel_Bach
+"Larrat":
+  - firstname: ["Benoit", "B.", "Benoit Larrat"]
+    url: https://www.researchgate.net/profile/Benoit-Larrat 
 
-"przibram":
-  - firstname: ["Karl"]
-    url: https://link.springer.com/article/10.1007/s00016-019-00242-z
-
-"schrodinger":
-  - firstname: ["Erwin"]
-    url: https://en.wikipedia.org/wiki/Erwin_Schr%C3%B6dinger
-
-"lorentz":
-  - firstname: ["Hendrik Antoon"]
-    url: https://en.wikipedia.org/wiki/Hendrik_Lorentz
-
-"planck":
-  - firstname: ["Max"]
-    url: https://en.wikipedia.org/wiki/Max_Planck
+"Zhang":
+  - firstname: ["Heng"]
+    url: https://scholar.google.com/citations?user=vFp_kEgAAAAJ&hl=en

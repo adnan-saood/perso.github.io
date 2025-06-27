@@ -1,14 +1,15 @@
 github_users:
-  - torvalds
-  - alshedivat
+  - adnan-saood
+
 
 repo_description_lines_max: 2
 
 github_repos:
-  - alshedivat/al-folio
-  - jekyll/jekyll
-  - twbs/bootstrap
-  - jquery/jquery
-  - FortAwesome/Font-Awesome
-  - mathjax/MathJax
-  - jpswalsh/academicons
+  - adnan-saood/3d_gradient_path_planner
+  - ICube-Robotics/ndisys_ros2
+  - adnan-saood/COVID19-DL
+  - adnan-saood/mekabot
+  - adnan-saood/turtlebot4_odometer
+  - adnan-saood/swarm-robot-firmware
+  - adnan-saood/simple_adc_library_AVR
+  
