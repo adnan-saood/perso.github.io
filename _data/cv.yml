@@ -2,20 +2,20 @@
   type: map
   contents:
     - name: Full Name
-      value: Albert Einstein
+      value: Adnan Saood
     - name: Date of Birth
-      value: 14th March 1879
+      value: 20 Hune 1998
     - name: Languages
-      value: English, German
+      value: English, French, Arabic
 
 - title: Education
   type: time_table
   contents:
-    - title: PhD
-      institution: University of Zurich, Zurich, Switzerland
-      year: 1905
+    - title: PhD (Ongoing)
+      institution: ENSTA - Institute Polytechnique de Paris
+      year: 2027
       description:
-        - Description 1.
+        - Socio-Affective Touch in Robotics
         - Description 2.
         - title: Description 3.
           contents:

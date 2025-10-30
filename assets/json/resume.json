@@ -1,200 +1,369 @@
 {
   "basics": {
-    "name": "Albert Einstein",
-    "label": "Scientist",
+    "name": "ADNAN SAOOD",
+    "label": "Doctoral Candidate in Robotics",
     "image": "",
-    "email": "albert@einstein.de",
-    "phone": "(912) 123-4567",
-    "url": "https://alshedivat.github.io/al-folio/",
-    "summary": "A German-born theoretical physicist, widely ranked among the greatest and most influential scientists of all time",
+    "email": "adnan.saood@ip-paris.fr",
+    "phone": "(+33) 7 49-24-00-63",
+    "url": "https://perso.ensta.fr/~saood/",
+    "summary": "Doctoral candidate specializing in socio-affective touch in robotics, with a strong background in medical robotics, signal processing, and optimization. Experienced in leading research projects and developing innovative robotic solutions.",
     "location": {
-      "address": "2712 Broadway St",
-      "postalCode": "CA 94115",
-      "city": "San Francisco",
-      "countryCode": "US",
-      "region": "California"
+      "address": "828 Bd des Maréchaux",
+      "postalCode": "",
+      "city": "Palaiseau",
+      "countryCode": "FR",
+      "region": "Île-de-France"
     },
     "profiles": [
       {
-        "network": "Twitter",
-        "username": "AlbertEinstein",
-        "url": "https://twitter.com/AlbertEinstein"
+        "network": "LinkedIn",
+        "username": "adnan-saood",
+        "url": "https://www.linkedin.com/in/adnan-saood/"
+      },
+      {
+        "network": "Google Scholar",
+        "username": "invKfxYAAAAJ",
+        "url": "https://scholar.google.com/citations?user=invKfxYAAAAJ"
       }
     ]
   },
   "work": [
     {
-      "name": "Institute for Advanced Study, Princeton University",
-      "position": "Professor of Theoretical Physics",
-      "url": "https://example.com",
-      "startDate": "1933-01-01",
-      "endDate": "1955-01-01",
-      "summary": "Teaching at Palmer Physical Laboratory (now 302 Frist Campus Center). While not a professor at Princeton, I associated with the physics professors and continued to give lectures on campus.",
-      "highlights": ["Relativity"]
-    }
-  ],
-  "volunteer": [
+      "name": "Institute Polytechnique de Paris - ENSTA",
+      "position": "Doctoral Candidate",
+      "url": "https://www.ip-paris.fr/",
+      "startDate": "2024-04-01",
+      "endDate": "Present",
+      "summary": "Researching socio-affective touch in robotics, focusing on haptics, tactility, signal processing, and real-time estimation.",
+      "highlights": [
+        "Socio-Affective Touch in Robotics",
+        "Haptics",
+        "Tactility",
+        "Signal Processing",
+        "Real time Estimation"
+      ]
+    },
     {
-      "organization": "People's Climate March",
-      "location": "Zurich, Switzerland",
-      "position": "Lead Organizer",
-      "url": "https://example.com",
-      "startDate": "2014-04-01",
-      "endDate": "2015-07-01",
-      "summary": "Lead organizer for the New York City branch of the People's Climate March, the largest climate march in history.",
-      "highlights": ["Awarded 'Climate Hero' award by Greenpeace for my efforts organizing the march.", "Men of the year 2014 by Time magazine"]
+      "name": "Therasonic - Spin-off company from CEA Neurospin",
+      "position": "Engineering Consultant",
+      "url": "https://www.therasonic.fr/",
+      "startDate": "2024-12-01",
+      "endDate": "Present",
+      "summary": "Contributing to medical robotics development and assisted drug delivery systems.",
+      "highlights": [
+        "Medical Robotics Development",
+        "Assisted Drug Delivery"
+      ]
+    },
+    {
+      "name": "ICube Laboratory",
+      "position": "Research Engineer",
+      "url": "https://icube.unistra.fr/en/",
+      "startDate": "2022-09-01",
+      "endDate": "2023-09-01",
+      "summary": "Led a team focused on optimization-based Coverage Path Planning and designed/implemented a control pipeline for an industrial manipulator in medical procedures.",
+      "highlights": [
+        "Team Lead: Jonathan VAPPOU",
+        "Optimization-based Coverage Path Planning",
+        "Control pipeline design for industrial manipulator"
+      ]
+    },
+    {
+      "name": "ICube Laboratory",
+      "position": "Master's End-of-Studies Intern",
+      "url": "https://healthtech.unistra.fr/training/master-research-projects",
+      "startDate": "2022-03-01",
+      "endDate": "2022-08-01",
+      "summary": "Completed thesis on robotic assistance for Blood-Brain-Barrier opening using focused ultrasound.",
+      "highlights": [
+        "Thesis: Robotic Assistance for Blood-Brain-Barrier Opening Using Focused Ultrasound",
+        "Supervisors: Jonathan VAPPOU, Florent NAGEOTTE"
+      ]
+    },
+    {
+      "name": "Syrian Computer Society",
+      "position": "Robotics Club VP",
+      "url": "http://www.scs.org.sy/",
+      "startDate": "2019-10-01",
+      "endDate": "2021-08-01",
+      "summary": "Organized international and regional robotics competitions and provided training in embedded systems, C/C++ programming for robotics, and Matlab for robotics.",
+      "highlights": [
+        "International and regional robotics competitions",
+        "Robotics training",
+        "Teaching courses (Embedded systems, C/C++ Programming, Matlab)"
+      ]
+    },
+    {
+      "name": "Syrian Scientific Olympiad (SSO)",
+      "position": "Scientific Committee Member for Physics",
+      "url": "www.sso.sy",
+      "startDate": "2017-11-01",
+      "endDate": "2019-10-01",
+      "summary": ""
+    },
+    {
+      "name": "National Center for the Distinguished",
+      "position": "Project Supervisor",
+      "url": "www.ncd.sy",
+      "startDate": "2021-09-01",
+      "endDate": "2022-06-01",
+      "summary": "Supervised academic projects for distinguished students."
     }
   ],
   "education": [
     {
-      "institution": "University of Zurich, Zurich, Switzerland",
-      "location": "Zurich, Switzerland",
-      "url": "https://www.uzh.ch/",
-      "area": "Software Development",
-      "studyType": "PhD",
-      "startDate": "1905-01-01",
-      "endDate": "1905-01-01",
-      "score": "10",
-      "courses": ["Theory of Relativity"]
+      "institution": "University of Strasbourg",
+      "location": "Strasbourg, France",
+      "url": "https://www.master-iriv.fr/international/healthtech",
+      "area": "Medical Robotics",
+      "studyType": "M2 Masters in Engineering",
+      "startDate": "2021-09-01",
+      "endDate": "2022-09-01",
+      "score": "14.43/20 - Mention Bien",
+      "courses": [
+        "Medical Robotics (120 ECTS)"
+      ],
+      "highlights": [
+        "ITI HealthTech fellowship (Excellence Merit)",
+        "Interdisciplinary Thematic Institute, Excellence Initiative Program"
+      ]
+    },
+    {
+      "institution": "Tishreen University",
+      "location": "Latakia, Syria",
+      "url": "",
+      "area": "Mechatronics",
+      "studyType": "Engineer Diploma",
+      "startDate": "2016-09-01",
+      "endDate": "2021-08-01",
+      "score": "80.23/100 - Mention Tres Bien",
+      "courses": [
+        "5 yrs diploma. 168 credit hours in 61 graded courses."
+      ],
+      "highlights": [
+        "Distinction and Creativity Agency Scholarship (Excellence Merit)",
+        "[Full program description here](https://1f11fc48-c7ab-4fb0-b7e9-79d2b17414ee.filesusr.com/ugd/f82b31_26015136aca34f65a9d74e54ee970dda.pdf)"
+      ]
+    },
+    {
+      "institution": "National Center for the Distinguished",
+      "location": "Damascus, Syria",
+      "url": "www.ncd.sy",
+      "area": "Science",
+      "studyType": "Baccalauréat",
+      "startDate": "2013-09-01",
+      "endDate": "2016-08-01",
+      "score": "99.94% Percentile",
+      "highlights": [
+        "Excellence Merit Scholarship",
+        "Second rank in the entrance exams out of 3500+ applicants from the top 10% nationally."
+      ]
     }
   ],
   "awards": [
     {
-      "title": "Nobel Prize in Physics",
-      "date": "1921-11-01",
-      "awarder": "Royal Swedish Academy of Sciences",
-      "url": "https://www.nobelprize.org/prizes/physics/1921/einstein/biographical/",
-      "summary": "The Nobel Prizes are five separate prizes that, according to Alfred Nobel's will of 1895, are awarded to 'those who, during the preceding year, have conferred the greatest benefit to humankind.'"
-    }
-  ],
-  "certificates": [
-    {
-      "name": "Machine Learning",
-      "date": "2018-01-01",
-      "issuer": "Stanford University",
-      "url": "https://example.com",
-      "icon": "fa-solid fa-location-dot"
+      "title": "Excellence Merit Fellowship of the Interdisciplinary Thematic Institute (HealthTech)",
+      "date": "2021",
+      "awarder": "University of Strasbourg",
+      "url": "",
+      "summary": "Awarded for excellence in the Interdisciplinary Thematic Institute (HealthTech) program."
     },
     {
-      "name": "Quantum Computing",
-      "date": "2018-01-01",
-      "issuer": "Stanford University",
-      "url": "https://example.com",
-      "icon": "fa-solid fa-tag"
+      "title": "First place at Annual Robotics Competition, Senior SUMO cat.",
+      "date": "2019",
+      "awarder": "Syrian Computer Society",
+      "url": "",
+      "summary": "Achieved first place in the Senior SUMO category at the annual robotics competition."
     },
     {
-      "name": "Quantum Information",
-      "date": "2018-01-01",
-      "issuer": "Stanford University",
-      "url": "https://example.com",
-      "icon": "fa-solid fa-envelope"
+      "title": "Best paper award at ICASSDA 2018",
+      "date": "2018",
+      "awarder": "ICASSDA",
+      "url": "https://ieeexplore.ieee.org/xpl/conhome/8467552/proceeding",
+      "summary": "Received the best paper award at the International Conference on Advanced Science and Sustainable Development Applications."
     },
     {
-      "name": "Quantum Cryptography",
-      "date": "2018-01-01",
-      "issuer": "Stanford University",
-      "url": "https://example.com",
-      "icon": "fa-solid fa-hashtag"
+      "title": "Second place at ULFG2 (regional robotics contest)",
+      "date": "2017",
+      "awarder": "ULFG2",
+      "url": "",
+      "summary": "Secured second place in the ULFG2 regional robotics contest."
     },
     {
-      "name": "Quantum Communication",
-      "date": "2018-01-01",
-      "issuer": "Stanford University",
-      "url": "https://example.com",
-      "icon": "fa-solid fa-calendar"
+      "title": "Participant in the 46th International Physics Olympiad",
+      "date": "2015",
+      "awarder": "International Physics Olympiad",
+      "url": "http://www.ipho2015.in/",
+      "summary": "Represented Syria in the prestigious International Physics Olympiad."
     },
     {
-      "name": "Quantum Teleportation",
-      "date": "2018-01-01",
-      "issuer": "Stanford University",
-      "url": "https://example.com",
-      "icon": "fa-solid fa-clipboard-check"
+      "title": "National third rank, National Physics Olympiad",
+      "date": "2014",
+      "awarder": "National Physics Olympiad",
+      "url": "",
+      "summary": "Achieved the third national rank in the National Physics Olympiad."
     }
   ],
   "publications": [
     {
-      "name": "Zur Elektrody/namik bewegter Körper",
-      "publisher": "Annalen der Physik",
-      "releaseDate": "1905-06-30",
-      "url": "https://en.wikisource.org/wiki/Translation:On_the_Electrodynamics_of_Moving_Bodies",
-      "summary": "It concerned an interpretation of the Michelson–Morley experiment and the properties of light and time. Special relativity incorporates the principle that the speed of light is the same for all inertial observers regardless of the state of motion of the source."
+      "name": "Human Hand Shape and Grasping Behavior Estimation using a Humanoid Hand with a Tactile Interface",
+      "publisher": "Human Hand Shape and Grasping Behavior Estimation using a Humanoid Hand with a Tactile Interface",
+      "releaseDate": "2025-09-12",
+      "url": "",
+      "summary": "Published in collaboration with Tapus, A. (2025). In this work, we introduce a novel method for estimating both human hand geometry and grasping style using a tactile sensory humanoid hand.",
+      "highlights": ["Tactile Interfaces", "Human-robot interaction"]
     },
     {
-      "name": "Über einen die Erzeugung und Verwandlung des Lichtes betreffenden heuristischen Gesichtspunkt",
-      "publisher": "Annalen der Physik",
-      "releaseDate": "1905-03-18",
-      "url": "https://de.wikisource.org/wiki/Über_einen_die_Erzeugung_und_Verwandlung_des_Lichtes_betreffenden_heuristischen_Gesichtspunkt",
-      "summary": "In the second paper, he applied the quantum theory to light to explain the photoelectric effect. In particular, he used the idea of light quanta (photons) to explain experimental results, but stressed the importance of the experimental results. The importance of his work on the photoelectric effect earned him the Nobel Prize in Physics in 1921."
+      "name": "\"Oh! It's Fun Chatting with You!\" A Humor-aware Social Robot Chat Framework",
+      "publisher": "IEEE-RAS International Conference on Robotics and Automation (ICRA)",
+      "releaseDate": "2025-05-01",
+      "url": "",
+      "summary": "Published in collaboration with Zhang, H., García Cárdenas, J.J., Hei, X., Tapus, A. (2024). This work introduces a framework for social robots that can engage in humor-aware conversations.",
+      "highlights": ["Humor-aware social robot chat", "Human-robot interaction"]
     },
     {
-      "name": "Die Grundlage der allgemeinen Relativitätstheorie",
-      "publisher": "Annalen der Physik",
-      "releaseDate": "1916-03-20",
-      "url": "https://de.wikisource.org/wiki/Die_Grundlage_der_allgemeinen_Relativitätstheorie",
-      "summary": "The publication of the theory of general relativity made him internationally famous. He was professor of physics at the universities of Zurich (1909–1911) and Prague (1911–1912), before he returned to ETH Zurich (1912–1914)."
+      "name": "Designing a Haptic Interface for Enhanced Non-Verbal Human-Robot Interaction: Integrating Heart and Lung Emotional Feedback",
+      "publisher": "IEEE-RAS International Conference on Humanoid Robots",
+      "releaseDate": "2024-11-01",
+      "url": "",
+      "summary": "Published with Liu, Y., Tapus, A. (2024). This paper focuses on creating a haptic interface for humanoid robots to convey emotional feedback through heart and lung simulations, enhancing non-verbal interaction.",
+      "highlights": ["Haptic interface design", "Non-verbal human-robot interaction", "Emotional feedback"]
+    },
+    {
+      "name": "Diaphragmatic Breathing Guidance Using a Humanoid Robot With a Soft Robotic Haptic Interface for Anxiety Reduction",
+      "publisher": "Human Hand Shape and Grasping Behavior Estimation using a Humanoid Hand with a Tactile Interface",
+      "releaseDate": "2024-10-01",
+      "url": "",
+      "summary": "Authored with Liu, Y., Zhang, H., Tapus, A. (2024). This research explores using a humanoid robot with a soft haptic interface to guide diaphragmatic breathing for anxiety reduction.",
+      "highlights": ["Humanoid robot", "Soft robotic haptic interface", "Anxiety reduction", "Diaphragmatic breathing guidance"]
+    },
+    {
+      "name": "Full Coverage and Optimal Planner for Blood-Brain Barrier Permeabilization using Focused Ultrasound Cavitation",
+      "publisher": "Journal Article (under review)",
+      "releaseDate": "2023-01-01",
+      "url": "",
+      "summary": "Research conducted with Vappou, J - Nageotte. F - Larrat, B., focusing on optimizing planning for focused ultrasound applications.",
+      "highlights": ["Blood-Brain Barrier Permeabilization", "Focused Ultrasound Cavitation", "Optimal Planning"]
+    },
+    {
+      "name": "Focused Ultrasound Sonication With Mechanical and Electronic Steering Along a Computed Trajectory",
+      "publisher": "Patent",
+      "releaseDate": "2022-01-01",
+      "url": "",
+      "summary": "Patent application with Vappou, J - Nageotte. F - Larrat, B., describing a method for steering focused ultrasound.",
+      "highlights": ["Focused Ultrasound", "Mechanical and Electronic Steering"]
+    },
+    {
+      "name": "COVID-19 lung CT image segmentation using deep learning methods: U-Net versus SegNet",
+      "publisher": "BMC Med Imaging",
+      "releaseDate": "2021-02-09",
+      "url": "https://doi.org/10.1186/s12880-020-00529-5",
+      "summary": "Investigated and compared U-Net and SegNet deep learning techniques for semantic segmentation of COVID-19 infected tissue in CT lung images.",
+      "highlights": ["Deep learning", "Medical image segmentation", "COVID-19"]
+    },
+    {
+      "name": "Two Proposed Indoor Multi-Cameras Positioning Systems Compared to Classical Geometry System",
+      "publisher": "IEEE International Conference on Advanced Science and Sustainable Development Applications (ICASSDA)",
+      "releaseDate": "2018-08-14",
+      "url": "https://doi.org/10.1109/ICASSDA.2018.8477636",
+      "summary": "Presented research on indoor positioning systems using multi-cameras, comparing them to classical geometry approaches.",
+      "highlights": ["Indoor positioning systems", "Multi-camera systems"]
     }
   ],
   "skills": [
     {
-      "name": "Physics",
-      "level": "Master",
-      "icon": "fa-solid fa-hashtag",
+      "name": "Mechatronics",
+      "level": "Expert",
+      "icon": "fa-solid fa-robot",
       "keywords": [
-        "Quantum Mechanics",
-        "Quantum Computing",
-        "Quantum Information",
-        "Quantum Cryptography",
-        "Quantum Communication",
-        "Quantum Teleportation"
+        "Robot Design",
+        "Embedded Systems",
+        "Computer Vision",
+        "Signal Processing",
+        "Mechanical Design"
+      ]
+    },
+    {
+      "name": "MATLAB/SIMULINK",
+      "level": "Expert",
+      "icon": "fa-solid fa-brain",
+      "keywords": [
+        "Deep Learning and Machine Learning",
+        "Optimization",
+        "System Identification"
+      ]
+    },
+    {
+      "name": "Technical Tools",
+      "level": "Proficient",
+      "icon": "fa-solid fa-code",
+      "keywords": [
+        "C++",
+        "ROS/ROS2",
+        "C and Embedded C",
+        "NVidia CUDA",
+        "Python",
+        "OpenCV",
+        "Qt",
+        "Git & Clean Code Practices",
+        "Assembly Intel 8086"
+      ]
+    },
+    {
+      "name": "CAD",
+      "level": "Proficient",
+      "icon": "fa-solid fa-drafting-compass",
+      "keywords": [
+        "SolidWorks",
+        "Altium PCB Designer",
+        "Proteus Suite",
+        "Autodesk Inventor"
       ]
     }
   ],
-  "languages": [
-    {
-      "language": "German",
-      "fluency": "Native speaker",
-      "icon": ""
-    },
-    {
-      "language": "English",
-      "fluency": "Fluent",
-      "icon": ""
-    }
-  ],
-  "interests": [
-    {
-      "name": "Physics",
-      "icon": "fa-solid fa-tag",
-      "keywords": [
-        "Quantum Mechanics",
-        "Quantum Computing",
-        "Quantum Information",
-        "Quantum Cryptography",
-        "Quantum Communication",
-        "Quantum Teleportation"
-      ]
-    }
-  ],
-  "references": [
-    {
-      "name": "Professor John Doe",
-      "icon": "fa-solid fa-laptop",
-      "reference": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam condimentum, diam quis convallis euismod, arcu mi ullamcorper lorem, a vestibulum nunc magna at sem. Sed in risus ac felis varius blandit. D"
-    },
-    {
-      "name": "Professor John Doe",
-      "icon": "fa-solid fa-thumbtack",
-      "reference": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam condimentum, diam quis convallis euismod, arcu mi ullamcorper lorem, a vestibulum nunc magna at sem. Sed in risus ac felis varius blandit. D"
-    }
-  ],
+  "languages": [],
+  "interests": [],
+  "references": [],
   "projects": [
     {
-      "name": "Quantum Computing",
-      "summary": "Quantum computing is the use of quantum-mechanical phenomena such as superposition and entanglement to perform computation. Computers that perform quantum computations are known as quantum computers.",
-      "highlights": ["Quantum Teleportation", "Quantum Cryptography"],
-      "startDate": "2018-01-01",
-      "endDate": "2018-01-01",
-      "url": "https://example.com"
+      "name": "Tactile Array for Humanoid Hand to enable socio-affective touch",
+      "summary": "Design, manufacturing, and validation of a tactile array embedded in a silicon-based substrate for humanoid hands, part of my thesis research.",
+      "highlights": ["Thesis Project", "Tactile sensor design", "Humanoid robotics"],
+      "startDate": "2024-04-01",
+      "endDate": "Present",
+      "url": ""
+    },
+    {
+      "name": "Robotic Assistance for Blood-Brain Barrier Opening using Focused Ultrasound",
+      "summary": "Designed and optimized robot path planning using ROS2 on Universal Robots UR5 for improving accuracy and precision in this promising breakthrough in brain medicine.",
+      "highlights": ["ROS2", "Universal Robots UR5", "Path planning", "Medical robotics"],
+      "startDate": "2022-01-01",
+      "endDate": "2022-12-31",
+      "url": ""
+    },
+    {
+      "name": "ROS2 Driver for NDI medical-grade visual localization system using ros2-control",
+      "summary": "Developed drivers for `ros2_control` to facilitate communication with NDI localization systems, crucial for performance-critical applications.",
+      "highlights": ["ROS2", "NDI localization systems", "Performance-critical applications", "GitHub"],
+      "startDate": "2022-01-01",
+      "endDate": "2022-12-31",
+      "url": "https://github.com/ICube-Robotics/ndisys_ros2"
+    },
+    {
+      "name": "Design and Implementation of a SWARM motion planning algorithm based on fluid dynamics",
+      "summary": "Developed a novel motion planning algorithm for a swarm of non-holonomic robots based on the numerical solution of Navier-Stokes’s equations. Also created a swarm platform of 15 mobile robots.",
+      "highlights": ["SWARM robotics", "Motion planning", "Fluid dynamics", "Navier-Stokes equations", "GitHub"],
+      "startDate": "2021-01-01",
+      "endDate": "2021-12-31",
+      "url": "https://adnan-saood.github.io/swarm-robot-firmware/"
+    },
+    {
+      "name": "COVID-19 Lung CT Image Segmentation using Deep Learning",
+      "summary": "Investigated and compared SegNet and U-NET deep learning techniques for semantic segmentation of COVID-19 infected tissue regions in CT lung images.",
+      "highlights": ["Deep Learning", "Image Segmentation", "COVID-19", "U-NET", "SegNet", "GitHub"],
+      "startDate": "2020-01-01",
+      "endDate": "2020-12-31",
+      "url": "https://github.com/adnan-saood/COVID19-DL"
     }
   ]
 }
