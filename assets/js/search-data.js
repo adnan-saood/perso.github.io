@@ -488,11 +488,31 @@ ninja.data = [{
           description: "",
           section: "News",handler: () => {
               window.location.href = "/~saood/news/announcement_rosconfr_2025/";
-            },},{id: "projects-blood-brain-barrier-openning-with-focused-ultrasound",
-          title: 'Blood-Brain Barrier Openning with Focused Ultrasound',
-          description: "For theraputic agent deliery to the Central Nervous System.",
+            },},{id: "projects-tactile-array-for-humanoid-hand-to-enable-socio-affective-touch",
+          title: 'Tactile Array for Humanoid Hand to Enable Socio-Affective Touch',
+          description: "Design, manufacturing, and validation of a tactile array embedded in a silicon-based substrate for humanoid hands.",
           section: "Projects",handler: () => {
               window.location.href = "/~saood/projects/1_project/";
+            },},{id: "projects-robotic-assistance-for-blood-brain-barrier-opening-using-focused-ultrasound",
+          title: 'Robotic Assistance for Blood-Brain Barrier Opening using Focused Ultrasound',
+          description: "Advanced robot path planning using ROS2 on Universal Robots UR5 for precision medical procedures.",
+          section: "Projects",handler: () => {
+              window.location.href = "/~saood/projects/2_project/";
+            },},{id: "projects-ros2-driver-for-ndi-medical-grade-visual-localization-system",
+          title: 'ROS2 Driver for NDI Medical-Grade Visual Localization System',
+          description: "High-performance ros2_control drivers for NDI localization systems in performance-critical medical applications.",
+          section: "Projects",handler: () => {
+              window.location.href = "/~saood/projects/3_project/";
+            },},{id: "projects-swarm-motion-planning-algorithm-based-on-fluid-dynamics",
+          title: 'SWARM Motion Planning Algorithm Based on Fluid Dynamics',
+          description: "Novel motion planning algorithm for non-holonomic robots using Navier-Stokes equations with 15-robot swarm platform.",
+          section: "Projects",handler: () => {
+              window.location.href = "/~saood/projects/4_project/";
+            },},{id: "projects-covid-19-lung-ct-image-segmentation-using-deep-learning",
+          title: 'COVID-19 Lung CT Image Segmentation using Deep Learning',
+          description: "Comparative study of U-Net versus SegNet architectures for semantic segmentation of COVID-19 infected tissue in CT images.",
+          section: "Projects",handler: () => {
+              window.location.href = "/~saood/projects/5_project/";
             },},{id: "teaching-control-theory-course",
           title: 'Control Theory Course',
           description: "a project with a background image and giscus comments",
