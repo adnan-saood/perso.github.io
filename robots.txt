@@ -1,4 +1,4 @@
 User-agent: *
 Disallow:
 
-Sitemap: https://perso.ensta-paris.fr/~saood/sitemap.xml
+Sitemap: https://perso.ensta-paris.fr/~saood//sitemap.xml
