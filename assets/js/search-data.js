@@ -503,6 +503,11 @@ ninja.data = [{
           description: "High-performance ros2_control drivers for NDI localization systems in performance-critical medical applications.",
           section: "Projects",handler: () => {
               window.location.href = "/~saood/projects/3_project/";
+            },},{id: "projects-3d-gradient-path-planner",
+          title: '3D Gradient Path Planner',
+          description: "Advanced three-dimensional path planning algorithm using gradient descent with attractive and repulsive potential fields for robotics navigation",
+          section: "Projects",handler: () => {
+              window.location.href = "/~saood/projects/3d_gradient_path_planner/";
             },},{id: "projects-swarm-motion-planning-algorithm-based-on-fluid-dynamics",
           title: 'SWARM Motion Planning Algorithm Based on Fluid Dynamics',
           description: "Novel motion planning algorithm for non-holonomic robots using Navier-Stokes equations with 15-robot swarm platform.",
@@ -513,6 +518,21 @@ ninja.data = [{
           description: "Comparative study of U-Net versus SegNet architectures for semantic segmentation of COVID-19 infected tissue in CT images.",
           section: "Projects",handler: () => {
               window.location.href = "/~saood/projects/5_project/";
+            },},{id: "projects-ndi-systems-ros2-driver",
+          title: 'NDI Systems ROS2 Driver',
+          description: "Professional-grade medical tracking system integration for ROS2, enabling precision motion capture in surgical and rehabilitation applications",
+          section: "Projects",handler: () => {
+              window.location.href = "/~saood/projects/ndisys_ros2/";
+            },},{id: "projects-simple-adc-library-for-avr",
+          title: 'Simple ADC Library for AVR',
+          description: "Lightweight, efficient analog-to-digital conversion library for AVR microcontrollers with configurable resolution and reference voltage options",
+          section: "Projects",handler: () => {
+              window.location.href = "/~saood/projects/simple_adc_library_avr/";
+            },},{id: "projects-swarm-robot-firmware",
+          title: 'Swarm Robot Firmware',
+          description: "Complete embedded C firmware for autonomous mobile swarm robots with advanced control algorithms and multi-robot coordination capabilities",
+          section: "Projects",handler: () => {
+              window.location.href = "/~saood/projects/swarm_robot_firmware/";
             },},{id: "teaching-control-theory-course",
           title: 'Control Theory Course',
           description: "a project with a background image and giscus comments",
