@@ -9,7 +9,7 @@ if (!defined('CMS_BOOT')) { http_response_code(404); exit; }
 // Paths that are machine state, not content.
 function cms_backup_skip($rel)
 {
-    return preg_match('#^cms-data/(sessions|state|backups)(/|$)|/\.salt-|/\.tmp_#', $rel) === 1;
+    return preg_match('#^cms-data/(sessions|state|backups|_seed)(/|$)|/\.salt-|/\.tmp_#', $rel) === 1;
 }
 
 // Yields array(archive path, absolute path) for every file to back up.

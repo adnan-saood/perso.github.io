@@ -26,6 +26,7 @@
     "uniform vec2 uSize;",
     "uniform float uTime;",
     "uniform float uBreath;",
+    "uniform float uScroll;", // 0 at the top of the page, 1 once the hero has scrolled away
     "uniform vec4 uTouch[4];", // x, z, depth 0..1, radius
     "uniform vec4 uRipple[6];", // x, z, start time, strength
     "varying vec3 vPos;",
@@ -68,8 +69,10 @@
     "  float e = 0.012;",
     "  float hx = height(p + vec2(e, 0.0), d) - height(p - vec2(e, 0.0), d);",
     "  float hz = height(p + vec2(0.0, e), d) - height(p - vec2(0.0, e), d);",
-    "  vNormal = normalize(vec3(-hx, 2.0 * e, -hz));",
-    "  vPos = vec3(p.x, h, p.y);",
+    // Scrolling away: the membrane flattens and sinks into the page.
+    "  float flatten = 1.0 - 0.6 * uScroll;",
+    "  vNormal = normalize(vec3(-hx * flatten, 2.0 * e, -hz * flatten));",
+    "  vPos = vec3(p.x, h * flatten - 0.28 * uScroll, p.y);",
     "  vPress = pr;",
     "  vUV = aUV;",
     "  gl_Position = uViewProj * vec4(vPos, 1.0);",
@@ -84,6 +87,7 @@
     "uniform vec3 uCam;",
     "uniform vec2 uSize;",
     "uniform float uDark;",
+    "uniform float uScroll;",
     "varying vec3 vPos;",
     "varying vec3 vNormal;",
     "varying float vPress;",
@@ -99,7 +103,7 @@
     "  float spec = pow(max(dot(n, normalize(L1 + v)), 0.0), 60.0) * mix(0.16, 0.4, uDark);",
     "  float fres = pow(1.0 - max(dot(n, v), 0.0), 3.0);",
     "  float p = clamp(vPress, 0.0, 1.0);",
-    "  vec3 heat = mix(uViolet, uCoral, smoothstep(0.35, 0.95, p));",
+    "  vec3 heat = mix(uViolet, uCoral, smoothstep(0.35, 0.95, p) * (1.0 - uScroll));", // cools to violet on scroll
     "  vec3 col = uBase * (mix(0.36, 0.34, uDark) + 0.52 * d1 + 0.14 * d2);",
     "  col = mix(col, heat, smoothstep(0.03, 0.8, p) * 0.8);",
     "  col += uCoral * 0.10 * p;",
@@ -112,6 +116,7 @@
     "  col = mix(col, taxel, dotMask * (0.55 + 0.45 * lit));",
     "  col += spec;",
     "  col += fres * mix(uViolet, vec3(1.0), 0.35) * mix(0.16, 0.5, uDark);",
+    "  col = mix(col, col * 0.72 + uViolet * 0.28, uScroll);",
     // fade the membrane edges into the page
     "  vec2 q = abs(vUV - 0.5) * 2.0;",
     "  float sq4 = pow(pow(q.x, 4.0) + pow(q.y, 4.0), 0.25);",
@@ -169,7 +174,7 @@
   gl.vertexAttribPointer(aUV, 2, gl.FLOAT, false, 0, 0);
 
   var U = {};
-  ["uViewProj", "uSize", "uTime", "uBreath", "uTouch", "uRipple", "uBase", "uViolet", "uCoral", "uCam", "uDark"].forEach(function (n) {
+  ["uViewProj", "uSize", "uTime", "uBreath", "uTouch", "uRipple", "uBase", "uViolet", "uCoral", "uCam", "uDark", "uScroll"].forEach(function (n) {
     U[n] = gl.getUniformLocation(prog, n);
   });
   gl.uniform2f(U.uSize, SIZE[0], SIZE[1]);
@@ -258,6 +263,27 @@
   var start = performance.now();
   var now = 0, lastInput = -10, pointerInside = false, pressed = false, nextGhostTap = 3;
   var readout = document.querySelector("[data-skin-readout]");
+  var readoutNodes = null, readoutLast = "";
+  if (readout) {
+    readout.innerHTML = "<span>pressure <b></b></span><span>active taxels <b></b></span><span>contact <b></b></span>";
+    readoutNodes = readout.querySelectorAll("b");
+  }
+  // Scroll: 0 with the hero fully on screen, 1 once it has scrolled away.
+  var scrollTarget = 0, scrollK = 0, farewell = false;
+  var hero = canvas.closest(".hero") || canvas;
+  function onScroll() {
+    if (reduce) return;
+    scrollTarget = Math.max(0, Math.min(1, window.scrollY / (hero.offsetHeight * 0.85 || 1)));
+    // One last ripple as you leave, re-armed when you come back to the top.
+    if (scrollTarget > 0.12 && !farewell) {
+      farewell = true;
+      addRipple(finger.x || 0.3, finger.z || 0, 1.15);
+    } else if (scrollTarget < 0.03) {
+      farewell = false;
+    }
+    wake();
+  }
+  window.addEventListener("scroll", onScroll, { passive: true });
   var cursor = document.querySelector(".touch-cursor");
 
   function addRipple(x, z, strength) {
@@ -351,6 +377,9 @@
       rippleData[i * 4 + 3] = r.s;
     });
 
+    scrollK += (scrollTarget - scrollK) * Math.min(1, dt * 7);
+    if (Math.abs(scrollTarget - scrollK) > 0.001) moving = true;
+    gl.uniform1f(U.uScroll, scrollK);
     gl.uniform1f(U.uTime, now);
     gl.uniform1f(U.uBreath, reduce ? 0 : 1);
     gl.uniform4fv(U.uTouch, touchData);
@@ -359,12 +388,16 @@
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     gl.drawElements(gl.TRIANGLES, idx.length, gl.UNSIGNED_SHORT, 0);
 
-    if (readout) {
+    if (readoutNodes) {
+      // Only touch the DOM when a shown value changes (not 60 times a second).
       var pmax = Math.max(finger.depth, ghost.depth);
-      readout.innerHTML =
-        "<span>pressure <b>" + (pmax * 38).toFixed(1) + " kPa</b></span>" +
-        "<span>active taxels <b>" + Math.round(pmax * 46) + "</b></span>" +
-        "<span>contact <b>" + (pmax > 0.05 ? (finger.depth >= ghost.depth ? "you" : "ghost") : "none") + "</b></span>";
+      var vals = [(pmax * 38).toFixed(1) + " kPa", String(Math.round(pmax * 46)),
+        pmax > 0.05 ? (finger.depth >= ghost.depth ? "you" : "ghost") : "none"];
+      var key = vals.join("|");
+      if (key !== readoutLast) {
+        readoutLast = key;
+        for (var r = 0; r < 3; r++) readoutNodes[r].textContent = vals[r];
+      }
     }
 
     // Keep animating while something moves; otherwise sleep until the next input.

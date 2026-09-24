@@ -2970,3 +2970,284 @@ model-viewer.is-loaded .model__progress {
   border: 0;
   color: var(--paper);
 }
+
+
+/* ============================ Hero: recruiter strip & proof ============== */
+
+// Hero text drifts up and fades as the skin sinks (motion.js sets --hs, 0..1).
+.hero__content {
+  translate: 0 calc(var(--hs, 0) * -90px);
+  opacity: calc(1 - var(--hs, 0) * 0.9);
+}
+.pulse {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #22c55e;
+  box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.55);
+  animation: pulse-ring 2.2s ease-out infinite;
+  vertical-align: middle;
+}
+@keyframes pulse-ring {
+  70% { box-shadow: 0 0 0 9px rgba(34, 197, 94, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+}
+.hero__strip {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1.1rem;
+  margin-top: 1.6rem;
+  font-size: 0.92rem;
+  color: var(--ink-2);
+}
+.hero__status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+.hero__seeking::before {
+  content: "·";
+  margin-right: 1.1rem;
+  color: var(--ink-3);
+}
+.hero__links {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+.hero__links a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.3rem 0.75rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  background: var(--header-bg);
+  backdrop-filter: blur(8px);
+  color: var(--ink) !important;
+  font-size: 0.82rem;
+  font-weight: 600;
+  transition: border-color 250ms ease, transform 300ms var(--ease-soft);
+}
+.hero__links a:hover {
+  border-color: var(--violet);
+  transform: translateY(-2px);
+}
+.proof {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 1rem 0 0;
+  padding: 0;
+}
+.proof a,
+.proof span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.35rem 0.8rem 0.35rem 0.6rem;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--header-bg);
+  backdrop-filter: blur(8px);
+  color: var(--ink-2) !important;
+  font-size: 0.8rem;
+  transition: border-color 250ms ease, color 250ms ease;
+}
+.proof a:hover {
+  border-color: var(--coral);
+  color: var(--ink) !important;
+}
+.proof i {
+  font-size: 1rem;
+  color: var(--violet);
+}
+@media (max-width: 640px) {
+  .hero__seeking::before {
+    content: none;
+  }
+  .hero__strip {
+    font-size: 0.85rem;
+  }
+}
+
+/* ============================ Now panel ================================== */
+
+.section--now {
+  padding-block: clamp(3rem, 7vw, 5.5rem);
+}
+.section--now .kicker .pulse {
+  margin-right: 0.35rem;
+}
+.now {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr) minmax(0, 1fr);
+  gap: 1.25rem;
+}
+@media (max-width: 900px) {
+  .now {
+    grid-template-columns: 1fr;
+  }
+}
+.now__tile {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  min-height: 12.5rem;
+  padding: 1.6rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--ink) !important;
+  overflow: hidden;
+  transition: box-shadow 400ms var(--ease-out), border-color 300ms ease, transform 400ms var(--ease-soft);
+}
+a.now__tile:hover {
+  box-shadow: var(--shadow-lg);
+  border-color: transparent;
+  transform: translateY(-3px);
+}
+.now__tile h3 {
+  font-size: 1.2rem !important;
+  line-height: 1.3 !important;
+  margin: 0 !important;
+}
+.now__label {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.now__label i {
+  font-size: 1rem;
+  color: var(--violet);
+}
+.now__meta {
+  margin: auto 0 0;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--ink-3);
+}
+.now__text {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.15rem, 2vw, 1.45rem);
+  line-height: 1.35;
+}
+.now__more {
+  margin-top: auto;
+  font-weight: 600;
+  color: #fff !important;
+}
+.now__tile--focus {
+  color: #fff !important;
+  border-color: transparent;
+  background:
+    radial-gradient(120% 90% at 100% 0%, rgba(255, 255, 255, 0.22), transparent 60%),
+    var(--gradient);
+}
+.now__tile--focus .now__label,
+.now__tile--focus .now__label i {
+  color: rgba(255, 255, 255, 0.85);
+}
+[data-gh-commit] [data-commit-msg] {
+  font-family: var(--font-mono);
+  font-size: 1rem !important;
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+[data-gh-commit].is-live .now__label i {
+  color: #22c55e;
+}
+
+/* ============================ Headings light up like taxels ============== */
+
+// After a heading's words have risen, a warm pulse runs across them, word by word,
+// like a fingertip sliding over a tactile array.
+.section__title.split.is-visible .w > span:not(.text-gradient),
+.hero__title.split.is-visible .w > span:not(.text-gradient) {
+  animation: taxel-lit 1100ms ease calc(650ms + var(--i, 0) * 85ms) both;
+}
+.section__title.split.is-visible .w > span.text-gradient,
+.hero__title.split.is-visible .w > span.text-gradient {
+  animation: taxel-lit-grad 1100ms ease calc(650ms + var(--i, 0) * 85ms) both;
+}
+@keyframes taxel-lit {
+  40% {
+    color: var(--coral);
+    text-shadow: 0 0 22px rgba(255, 111, 78, 0.45);
+  }
+}
+@keyframes taxel-lit-grad {
+  40% {
+    filter: brightness(1.25) saturate(1.3) drop-shadow(0 0 14px rgba(255, 111, 78, 0.45));
+  }
+}
+
+/* ============================ Keywords strip: scroll velocity ============ */
+
+.marquee__track span {
+  transform: skewX(var(--skew, 0deg));
+}
+
+/* ============================ Dot-grid cards ============================= */
+
+// A faint taxel grid on research and project cards that lights up under the
+// cursor (motion.js sets --mx/--my while hovering).
+.pillar::after,
+.project-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: inherit;
+  pointer-events: none;
+  background-image: radial-gradient(circle, var(--violet) 1.1px, transparent 1.7px);
+  background-size: 14px 14px;
+  background-position: 7px 7px;
+  opacity: 0.1;
+  -webkit-mask-image: radial-gradient(220px circle at var(--mx, 50%) var(--my, 50%), #000, rgba(0, 0, 0, 0.35) 55%, rgba(0, 0, 0, 0.12));
+  mask-image: radial-gradient(220px circle at var(--mx, 50%) var(--my, 50%), #000, rgba(0, 0, 0, 0.35) 55%, rgba(0, 0, 0, 0.12));
+  transition: opacity 350ms ease;
+}
+.pillar:hover::after,
+.project-card:hover::after {
+  opacity: 0.6;
+}
+.project-card::after {
+  // Keep the picture clean: dots only over the text part of the card.
+  top: auto;
+  height: 55%;
+}
+
+/* ============================ 3D demo ==================================== */
+
+.robots--demo .robots__stage {
+  background: radial-gradient(80% 70% at 50% 40%, var(--surface), var(--paper-2));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__content {
+    translate: none;
+    opacity: 1;
+  }
+  .pulse,
+  .section__title.split.is-visible .w > span,
+  .hero__title.split.is-visible .w > span {
+    animation: none;
+  }
+  .marquee__track span {
+    transform: none;
+  }
+}

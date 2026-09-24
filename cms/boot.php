@@ -13,3 +13,7 @@ require_once __DIR__ . '/lib/bibtex.php';
 require_once __DIR__ . '/lib/stats.php';
 require_once __DIR__ . '/lib/i18n.php';
 require_once __DIR__ . '/lib/backup.php';
+require_once __DIR__ . '/lib/seed.php';
+
+// Bring in starting content that is new since the last deploy (see lib/seed.php).
+cms_seed_sync();

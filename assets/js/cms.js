@@ -90,8 +90,9 @@
       if (!btn) return;
       var pre = btn.parentNode.querySelector("pre");
       navigator.clipboard.writeText(pre.textContent).then(function () {
-        btn.textContent = "Copied!";
-        setTimeout(function () { btn.textContent = "Copy"; }, 1500);
+        var label = btn.textContent;
+        btn.textContent = getLang() === "fr" ? "Copié !" : "Copied!";
+        setTimeout(function () { btn.textContent = label; }, 1500);
       });
     });
   }
@@ -118,6 +119,58 @@
         })
         .catch(function () { el.textContent = "30+"; });
     });
+  }
+
+  // --- "Now" panel: latest public commit on GitHub (cached for an hour) ----------------
+  function relTime(iso) {
+    var lang = getLang();
+    var diff = (new Date(iso).getTime() - Date.now()) / 1000;
+    var units = [["year", 31536000], ["month", 2592000], ["week", 604800], ["day", 86400], ["hour", 3600], ["minute", 60]];
+    try {
+      var rtf = new Intl.RelativeTimeFormat(lang, { numeric: "auto" });
+      for (var i = 0; i < units.length; i++) {
+        if (Math.abs(diff) >= units[i][1] || i === units.length - 1) return rtf.format(Math.round(diff / units[i][1]), units[i][0]);
+      }
+    } catch (e) { /* old browser */ }
+    return new Date(iso).toLocaleDateString(lang);
+  }
+  function latestCommit() {
+    var tile = document.querySelector("[data-gh-commit]");
+    if (!tile) return;
+    var user = tile.getAttribute("data-gh-commit");
+    var key = "gh:commit:" + user;
+    var show = function (c) {
+      tile.href = c.url;
+      tile.querySelector("[data-commit-msg]").textContent = c.msg;
+      tile.querySelector("[data-commit-meta]").textContent = c.repo + " · " + relTime(c.at);
+      tile.classList.add("is-live");
+    };
+    try {
+      var hit = JSON.parse(localStorage.getItem(key) || "null");
+      if (hit && Date.now() - hit.t < 3600000) return show(hit.c);
+    } catch (e) { /* ignore */ }
+    var api = "https://api.github.com";
+    fetch(api + "/users/" + encodeURIComponent(user) + "/events/public?per_page=30")
+      .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+      .then(function (events) {
+        var push = (events || []).filter(function (ev) { return ev.type === "PushEvent"; })[0];
+        if (!push) throw new Error("no push");
+        var repo = push.repo.name;
+        var commits = push.payload && push.payload.commits;
+        // Newer API responses may leave out the commit list: ask for the head commit then.
+        var msg = commits && commits.length ? Promise.resolve(commits[commits.length - 1].message)
+          : fetch(api + "/repos/" + repo + "/commits/" + push.payload.head).then(function (r) { return r.json(); })
+            .then(function (c) { return c.commit.message; });
+        return msg.then(function (m) {
+          return { msg: String(m).split(/\r?\n/)[0].slice(0, 90), repo: repo.split("/")[1], at: push.created_at,
+            url: "https://github.com/" + repo + "/commit/" + push.payload.head };
+        });
+      })
+      .then(function (c) {
+        show(c);
+        try { localStorage.setItem(key, JSON.stringify({ t: Date.now(), c: c })); } catch (e) { /* ignore */ }
+      })
+      .catch(function () { /* keep the link to the GitHub profile */ });
   }
 
   // --- Language: English / French -------------------------------------------------
@@ -172,13 +225,16 @@
       box.addEventListener("click", function (ev) {
         var t = ev.target.closest(".robots__thumb");
         if (!t) return;
-        box.querySelectorAll(".robots__thumb").forEach(function (b) { b.classList.toggle("is-active", b === t); });
+        box.querySelectorAll(".robots__thumb").forEach(function (b) {
+          b.classList.toggle("is-active", b === t);
+          b.setAttribute("aria-selected", b === t ? "true" : "false");
+        });
         box.classList.add("is-switching");
         setTimeout(function () {
           if (t.dataset.poster) viewer.setAttribute("poster", t.dataset.poster); else viewer.removeAttribute("poster");
           viewer.classList.remove("is-loaded");
           viewer.setAttribute("src", t.dataset.src);
-          viewer.setAttribute("alt", "3D model: " + t.dataset.title);
+          viewer.setAttribute("alt", (getLang() === "fr" ? "Modèle 3D : " : "3D model: ") + t.dataset.title);
           box.querySelector("[data-robot-title]").textContent = t.dataset.title;
           box.querySelector("[data-robot-cat]").textContent = t.dataset.cat;
           box.querySelector("[data-robot-text]").textContent = t.dataset.text;
@@ -215,5 +271,6 @@
     track();
     publications();
     githubCount();
+    latestCommit();
   });
 })();

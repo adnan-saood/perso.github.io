@@ -83,7 +83,7 @@ function admin_head($title)
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
 <title><?php echo e($title); ?> · Site admin</title>
-<link rel="stylesheet" href="admin.css?v=6">
+<link rel="stylesheet" href="admin.css?v=7">
 <?php
 }
 
@@ -142,7 +142,7 @@ function admin_layout_end($scripts = array())
 {
     echo '</main></div>';
     foreach ($scripts as $s) echo '<script src="' . e($s) . '"></script>';
-    echo '<script src="admin.js?v=6"></script></body></html>';
+    echo '<script src="admin.js?v=7"></script></body></html>';
 }
 
 // ---------------------------------------------------------------------------
@@ -276,7 +276,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $meta['inline'] = !empty($_POST['inline']);
             }
             // Optional French versions and the generated share image.
-            foreach (array('title_fr', 'description_fr', 'event_fr', 'body_fr') as $k) {
+            foreach (array('title_fr', 'description_fr', 'event_fr', 'location_fr', 'award_fr', 'category_fr', 'body_fr') as $k) {
                 $v = trim(str_replace("\r\n", "\n", admin_post($k)));
                 if ($v === '') unset($meta[$k]); else $meta[$k] = $v;
             }
@@ -683,8 +683,13 @@ case 'edit':
             <?php if ($type === 'posts' || $type === 'projects'): ?>
               <label class="wide">Résumé<input name="description_fr" value="<?php echo e(isset($m['description_fr']) ? $m['description_fr'] : ''); ?>"></label>
             <?php endif; ?>
+            <?php if ($type === 'projects'): ?>
+              <label>Catégorie<input name="category_fr" value="<?php echo e(isset($m['category_fr']) ? $m['category_fr'] : ''); ?>"></label>
+            <?php endif; ?>
             <?php if ($type === 'talks'): ?>
               <label class="wide">Événement<input name="event_fr" value="<?php echo e(isset($m['event_fr']) ? $m['event_fr'] : ''); ?>"></label>
+              <label>Lieu<input name="location_fr" value="<?php echo e(isset($m['location_fr']) ? $m['location_fr'] : ''); ?>"></label>
+              <label>Prix<input name="award_fr" value="<?php echo e(isset($m['award_fr']) ? $m['award_fr'] : ''); ?>"></label>
             <?php endif; ?>
             <label class="wide">Texte <small>(Markdown)</small><textarea name="body_fr" rows="10" class="mono"><?php echo e(isset($m['body_fr']) ? $m['body_fr'] : ''); ?></textarea></label>
           </div>
@@ -783,6 +788,12 @@ case 'cv':
               <label><?php echo e($label); ?><input name="cv[basics][<?php echo $k; ?>]" value="<?php echo e(isset($b[$k]) ? $b[$k] : ''); ?>"></label>
             <?php endif; ?>
           <?php endforeach; ?>
+          <details class="wide fr-sub"><summary>Français <span class="muted small">(optional)</span></summary>
+            <div class="grid meta">
+              <label class="wide">Titre<input name="cv[basics][label_fr]" value="<?php echo e(isset($b['label_fr']) ? $b['label_fr'] : ''); ?>"></label>
+              <label class="wide">Résumé<textarea name="cv[basics][summary_fr]" rows="3"><?php echo e(isset($b['summary_fr']) ? $b['summary_fr'] : ''); ?></textarea></label>
+            </div>
+          </details>
           <label class="wide">Downloadable PDF <small>(people get this file from the “Download CV” button)</small>
             <span class="with-btn"><input name="cv[basics][pdf]" id="cvpdf" value="<?php echo e(isset($b['pdf']) ? $b['pdf'] : ''); ?>" placeholder="files/cv/your-cv.pdf">
               <button type="button" class="btn small" data-library-into="#cvpdf">Library</button>
@@ -1133,6 +1144,11 @@ function admin_home_field($lang, $path, array $spec, $value)
         case 'textarea':
             echo '<label class="wide">' . $label . '<textarea name="' . e($name) . '" rows="3">' . e((string) $value) . '</textarea></label>';
             break;
+        case 'check':
+            if ($lang !== 'en') break; // switches live on the English tab only
+            echo '<label class="toggle wide"><input type="hidden" name="' . e($name) . '" value="0"><input type="checkbox" name="' . e($name) . '" value="1"'
+                . ($value ? ' checked' : '') . '> ' . $label . '</label>';
+            break;
         case 'paragraphs':
             echo '<label class="wide">' . $label . '<textarea name="' . e($name) . '" rows="8">' . e(implode("\n\n", (array) $value)) . '</textarea></label>';
             break;
@@ -1219,6 +1235,20 @@ function admin_cv_row($section, $def, $i, array $row, $open = false)
             <label class="wide"><?php echo e($spec[0]); ?><textarea name="<?php echo e($name($f)); ?>" rows="<?php echo $spec[1] === 'list' ? 4 : 3; ?>"><?php echo e($val); ?></textarea></label>
           <?php endif; ?>
         <?php endforeach; ?>
+        <details class="wide fr-sub"><summary>Français <span class="muted small">(optional; empty fields show the English text)</span></summary>
+          <div class="grid meta">
+            <?php foreach ($def['fields'] as $f => $spec):
+                if (!cms_cv_translatable($f)) continue;
+                $val = isset($row[$f . '_fr']) ? $row[$f . '_fr'] : '';
+                if (is_array($val)) $val = implode("\n", $val); ?>
+              <?php if ($spec[1] === 'text'): ?>
+                <label><?php echo e($spec[0]); ?><input name="<?php echo e($name($f . '_fr')); ?>" value="<?php echo e($val); ?>"></label>
+              <?php else: ?>
+                <label class="wide"><?php echo e($spec[0]); ?><textarea name="<?php echo e($name($f . '_fr')); ?>" rows="3"><?php echo e($val); ?></textarea></label>
+              <?php endif; ?>
+            <?php endforeach; ?>
+          </div>
+        </details>
       </div>
     </details>
     <?php

@@ -62,6 +62,11 @@ you wrote in the admin panel.
   the gradient), intro, about text, the scrolling keywords strip, the research pillars,
   highlight numbers and every section title. The *Français* tab holds the French
   versions; any field left empty there falls back to English.
+  The same page holds the **recruiter strip** (availability with a green dot, what you're
+  looking for, CV · Email · Scholar buttons), the **proof badges** under the hero, the
+  **Now panel** (your current work + your next talk, picked automatically, + your latest
+  public GitHub commit) and the **Robots in 3D** switch that shows a demo robot made of
+  cubes until one of your projects has a 3D model on the homepage.
 - **Talks & media**: Dashboard → *+ Talk*. Pick the kind (talk, paper presentation,
   poster, workshop, media...), event, place, and paste a YouTube/Vimeo link: the video
   only loads when a visitor presses play. Slides/paper/code links become buttons;
@@ -73,7 +78,8 @@ you wrote in the admin panel.
   phones), and *Show in 3D on homepage* adds it to the “Robots in 3D” showcase.
 - **French / English**: the FR/EN button in the menu switches the site. Each post,
   news item, project and talk has a *Français* box (title, summary, text); anything left
-  empty is shown in English.
+  empty is shown in English. The CV has a *Français* box in its header and in every entry, and
+  the homepage has its own *Français* tab. Paper titles stay in English on purpose.
 - **Share images**: when you save a post, project, news item or talk, the admin draws a
   1200×630 preview card (title + cover) and uses it when the page is shared on LinkedIn,
   X, WhatsApp... Stored in `files/og/`.
@@ -111,6 +117,16 @@ preview edits go to `.preview-data/` (delete it to start over from `cms-seed/`).
 Jekyll's own server, without PHP, is still on port 4000.
 
 Without Docker: `bundle exec jekyll build`, then `bash tools/preview.sh` (needs `php`).
+
+## Starting content (cms-seed/)
+
+`cms-seed/` holds the site's starting content: posts, news, projects, publications, talks,
+CV, repositories and homepage texts (with their French versions). The CMS imports it by
+itself: anything you don't have yet is added, and when a seed file changes (e.g. new
+translations) only the fields your copy is missing are filled in. Nothing you edited is
+overwritten and deleted items don't come back (`cms-data/state/seeded.json` keeps track).
+`deploy.sh` uploads it to `~/cms-data/_seed` on every deploy; the local preview reads it
+straight from the repository.
 
 ## URLs
 

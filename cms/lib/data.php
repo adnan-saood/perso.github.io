@@ -36,12 +36,14 @@ function cms_cv_schema()
         'education' => array('label' => 'Education', 'title' => 'studyType', 'fields' => array(
             'studyType' => array('Degree', 'text'), 'area' => array('Field', 'text'), 'institution' => array('Institution', 'text'),
             'location' => array('Location', 'text'), 'startDate' => array('Start', 'text'), 'endDate' => array('End', 'text'),
-            'score' => array('Grade', 'text'), 'url' => array('Link', 'text'), 'highlights' => array('Highlights (one per line)', 'list'))),
+            'score' => array('Grade', 'text'), 'url' => array('Link', 'text'), 'courses' => array('Courses (one per line)', 'list'),
+            'highlights' => array('Highlights (one per line)', 'list'))),
         'awards' => array('label' => 'Awards & honours', 'title' => 'title', 'fields' => array(
             'title' => array('Award', 'text'), 'awarder' => array('Awarded by', 'text'), 'date' => array('Year / date', 'text'),
             'url' => array('Link', 'text'), 'summary' => array('Summary', 'textarea'))),
         'skills' => array('label' => 'Skills', 'title' => 'name', 'fields' => array(
-            'name' => array('Skill group', 'text'), 'level' => array('Level', 'text'), 'keywords' => array('Keywords (one per line)', 'list'))),
+            'name' => array('Skill group', 'text'), 'level' => array('Level', 'text'), 'icon' => array('Icon (Font Awesome class, optional)', 'text'),
+            'keywords' => array('Keywords (one per line)', 'list'))),
         'projects' => array('label' => 'Selected projects', 'title' => 'name', 'fields' => array(
             'name' => array('Project', 'text'), 'startDate' => array('Start', 'text'), 'endDate' => array('End', 'text'),
             'url' => array('Link', 'text'), 'summary' => array('Summary', 'textarea'), 'highlights' => array('Highlights (one per line)', 'list'))),
@@ -50,6 +52,12 @@ function cms_cv_schema()
         'interests' => array('label' => 'Interests', 'title' => 'name', 'fields' => array(
             'name' => array('Interest', 'text'), 'keywords' => array('Keywords (one per line)', 'list'))),
     );
+}
+
+// CV fields that can have a French version (field_fr). Dates, links and grades don't.
+function cms_cv_translatable($field)
+{
+    return !in_array($field, array('startDate', 'endDate', 'date', 'url', 'score', 'icon'), true);
 }
 
 function cms_cv_basics_fields()
@@ -70,6 +78,9 @@ function cms_cv_sanitize(array $in)
         if (isset($old['basics'][$keep])) $out['basics'][$keep] = $old['basics'][$keep];
     }
     $out['basics']['pdf'] = isset($b['pdf']) ? trim((string) $b['pdf']) : '';
+    foreach (array('label_fr', 'summary_fr') as $k) {
+        if (isset($b[$k]) && trim((string) $b[$k]) !== '') $out['basics'][$k] = trim((string) $b[$k]);
+    }
     foreach (cms_cv_schema() as $section => $def) {
         $out[$section] = array();
         $rows = isset($in[$section]) && is_array($in[$section]) ? $in[$section] : array();
@@ -88,6 +99,14 @@ function cms_cv_sanitize(array $in)
                     if ($v !== '') $empty = false;
                 }
                 $clean[$f] = $v;
+                // Optional French version of the field (shown to visitors who read in French).
+                if (cms_cv_translatable($f) && isset($row[$f . '_fr'])) {
+                    $fr = $row[$f . '_fr'];
+                    $fr = $spec[1] === 'list'
+                        ? array_values(array_filter(array_map('trim', is_array($fr) ? $fr : preg_split('/\r?\n/', (string) $fr)), 'strlen'))
+                        : trim((string) $fr);
+                    if ($fr !== '' && $fr !== array()) $clean[$f . '_fr'] = $fr;
+                }
             }
             if (!$empty) $out[$section][] = $clean;
         }
@@ -99,8 +118,8 @@ function cms_cv_sanitize(array $in)
 function cms_cv_date($d)
 {
     $d = trim((string) $d);
-    if (preg_match('/^(\d{4})-(\d{2})/', $d, $m)) return date('M Y', mktime(0, 0, 0, (int) $m[2], 1, (int) $m[1]));
-    return $d;
+    if (preg_match('/^(\d{4})-(\d{2})/', $d, $m)) return cms_date('M Y', mktime(0, 0, 0, (int) $m[2], 1, (int) $m[1]));
+    return strcasecmp($d, 'Present') === 0 ? cms_t('Present') : $d;
 }
 
 // ---------------------------------------------------------------------------
@@ -142,6 +161,18 @@ function cms_home_schema()
             'hero.title' => array('Big title (wrap a word in *stars* for the gradient)', 'text'),
             'hero.lede' => array('Intro sentence', 'textarea'),
         ),
+        'Recruiter strip (under the intro)' => array(
+            'hero.status' => array('Availability, shown with a green dot (e.g. “Available from October 2027”); empty = hidden', 'text'),
+            'hero.seeking' => array('What you are looking for (e.g. “Postdoc or R&D roles in tactile HRI”)', 'text'),
+            'hero.links' => array('Show CV · Email · Scholar buttons', 'check'),
+            'proof' => array('Proof badges (patents, awards…)', 'rows', array('label' => 'Text', 'icon' => 'Icon (tabler name, e.g. ti-trophy)', 'link' => 'Link (optional, e.g. news/?n=my-award)')),
+        ),
+        'Now panel' => array(
+            'now.show' => array('Show the “Now” panel (current work, next talk, latest GitHub commit)', 'check'),
+            'now.title' => array('Title', 'text'),
+            'now.text' => array('What you are working on right now', 'textarea'),
+            'now.link' => array('Link for it (optional)', 'text'),
+        ),
         'About' => array(
             'about.image' => array('Portrait', 'image'),
             'about.lead' => array('Lead sentence', 'textarea'),
@@ -155,8 +186,11 @@ function cms_home_schema()
             'research_title' => array('Section title', 'text'),
             'pillars' => array('Research threads', 'rows', array('title' => 'Title', 'icon' => 'Icon (tabler name, e.g. ti-hand-finger)', 'text' => 'Text')),
         ),
+        'Robots in 3D' => array(
+            'robots_title' => array('Section title', 'text'),
+            'robots_demo' => array('Show a demo model while no project has a 3D model on the homepage', 'check'),
+        ),
         'Other section titles' => array(
-            'robots_title' => array('“Robots in 3D” title', 'text'),
             'work_title' => array('“Selected work” title', 'text'),
             'papers_title' => array('“Selected papers” title', 'text'),
             'talks_title' => array('“Talks & media” title', 'text'),
@@ -195,7 +229,8 @@ function cms_home($lang = null)
     if ($lang !== 'fr' || empty($doc['fr'])) return $en;
     $out = $en;
     foreach (cms_home_schema() as $fields) {
-        foreach (array_keys($fields) as $path) {
+        foreach ($fields as $path => $spec) {
+            if ($spec[1] === 'check') continue; // switches are set once, on the English tab
             $v = cms_path_get($doc['fr'], $path);
             if ($v !== null && $v !== '' && $v !== array()) cms_path_set($out, $path, $v);
         }
@@ -217,6 +252,9 @@ function cms_home_sanitize(array $in)
                     break;
                 case 'paragraphs':
                     $v = array_values(array_filter(array_map('trim', preg_split('/\r?\n\s*\r?\n/', trim((string) $v))), 'strlen'));
+                    break;
+                case 'check':
+                    $v = $v === '1';
                     break;
                 case 'rows':
                     $rows = array();

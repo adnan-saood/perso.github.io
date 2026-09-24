@@ -155,8 +155,41 @@
     bar.className = "scroll-progress";
     document.body.appendChild(bar);
     var lastY = window.scrollY, ticking = false;
+    var hero = document.querySelector(".hero");
+
+    // Keywords strip: speeds up and leans in the direction you scroll, then settles.
+    var marquee = document.querySelector(".marquee"), mAnim = null, vel = 0, velRaf = 0;
+    function marqueeKick(dy) {
+      if (!marquee || reduce) return;
+      if (!mAnim) {
+        var track = marquee.querySelector(".marquee__track");
+        mAnim = track && track.getAnimations ? track.getAnimations()[0] || null : null;
+      }
+      vel += dy;
+      if (!velRaf) velRaf = requestAnimationFrame(settle);
+    }
+    function settle() {
+      vel *= 0.9;
+      var v = Math.max(-60, Math.min(60, vel));
+      if (mAnim) mAnim.playbackRate = (v < 0 ? -1 : 1) * (1 + Math.abs(v) * 0.12);
+      marquee.style.setProperty("--skew", (-v * 0.12).toFixed(2) + "deg");
+      if (Math.abs(vel) > 0.3) {
+        velRaf = requestAnimationFrame(settle);
+      } else {
+        velRaf = 0;
+        vel = 0;
+        if (mAnim) mAnim.playbackRate = 1;
+        marquee.style.setProperty("--skew", "0deg");
+      }
+    }
+
     function onScroll() {
       var y = window.scrollY;
+      marqueeKick(y - lastY);
+      // Hero text drifts up and fades a little faster than the page.
+      if (hero && !reduce && y < window.innerHeight * 1.3) {
+        hero.style.setProperty("--hs", Math.min(1, y / hero.offsetHeight).toFixed(3));
+      }
       var max = document.documentElement.scrollHeight - window.innerHeight;
       bar.style.transform = "scaleX(" + (max > 0 ? Math.min(1, y / max) : 0) + ")";
       if (header) {

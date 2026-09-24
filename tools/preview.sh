@@ -11,7 +11,7 @@
 # container next to Jekyll and serves everything on http://localhost:8080.
 #
 # Content edited in the preview goes to .preview-data/ (not committed); delete
-# that folder to start again from cms-seed/.
+# that folder to start again from cms-seed/ alone.
 set -euo pipefail
 cd "$(dirname "$0")/.."
 PORT="${PORT:-8081}"
@@ -34,9 +34,11 @@ BASE="${BASE:-/}"
 DATA="$PWD/.preview-data"
 if [[ ! -d "$DATA" ]]; then
   mkdir -p "$DATA"
-  cp -r cms-seed/posts cms-seed/news cms-seed/projects cms-seed/publications cms-seed/talks cms-seed/*.json "$DATA/"
   echo "preview-setup-token-local" > "$DATA/SETUP_TOKEN"
 fi
+# The CMS imports cms-seed/ by itself (new items, and new fields such as translations),
+# without touching what you've edited in the preview.
+export CMS_SEED_DIR="$PWD/cms-seed"
 
 echo "Site:   http://localhost:$PORT$BASE"
 echo "Admin:  http://localhost:$PORT${BASE}admin/"

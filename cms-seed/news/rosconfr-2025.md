@@ -4,6 +4,8 @@ date: 2025-10-30 07:00:00-0400
 inline: false
 title: Debuting hid_ros2 at ROSConfr 2025
 related_posts: false
+title_fr: "Lancement de hid_ros2 à la ROSConFr 2025"
+body_fr: "Je présenterai pour la première fois **hid_ros2**, une nouvelle interface matérielle ros2_control, à la ROSConFr 2025.\n\nhid_ros2 se veut un pont universel et performant entre le framework ROS 2 control et tout périphérique utilisant le protocole standard HID (Human Interface Device).\n\n#### Pourquoi ça change la donne ?\n\n- **Intégration de matériel sur mesure sans driver** : connectez capteurs, projets sur microcontrôleur (Teensy, ESP32, STM32…) et interfaces physiques sans écrire de plugin C++. Il suffit de décrire les paquets de données de votre appareil dans un fichier de configuration simple.\n- **Faible latence et hautes performances** : en s'appuyant sur la spécification USB-HID native du système, hid_ros2 offre la robustesse du noyau, un vrai plug-and-play et des fréquences d'échantillonnage élevées.\n- **La configuration plutôt que le code** : pas de code complexe, vous vous concentrez sur votre application robotique.\n- **Branchement à chaud et résilience** : les déconnexions et reconnexions sont gérées proprement, et votre matériel se comporte comme un produit commercial.\n\nC'est une étape importante pour simplifier et accélérer l'intégration de matériel sur mesure dans ROS 2, avec une alternative plus robuste et plus performante aux liaisons série ou réseau pour de nombreuses tâches d'E/S.\n\nVenez me voir à la ROSConFr 2025 !\n\n[Site de la ROSConFr 2025](https://roscon.fr/)"
 ---
 
 I'll be debuting **hid_ros2**, a new ros2_control hardware interface, at ROSConfr 2025.

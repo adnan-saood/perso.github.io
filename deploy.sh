@@ -83,3 +83,8 @@ fi
 echo "==> Uploading _site/ to $HOST:$WEB"
 # Also removes files from older versions that would shadow the new PHP pages or are unsafe.
 tar -C _site -czf - . | remote "tar -xzf - -C $WEB && rm -f $WEB/index.html $WEB/talks/index.html $WEB/simple-admin.php $WEB/server-check.php $WEB/blog/index.html $WEB/news/index.html $WEB/projects/index.html $WEB/publications/index.html $WEB/cv/index.html $WEB/repositories/index.html $WEB/admin/index.html $WEB/admin/config.yml && mkdir -p $WEB/files && echo Done."
+
+# Starting content: the CMS imports what is new (items, translations) by itself on the
+# next page view, without overwriting anything edited in the admin (cms/lib/seed.php).
+echo "==> Uploading cms-seed/ to $DATA/_seed"
+tar -C cms-seed -czf - . | remote "rm -rf $DATA/_seed && mkdir -p $DATA/_seed && tar -xzf - -C $DATA/_seed && echo Done."

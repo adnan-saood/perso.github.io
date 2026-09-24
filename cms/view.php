@@ -19,9 +19,9 @@ function cms_view_not_found()
 {
     return array(
         'status' => 404,
-        'title' => 'Not found',
-        'html' => '<div class="post"><h1 class="post-title">Not found</h1><p>That page does not exist (anymore).</p>'
-            . '<p><a href="' . e(cms_url('blog/')) . '">Back to the blog</a></p></div>',
+        'title' => cms_t('Not found'),
+        'html' => '<div class="post"><h1 class="post-title">' . e(cms_t('Not found')) . '</h1><p>' . e(cms_t('That page does not exist (anymore).')) . '</p>'
+            . '<p><a href="' . e(cms_url('blog/')) . '">' . e(cms_t('Back to the blog')) . '</a></p></div>',
     );
 }
 
@@ -74,9 +74,9 @@ function cms_view_blog()
     ob_start();
     echo '<div class="post cms-blog">';
     echo '<header class="cms-page-header"><p class="kicker reveal">' . e(cms_t('Blog')) . '</p>';
-    echo '<h1 class="post-title split">' . ($filter !== '' ? 'Posts: ' . e($filter) : cms_t('Notes from the lab.')) . '</h1>';
+    echo '<h1 class="post-title split">' . ($filter !== '' ? e(cms_t('Posts')) . ': ' . e($filter) : cms_t('Notes from the lab.')) . '</h1>';
     echo '<p class="post-description reveal">' . e(cms_t('Research notes, conference recaps and the stories behind the papers.')) . '</p>';
-    if ($filter !== '') echo '<p><a href="' . e(cms_url('blog/')) . '">&larr; All posts</a></p>';
+    if ($filter !== '') echo '<p><a href="' . e(cms_url('blog/')) . '">&larr; ' . e(cms_t('All posts')) . '</a></p>';
     echo '</header>';
 
     // Featured posts as cards, only on the unfiltered first page.
@@ -87,7 +87,7 @@ function cms_view_blog()
             foreach ($featured as $p) {
                 echo '<a class="cms-card reveal" href="' . e(cms_post_url($p['slug'])) . '">'
                     . ($p['thumbnail'] !== '' ? '<img src="' . e(cms_asset_url($p['thumbnail'])) . '" alt="" loading="lazy">' : '')
-                    . '<span class="cms-card-body"><span class="cms-pin"><i class="fa-solid fa-thumbtack fa-xs"></i> Featured</span>'
+                    . '<span class="cms-card-body"><span class="cms-pin"><i class="fa-solid fa-thumbtack fa-xs"></i> ' . e(cms_t('Featured')) . '</span>'
                     . '<span class="cms-card-title">' . e($p['title']) . '</span>'
                     . '<span class="cms-card-text">' . e(cms_excerpt($p, 140)) . '</span></span></a>';
             }
@@ -102,7 +102,7 @@ function cms_view_blog()
         if ($p['thumbnail'] !== '') echo '<div class="row"><div class="col-sm-9">';
         echo '<h3><a class="post-title" href="' . e(cms_post_url($p['slug'])) . '">' . e($p['title']) . '</a></h3>';
         echo '<p>' . e(cms_excerpt($p)) . '</p>';
-        echo '<p class="post-meta">' . cms_reading_time($p['body']) . ' min read &nbsp; &middot; &nbsp; ' . cms_date('F j, Y', $p['date']) . '</p>';
+        echo '<p class="post-meta">' . cms_reading_time($p['body']) . ' ' . e(cms_t('min read')) . ' &nbsp; &middot; &nbsp; ' . cms_date('F j, Y', $p['date']) . '</p>';
         echo '<p class="post-tags">' . cms_tag_links($p) . '</p>';
         if ($p['thumbnail'] !== '') {
             echo '</div><div class="col-sm-3"><img class="card-img" src="' . e(cms_asset_url($p['thumbnail'])) . '" style="object-fit:cover;height:90%" alt="" loading="lazy"></div></div>';
@@ -122,7 +122,7 @@ function cms_view_blog()
     }
     echo '</div>';
 
-    return array('title' => $filter !== '' ? 'Blog: ' . $filter : 'Blog', 'html' => ob_get_clean());
+    return array('title' => $filter !== '' ? cms_t('Blog') . ': ' . $filter : cms_t('Blog'), 'html' => ob_get_clean());
 }
 
 function cms_view_post($slug)
@@ -140,16 +140,16 @@ function cms_view_post($slug)
 
     ob_start();
     echo '<div class="post cms-post">';
-    echo '<a class="cms-back reveal" href="' . e(cms_url('blog/')) . '"><i class="ti ti-arrow-left"></i> All posts</a>';
+    echo '<a class="cms-back reveal" href="' . e(cms_url('blog/')) . '"><i class="ti ti-arrow-left"></i> ' . e(cms_t('All posts')) . '</a>';
     echo '<header class="post-header"><h1 class="post-title split">' . e($post['title']) . '</h1>';
-    echo '<p class="post-meta">' . cms_date('F j, Y', $post['date']) . ' &nbsp;&middot;&nbsp; ' . cms_reading_time($post['body']) . ' min read</p>';
+    echo '<p class="post-meta">' . cms_date('F j, Y', $post['date']) . ' &nbsp;&middot;&nbsp; ' . cms_reading_time($post['body']) . ' ' . e(cms_t('min read')) . '</p>';
     echo '<p class="post-tags">' . cms_tag_links($post) . '</p></header>';
     echo '<article class="post-content"><div id="markdown-content">' . cms_markdown($post['body']) . '</div></article>';
 
     if ($prev || $next) {
         echo '<nav class="cms-prev-next">';
-        echo $prev ? '<a class="reveal" href="' . e(cms_post_url($prev['slug'])) . '"><small>&larr; Previous</small><span>' . e($prev['title']) . '</span></a>' : '<span></span>';
-        echo $next ? '<a class="reveal cms-next" href="' . e(cms_post_url($next['slug'])) . '"><small>Next &rarr;</small><span>' . e($next['title']) . '</span></a>' : '<span></span>';
+        echo $prev ? '<a class="reveal" href="' . e(cms_post_url($prev['slug'])) . '"><small>&larr; ' . e(cms_t('Previous')) . '</small><span>' . e($prev['title']) . '</span></a>' : '<span></span>';
+        echo $next ? '<a class="reveal cms-next" href="' . e(cms_post_url($next['slug'])) . '"><small>' . e(cms_t('Next')) . ' &rarr;</small><span>' . e($next['title']) . '</span></a>' : '<span></span>';
         echo '</nav>';
     }
     echo '</div>';
@@ -183,21 +183,21 @@ function cms_view_news()
     $html .= '<div class="news">';
     $html .= $items
         ? '<div class="table-responsive"><table class="table table-sm table-borderless">' . cms_news_rows($items) . '</table></div>'
-        : '<p>No news so far...</p>';
+        : '<p>' . e(cms_t('No news so far.')) . '</p>';
     $html .= '</div>';
-    return array('title' => 'News', 'html' => $html);
+    return array('title' => cms_t('News'), 'html' => $html);
 }
 
 function cms_view_news_item($slug)
 {
     $n = cms_load_item('news', $slug);
     if (!$n || $n['draft'] || $n['date'] > time()) return null;
-    $html = '<div class="post"><a class="cms-back reveal" href="' . e(cms_url('news/')) . '"><i class="ti ti-arrow-left"></i> All news</a>'
-        . '<header class="post-header"><h1 class="post-title split">' . e($n['title'] ?: 'News') . '</h1>'
+    $html = '<div class="post"><a class="cms-back reveal" href="' . e(cms_url('news/')) . '"><i class="ti ti-arrow-left"></i> ' . e(cms_t('All news')) . '</a>'
+        . '<header class="post-header"><h1 class="post-title split">' . e($n['title'] ?: cms_t('News')) . '</h1>'
         . '<p class="post-meta">' . cms_date('F j, Y', $n['date']) . '</p></header>'
         . '<article class="post-content">' . cms_markdown($n['body']) . '</article>'
         . '</div>';
-    return array('title' => $n['title'] ?: 'News', 'description' => cms_excerpt($n, 160), 'html' => $html, 'image' => $n['og_image'], 'article' => true);
+    return array('title' => $n['title'] ?: cms_t('News'), 'description' => cms_excerpt($n, 160), 'html' => $html, 'image' => $n['og_image'], 'article' => true);
 }
 
 // ---------------------------------------------------------------------------
@@ -241,14 +241,14 @@ function cms_view_projects()
         . '<p class="post-description reveal">' . e(cms_t('Tactile skins, haptic interfaces, medical robots, ROS 2 drivers and swarms. Pick a thread.')) . '</p></header>';
     if (count($cats) > 1) {
         $html .= '<div class="filters reveal" data-filters="#project-grid" role="group" aria-label="Filter projects">'
-            . '<button type="button" class="is-active" data-filter="*">All</button>';
+            . '<button type="button" class="is-active" data-filter="*">' . e(cms_t('All')) . '</button>';
         foreach (array_keys($cats) as $c) $html .= '<button type="button" data-filter="' . e($c) . '">' . e($c) . '</button>';
         $html .= '</div>';
     }
     $html .= $items
         ? '<div class="project-grid" id="project-grid">' . cms_project_cards($items, true) . '</div>'
-        : '<p>No projects yet.</p>';
-    return array('title' => 'Projects', 'description' => 'Research and engineering projects by ' . cms_config('site_name') . '.', 'html' => $html);
+        : '<p>' . e(cms_t('No projects yet.')) . '</p>';
+    return array('title' => cms_t('Projects'), 'description' => cms_t('Research and engineering projects by') . ' ' . cms_config('site_name') . '.', 'html' => $html);
 }
 
 function cms_view_project($slug)
@@ -261,7 +261,7 @@ function cms_view_project($slug)
         if ($it['slug'] === $slug) $next = isset($all[$i + 1]) ? $all[$i + 1] : $all[0];
     }
 
-    $html = '<a class="cms-back reveal" href="' . e(cms_url('projects/')) . '"><i class="ti ti-arrow-left"></i> All projects</a>';
+    $html = '<a class="cms-back reveal" href="' . e(cms_url('projects/')) . '"><i class="ti ti-arrow-left"></i> ' . e(cms_t('All projects')) . '</a>';
     $html .= '<header class="project-hero"><div>';
     if ($p['category'] !== '') $html .= '<p class="kicker reveal">' . e($p['category']) . '</p>';
     $html .= '<h1 class="post-title split">' . e($p['title']) . '</h1>';
@@ -285,7 +285,7 @@ function cms_view_project($slug)
     $html .= '<article class="cms-project-body post-content">' . cms_markdown($p['body']) . '</article>';
     if ($next && $next['slug'] !== $slug) {
         $html .= '<nav class="cms-prev-next"><span></span><a class="cms-next" href="' . e(cms_project_url($next['slug'])) . '">'
-            . '<small>Next project &rarr;</small><span>' . e($next['title']) . '</span></a></nav>';
+            . '<small>' . e(cms_t('Next project')) . ' &rarr;</small><span>' . e($next['title']) . '</span></a></nav>';
     }
     return array('title' => $p['title'], 'description' => cms_excerpt($p, 160), 'html' => $html,
                  'image' => $p['og_image'] !== '' ? $p['og_image'] : $p['img']);
@@ -297,8 +297,9 @@ function cms_view_project($slug)
 
 function cms_pub_types()
 {
-    return array('journal' => 'Journal', 'conference' => 'Conference', 'workshop' => 'Workshop', 'patent' => 'Patent',
-                 'thesis' => 'Thesis', 'preprint' => 'Preprint', 'talk' => 'Talk', 'other' => 'Other');
+    // Labels follow the visitor's language (the admin always runs in English).
+    return array_map('cms_t', array('journal' => 'Journal', 'conference' => 'Conference', 'workshop' => 'Workshop', 'patent' => 'Patent',
+                 'thesis' => 'Thesis', 'preprint' => 'Preprint', 'talk' => 'Talk', 'other' => 'Other'));
 }
 
 // Authors with the site owner highlighted.
@@ -328,7 +329,7 @@ function cms_publication_row(array $p, $compact = false)
     }
     $h .= '</div><div class="pub__body"><div class="pub__meta">';
     if ($p['badge'] !== '') $h .= '<span class="chip chip--badge">' . e($p['badge']) . '</span>';
-    $h .= '<span class="chip">' . e(isset($types[$p['pubtype']]) ? $types[$p['pubtype']] : 'Other') . '</span>';
+    $h .= '<span class="chip">' . e(isset($types[$p['pubtype']]) ? $types[$p['pubtype']] : cms_t('Other')) . '</span>';
     if ($p['award'] !== '') $h .= '<span class="chip chip--award"><i class="ti ti-trophy"></i> ' . e($p['award']) . '</span>';
     $h .= '</div>';
     $title = e($p['title']);
@@ -344,16 +345,16 @@ function cms_publication_row(array $p, $compact = false)
         $kinds = array('pdf' => array('PDF', 'ti-file-type-pdf'), 'code' => array('Code', 'ti-brand-github'),
                        'video' => array('Video', 'ti-player-play'), 'slides' => array('Slides', 'ti-presentation'));
         foreach ($kinds as $k => $l) {
-            if ($p[$k] !== '') $links[] = '<a class="pub__link" href="' . e(cms_asset_url($p[$k])) . '" rel="noopener"><i class="ti ' . $l[1] . '"></i> ' . $l[0] . '</a>';
+            if ($p[$k] !== '') $links[] = '<a class="pub__link" href="' . e(cms_asset_url($p[$k])) . '" rel="noopener"><i class="ti ' . $l[1] . '"></i> ' . e(cms_t($l[0])) . '</a>';
         }
         if ($p['doi'] !== '') $links[] = '<a class="pub__link" href="https://doi.org/' . e($p['doi']) . '" rel="noopener"><i class="ti ti-link"></i> DOI</a>';
         $extra = '';
         if (trim($p['body']) !== '') {
-            $extra .= '<details class="pub__more"><summary><i class="ti ti-align-left"></i> Abstract</summary><div class="pub__abstract">' . cms_markdown($p['body']) . '</div></details>';
+            $extra .= '<details class="pub__more"><summary><i class="ti ti-align-left"></i> ' . e(cms_t('Abstract')) . '</summary><div class="pub__abstract">' . cms_markdown($p['body']) . '</div></details>';
         }
         if ($p['bibtex'] !== '') {
             $extra .= '<details class="pub__more"><summary><i class="ti ti-quote"></i> BibTeX</summary><div class="pub__bib"><pre>' . e($p['bibtex']) . '</pre>'
-                . '<button type="button" class="pub__copy" data-copy-bib>Copy</button></div></details>';
+                . '<button type="button" class="pub__copy" data-copy-bib>' . e(cms_t('Copy')) . '</button></div></details>';
         }
         if ($links || $extra) $h .= '<div class="pub__links">' . implode('', $links) . $extra . '</div>';
     }
@@ -374,7 +375,7 @@ function cms_view_publications()
         . '<input type="search" placeholder="' . e(cms_t('Search title, author, venue…')) . '" data-pub-search aria-label="Search publications"></label>';
     if (count($present) > 1) {
         $html .= '<div class="filters" data-filters="#pub-list" role="group" aria-label="Filter by type">'
-            . '<button type="button" class="is-active" data-filter="*">All <span>' . count($items) . '</span></button>';
+            . '<button type="button" class="is-active" data-filter="*">' . e(cms_t('All')) . ' <span>' . count($items) . '</span></button>';
         foreach ($types as $k => $label) {
             if (!isset($present[$k])) continue;
             $n = 0;
@@ -389,13 +390,13 @@ function cms_view_publications()
         if ($p['year'] !== $year) {
             if ($year !== null) $html .= '</ol></section>';
             $year = $p['year'];
-            $html .= '<section class="pub-year"><h2 class="pub-year__label">' . e($year !== '' ? $year : 'Undated') . '</h2><ol class="pubs">';
+            $html .= '<section class="pub-year"><h2 class="pub-year__label">' . e($year !== '' ? $year : cms_t('Undated')) . '</h2><ol class="pubs">';
         }
         $html .= cms_publication_row($p);
     }
     if ($year !== null) $html .= '</ol></section>';
     $html .= '<p class="pub-empty" hidden>' . e(cms_t('No publication matches your search.')) . '</p></div>';
-    return array('title' => 'Publications', 'description' => 'Publications by ' . cms_config('site_name') . '.', 'html' => $html);
+    return array('title' => cms_t('Publications'), 'description' => cms_t('Publications by') . ' ' . cms_config('site_name') . '.', 'html' => $html);
 }
 
 // Selected publications for the homepage, in the chosen order.
@@ -412,6 +413,7 @@ function cms_selected_publications($limit)
 
 function cms_cv_get($a, $k)
 {
+    if (cms_lang() === 'fr' && !empty($a[$k . '_fr'])) $k .= '_fr';
     if (!isset($a[$k])) return '';
     return is_array($a[$k]) ? $a[$k] : trim((string) $a[$k]);
 }
@@ -541,7 +543,7 @@ function cms_view_repositories()
 
     $h = '<div class="oss" data-github-user="' . $u . '"><header class="oss-head"><div>'
         . '<p class="kicker reveal">' . e(cms_t('Open source')) . '</p><h1 class="post-title split">' . e(cms_t('Code that makes robots feel.')) . '</h1>'
-        . '<p class="post-description reveal">ROS 2 drivers, robot descriptions, embedded firmware and research tools, live from GitHub.</p></div>'
+        . '<p class="post-description reveal">' . e(cms_t('ROS 2 drivers, robot descriptions, embedded firmware and research tools, live from GitHub.')) . '</p></div>'
         . '<a class="oss-profile tilt reveal" href="https://github.com/' . $u . '" rel="noopener">'
         . '<img class="oss-profile__avatar" src="https://github.com/' . $u . '.png?size=160" alt="" width="72" height="72" loading="lazy">'
         . '<span class="oss-profile__name" data-gh="name">' . e(cms_config('site_name')) . '</span>'
@@ -553,13 +555,13 @@ function cms_view_repositories()
         . '<div class="oss-stat reveal"><b data-gh="repos">' . count($repos) . '</b><span>public repositories</span></div>'
         . '<div class="oss-stat reveal"><b data-gh="languages">–</b><span>languages in use</span></div>'
         . '<div class="oss-stat reveal"><b data-gh="stars">–</b><span>stars across projects</span></div>'
-        . '<div class="oss-stat reveal"><b><span class="oss-pulse" aria-hidden="true"></span><span data-gh="lastpush">–</span></b><span>since the last push</span></div></section>';
+        . '<div class="oss-stat reveal"><b><span class="oss-pulse" aria-hidden="true"></span><span data-gh="lastpush">–</span></b><span>' . e(cms_t('since the last push')) . '</span></div></section>';
     $h .= '<section class="oss-langs reveal" aria-label="Languages" hidden><div class="oss-langs__bar" data-gh="langbar"></div><ul class="oss-langs__legend" data-gh="langlegend"></ul></section>';
-    $h .= '<section class="oss-featured"><div class="section__head"><div><p class="kicker">Featured</p><h2 class="section__title split">' . e(cms_t('Selected repositories.')) . '</h2></div>'
-        . '<label class="oss-sort">Sort <select data-oss-sort><option value="curated">Curated</option><option value="updated">Recently updated</option>'
-        . '<option value="stars">Most stars</option><option value="name">Name</option></select></label></div>';
+    $h .= '<section class="oss-featured"><div class="section__head"><div><p class="kicker">' . e(cms_t('Featured')) . '</p><h2 class="section__title split">' . e(cms_t('Selected repositories.')) . '</h2></div>'
+        . '<label class="oss-sort">' . e(cms_t('Sort')) . ' <select data-oss-sort><option value="curated">' . e(cms_t('Curated')) . '</option><option value="updated">' . e(cms_t('Recently updated')) . '</option>'
+        . '<option value="stars">' . e(cms_t('Most stars')) . '</option><option value="name">' . e(cms_t('Name')) . '</option></select></label></div>';
     if (count($tags) > 1) {
-        $h .= '<div class="filters reveal" data-filters="#repo-grid" role="group" aria-label="Filter repositories"><button type="button" class="is-active" data-filter="*">All</button>';
+        $h .= '<div class="filters reveal" data-filters="#repo-grid" role="group" aria-label="Filter repositories"><button type="button" class="is-active" data-filter="*">' . e(cms_t('All')) . '</button>';
         foreach (array_keys($tags) as $t) $h .= '<button type="button" data-filter="' . e($t) . '">' . e($t) . '</button>';
         $h .= '</div>';
     }
@@ -577,9 +579,9 @@ function cms_view_repositories()
     }
     $h .= '</div></section>';
     $h .= '<section class="oss-activity reveal" hidden><div class="section__head"><div><p class="kicker">Live</p><h2 class="section__title">' . e(cms_t('Recent activity.')) . '</h2></div>'
-        . '<a class="section__more" href="https://github.com/' . $u . '?tab=repositories" rel="noopener">All repositories on GitHub <i class="ti ti-arrow-up-right"></i></a></div>'
+        . '<a class="section__more" href="https://github.com/' . $u . '?tab=repositories" rel="noopener">' . e(cms_t('All repositories on GitHub')) . ' <i class="ti ti-arrow-up-right"></i></a></div>'
         . '<ol class="oss-timeline" data-gh="activity"></ol></section></div>';
-    return array('title' => 'Open source', 'description' => 'Open-source repositories by ' . cms_config('site_name') . '.', 'html' => $h);
+    return array('title' => cms_t('Open source'), 'description' => cms_t('Open-source repositories by') . ' ' . cms_config('site_name') . '.', 'html' => $h);
 }
 
 // ---------------------------------------------------------------------------
@@ -598,14 +600,32 @@ function cms_view_home()
     return array('title' => '', 'description' => isset($h['hero']['lede']) ? $h['hero']['lede'] : '', 'home' => $h, 'html' => '');
 }
 
+// "Now" panel: the soonest upcoming talk, or the most recent one.
+function cms_home_next_talk()
+{
+    $talks = cms_list_items('talks');
+    $today = strtotime('today');
+    $upcoming = array_values(array_filter($talks, function ($t) use ($today) { return $t['date'] >= $today; }));
+    if ($upcoming) return array(end($upcoming), true); // list is newest first
+    return $talks ? array($talks[0], false) : array(null, false);
+}
+
+// Where the hero's "CV" button goes: the PDF when one is set, else the CV page.
+function cms_home_cv_link()
+{
+    $cv = cms_doc('cv');
+    $pdf = isset($cv['basics']) ? cms_cv_get($cv['basics'], 'pdf') : '';
+    return $pdf !== '' ? cms_asset_url($pdf) : cms_url('cv/');
+}
+
 // ---------------------------------------------------------------------------
 // Talks & media
 // ---------------------------------------------------------------------------
 
 function cms_talk_kinds()
 {
-    return array('keynote' => 'Keynote', 'talk' => 'Talk', 'paper' => 'Paper presentation', 'poster' => 'Poster',
-                 'workshop' => 'Workshop', 'panel' => 'Panel', 'press' => 'Press', 'podcast' => 'Podcast', 'video' => 'Video');
+    return array_map('cms_t', array('keynote' => 'Keynote', 'talk' => 'Talk', 'paper' => 'Paper presentation', 'poster' => 'Poster',
+                 'workshop' => 'Workshop', 'panel' => 'Panel', 'press' => 'Press', 'podcast' => 'Podcast', 'video' => 'Video'));
 }
 
 // YouTube / Vimeo link -> privacy-friendly embed URL, or '' if not embeddable.
@@ -636,12 +656,11 @@ function cms_talk_card(array $t, $compact = false)
     } elseif ($img !== '') {
         $h .= '<div class="talk__media"><img src="' . e($img) . '" alt="" loading="lazy"></div>';
     } else {
-        $h .= '<div class="talk__media talk__tile"><span>' . e($t['event'] !== '' ? $t['event'] : cms_t(isset($kinds[$t['kind']]) ? $kinds[$t['kind']] : 'Talk')) . '</span></div>';
+        $h .= '<div class="talk__media talk__tile"><span>' . e($t['event'] !== '' ? $t['event'] : (isset($kinds[$t['kind']]) ? $kinds[$t['kind']] : cms_t('Talk'))) . '</span></div>';
     }
     $h .= '<div class="talk__body"><div class="pub__meta">';
-    if ($upcoming) $h .= '<span class="chip chip--live">' . e(cms_lang() === 'fr' ? 'À venir' : 'Upcoming') . '</span>';
-    $label = isset($kinds[$t['kind']]) ? $kinds[$t['kind']] : 'Talk';
-    $h .= '<span class="chip">' . e(cms_lang() === 'fr' ? cms_t($t['kind']) : $label) . '</span>';
+    if ($upcoming) $h .= '<span class="chip chip--live">' . e(cms_t('Upcoming')) . '</span>';
+    $h .= '<span class="chip">' . e(isset($kinds[$t['kind']]) ? $kinds[$t['kind']] : cms_t('Talk')) . '</span>';
     if ($t['award'] !== '') $h .= '<span class="chip chip--award"><i class="ti ti-trophy"></i> ' . e($t['award']) . '</span>';
     $h .= '</div><h3 class="talk__title">' . e($t['title']) . '</h3>';
     $where = array_filter(array($t['event'], $t['location'], cms_date('M j, Y', $t['date'])));
@@ -675,9 +694,9 @@ function cms_view_talks()
     }
     $html .= '<div class="talk-list" id="talk-list">';
     foreach ($items as $t) $html .= cms_talk_card($t);
-    $html .= $items ? '' : '<p>No talks yet.</p>';
+    $html .= $items ? '' : '<p>' . e(cms_t('No talks yet.')) . '</p>';
     $html .= '</div>';
-    return array('title' => cms_t('Talks & media'), 'description' => 'Talks, workshops and media by ' . cms_config('site_name') . '.', 'html' => $html);
+    return array('title' => cms_t('Talks & media'), 'description' => cms_t('Talks, workshops and media by') . ' ' . cms_config('site_name') . '.', 'html' => $html);
 }
 
 // ---------------------------------------------------------------------------
@@ -688,19 +707,27 @@ function cms_model_viewer(array $p, $class = '')
 {
     $poster = $p['img'] !== '' ? ' poster="' . e(cms_asset_url($p['img'])) . '"' : '';
     return '<model-viewer class="model ' . e($class) . '" src="' . e(cms_asset_url($p['model'])) . '"' . $poster
-        . ' alt="' . e('3D model: ' . $p['title']) . '" camera-controls touch-action="pan-y" auto-rotate auto-rotate-delay="1500"'
+        . ' alt="' . e(cms_t('3D model') . ': ' . $p['title']) . '" camera-controls touch-action="pan-y" auto-rotate auto-rotate-delay="1500"'
         . ' rotation-per-second="18deg" interaction-prompt="auto" shadow-intensity="1" shadow-softness="0.9" exposure="1.05"'
         . ' environment-image="neutral" loading="lazy" reveal="auto" ar ar-modes="webxr scene-viewer quick-look">'
         . '<div class="model__progress" slot="progress-bar"><span></span></div>'
-        . '<button class="model__ar" slot="ar-button" type="button"><i class="ti ti-augmented-reality"></i> View in your space</button>'
+        . '<button class="model__ar" slot="ar-button" type="button"><i class="ti ti-augmented-reality"></i> ' . e(cms_t('View in your space')) . '</button>'
         . '</model-viewer>';
 }
 
 // Homepage showcase: one large viewer + a thumbnail strip to switch robots.
-function cms_models_showcase($limit)
+// With $demo, a small robot made of cubes stands in until a project has a model.
+function cms_models_showcase($limit, $demo = false)
 {
     $models = array_values(array_filter(cms_list_items('projects'), function ($p) { return $p['model'] !== '' && $p['model_home']; }));
     $models = array_slice($models, 0, $limit);
+    if (!$models && $demo) {
+        $first = array('title' => cms_t('Demo robot'), 'model' => 'assets/models/demo-robot.glb', 'img' => '', 'category' => cms_t('3D demo'));
+        return '<div class="robots robots--demo" data-robots><div class="robots__stage">' . cms_model_viewer($first, 'robots__viewer')
+            . '<p class="robots__hint"><i class="ti ti-hand-move"></i> ' . e(cms_t('Drag to rotate · scroll to zoom')) . '</p></div>'
+            . '<div class="robots__info"><p class="kicker">' . e($first['category']) . '</p><h3>' . e($first['title']) . '</h3>'
+            . '<p>' . e(cms_t('A placeholder robot built from cubes, to show how the 3D viewer works: drag it, zoom, or open it in augmented reality on a phone. My own robot designs will appear here.')) . '</p></div></div>';
+    }
     if (!$models) return '';
     $first = $models[0];
     $h = '<div class="robots" data-robots>';
@@ -712,7 +739,7 @@ function cms_models_showcase($limit)
     if (count($models) > 1) {
         $h .= '<div class="robots__thumbs" role="tablist">';
         foreach ($models as $i => $m) {
-            $h .= '<button type="button" role="tab" class="robots__thumb' . ($i === 0 ? ' is-active' : '') . '"'
+            $h .= '<button type="button" role="tab" aria-selected="' . ($i === 0 ? 'true' : 'false') . '" class="robots__thumb' . ($i === 0 ? ' is-active' : '') . '"'
                 . ' data-src="' . e(cms_asset_url($m['model'])) . '" data-poster="' . e($m['img'] !== '' ? cms_asset_url($m['img']) : '') . '"'
                 . ' data-title="' . e($m['title']) . '" data-cat="' . e($m['category']) . '" data-text="' . e(cms_excerpt($m, 220)) . '"'
                 . ' data-link="' . e(cms_project_url($m['slug'])) . '">'

@@ -22,6 +22,28 @@ $user = 'adnan-saood';
       <a class="btn btn--primary magnetic" href="<?php echo e(cms_url('projects/')); ?>"><?php echo e(cms_t('Explore my work')); ?> <i class="ti ti-arrow-right" aria-hidden="true"></i></a>
       <a class="btn btn--ghost magnetic" href="<?php echo e(cms_url('publications/')); ?>"><?php echo e(cms_t('Publications')); ?></a>
     </div>
+    <?php if ($g('hero.status') !== '' || $g('hero.seeking') !== '' || $g('hero.links')): ?>
+    <div class="hero__strip reveal">
+      <?php if ($g('hero.status') !== ''): ?><span class="hero__status"><i class="pulse" aria-hidden="true"></i><?php echo e($g('hero.status')); ?></span><?php endif; ?>
+      <?php if ($g('hero.seeking') !== ''): ?><span class="hero__seeking"><?php echo e($g('hero.seeking')); ?></span><?php endif; ?>
+      <?php if ($g('hero.links')): ?>
+      <span class="hero__links">
+        <a href="<?php echo e(cms_home_cv_link()); ?>"><i class="ti ti-file-cv" aria-hidden="true"></i> CV</a>
+        <a href="mailto:{{ site.data.socials.email | encode_email }}"><i class="ti ti-mail" aria-hidden="true"></i> <?php echo e(cms_t('Email')); ?></a>
+        {%- if site.data.socials.scholar_userid %}
+        <a href="https://scholar.google.com/citations?user={{ site.data.socials.scholar_userid }}" rel="noopener"><i class="ai ai-google-scholar" aria-hidden="true"></i> Scholar</a>
+        {%- endif %}
+      </span>
+      <?php endif; ?>
+    </div>
+    <?php endif; ?>
+    <?php $proof = (array) $g('proof', array()); if ($proof): ?>
+    <ul class="proof reveal" aria-label="<?php echo e(cms_t('Highlights')); ?>">
+      <?php foreach ($proof as $b): $icon = '<i class="ti ' . e($b['icon'] !== '' ? $b['icon'] : 'ti-award') . '" aria-hidden="true"></i>'; ?>
+        <li><?php if ($b['link'] !== ''): ?><a href="<?php echo e(cms_asset_url($b['link'])); ?>"><?php echo $icon . e($b['label']); ?></a><?php else: ?><span><?php echo $icon . e($b['label']); ?></span><?php endif; ?></li>
+      <?php endforeach; ?>
+    </ul>
+    <?php endif; ?>
   </div>
   <p class="hero__hint" aria-hidden="true"><?php echo e(cms_t('touch the skin')); ?> &rarr;</p>
   <div class="hero__readout" data-skin-readout aria-hidden="true"></div>
@@ -48,6 +70,36 @@ $user = 'adnan-saood';
     </div>
   </div>
 </section>
+
+<?php if ($g('now.show')): list($nextTalk, $isUpcoming) = cms_home_next_talk(); ?>
+<section class="section section--now" aria-labelledby="now-title">
+  <div class="section__head">
+    <div>
+      <p class="kicker"><i class="pulse" aria-hidden="true"></i> <?php echo e(cms_t('Now')); ?></p>
+      <h2 class="section__title split" id="now-title"><?php echo cms_home_title($g('now.title', 'What I am working on.')); ?></h2>
+    </div>
+  </div>
+  <div class="now">
+    <article class="now__tile now__tile--focus reveal">
+      <p class="now__label"><i class="ti ti-flask" aria-hidden="true"></i> <?php echo e(cms_t('Currently working on')); ?></p>
+      <p class="now__text"><?php echo e($g('now.text')); ?></p>
+      <?php if ($g('now.link') !== ''): ?><a class="now__more" href="<?php echo e(cms_asset_url($g('now.link'))); ?>"><?php echo e(cms_t('Read more')); ?> <i class="ti ti-arrow-right" aria-hidden="true"></i></a><?php endif; ?>
+    </article>
+    <?php if ($nextTalk): ?>
+    <a class="now__tile reveal" href="<?php echo e(cms_talk_url($nextTalk['slug'])); ?>">
+      <p class="now__label"><i class="ti ti-microphone" aria-hidden="true"></i> <?php echo e(cms_t($isUpcoming ? 'Next talk' : 'Latest talk')); ?></p>
+      <h3><?php echo e($nextTalk['title']); ?></h3>
+      <p class="now__meta"><?php echo e(cms_date('M j, Y', $nextTalk['date'])); ?><?php if ($nextTalk['event'] !== '') echo ' · ' . e($nextTalk['event']); ?></p>
+    </a>
+    <?php endif; ?>
+    <a class="now__tile reveal" href="https://github.com/<?php echo e($user); ?>" data-gh-commit="<?php echo e($user); ?>" rel="noopener">
+      <p class="now__label"><i class="ti ti-git-commit" aria-hidden="true"></i> <?php echo e(cms_t('Latest commit')); ?></p>
+      <h3 data-commit-msg><?php echo e(cms_t('On GitHub')); ?></h3>
+      <p class="now__meta" data-commit-meta>github.com/<?php echo e($user); ?></p>
+    </a>
+  </div>
+</section>
+<?php endif; ?>
 
 <?php $kw = (array) $g('keywords', array()); if ($kw): ?>
 <div class="marquee" aria-hidden="true">
@@ -76,7 +128,7 @@ $user = 'adnan-saood';
   </div>
 </section>
 
-<?php $robots = cms_models_showcase(6); if ($robots !== ''): ?>
+<?php $robots = cms_models_showcase(6, (bool) $g('robots_demo')); if ($robots !== ''): ?>
 <section class="section" aria-labelledby="robots-title">
   <div class="section__head">
     <div>

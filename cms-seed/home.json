@@ -1,88 +1,231 @@
 {
-  "en": {
-    "hero": {
-      "kicker": "PhD researcher · U2IS, ENSTA Paris — IP Paris",
-      "title": "Teaching robots the language of *touch*.",
-      "lede": "I build tactile skins, haptic interfaces and real-time models so humanoid robots can feel human touch, and answer it with care."
+    "en": {
+        "hero": {
+            "kicker": "PhD researcher · U2IS, ENSTA Paris — IP Paris",
+            "title": "Teaching robots the language of *touch*.",
+            "lede": "I build tactile skins, haptic interfaces and real-time models so humanoid robots can feel human touch, and answer it with care.",
+            "status": "Open to collaborations",
+            "seeking": "Postdoc and R&D roles in tactile HRI",
+            "links": true
+        },
+        "proof": [
+            {
+                "label": "Patent licensed to Therasonic",
+                "icon": "ti-certificate",
+                "link": "news/?n=therasonic-patent-2026"
+            },
+            {
+                "label": "Fédération Demeny Vaucanson prize 2026",
+                "icon": "ti-award",
+                "link": "news/?n=federation-demeny-vaucanson-2026"
+            },
+            {
+                "label": "Best Poster & Best Presentation · U2IS Lab Day 2026",
+                "icon": "ti-trophy",
+                "link": "news/?n=best-awards-lab-day-2026"
+            },
+            {
+                "label": "ICRA 2026 · human–robot handshake",
+                "icon": "ti-microphone",
+                "link": "talks/#icra-2026-handshake"
+            }
+        ],
+        "now": {
+            "show": true,
+            "title": "What I'm *working* on.",
+            "text": "Teaching a humanoid hand to tell a reassuring pat from a firm grip: silicone tactile skins, real-time touch models, and the Beyond Words 2 workshop on touch in social robotics.",
+            "link": "projects/"
+        },
+        "about": {
+            "image": "assets/img/prof_pic_color.png",
+            "lead": "I'm Adnan, a mechatronics engineer who became a roboticist because I wanted machines to be gentler with people.",
+            "body": [
+                "My PhD at U2IS, ENSTA Paris, is about socio-affective touch. I design silicone tactile arrays for humanoid hands and build models that turn raw pressure into meaning, so a robot can tell a reassuring pat from a firm grip.",
+                "Before that I worked on medical robotics at the ICube laboratory in Strasbourg, where my Master's work on robot-assisted focused ultrasound became a patent that is now licensed to Therasonic. I still enjoy the hardware side most, from embedded firmware to ROS 2 drivers."
+            ]
+        },
+        "facts": [
+            {
+                "label": "Now",
+                "value": "PhD candidate · U2IS, ENSTA Paris"
+            },
+            {
+                "label": "Also",
+                "value": "Engineering consultant · Therasonic"
+            },
+            {
+                "label": "Before",
+                "value": "Research engineer · ICube, Strasbourg"
+            },
+            {
+                "label": "Studied",
+                "value": "M2 Medical Robotics · Univ. of Strasbourg"
+            }
+        ],
+        "keywords": [
+            "tactile sensing",
+            "socio-affective touch",
+            "humanoid hands",
+            "soft silicone skins",
+            "haptic interfaces",
+            "human–robot handshakes",
+            "focused ultrasound",
+            "ROS 2",
+            "generative touch models",
+            "swarm robotics"
+        ],
+        "research_title": "Three threads, one question — how should a robot touch?",
+        "pillars": [
+            {
+                "title": "Tactile perception",
+                "icon": "ti-hand-finger",
+                "text": "Silicone skins with embedded taxel arrays for humanoid hands, and the signal processing that turns raw pressure into something a robot can reason about."
+            },
+            {
+                "title": "Socio-affective interaction",
+                "icon": "ti-heart-handshake",
+                "text": "What makes a robot's touch feel natural and kind? Handshake studies, soft haptic interfaces that calm, and generative models of touch."
+            },
+            {
+                "title": "Medical robotics",
+                "icon": "ti-activity-heartbeat",
+                "text": "Robot-assisted focused ultrasound to open the blood–brain barrier for drug delivery, now licensed to Therasonic."
+            }
+        ],
+        "robots_title": "Robots I've designed, in 3D.",
+        "robots_demo": true,
+        "work_title": "Things I've built, measured and shipped.",
+        "stats": [
+            {
+                "value": "1",
+                "label": "focused-ultrasound patent licensed to Therasonic (2026)"
+            },
+            {
+                "value": "3",
+                "label": "research awards in 2026, including the Fédération Demeny Vaucanson prize"
+            },
+            {
+                "value": "2",
+                "label": "editions of the Beyond Words workshop on touch in social robotics, co-organised"
+            },
+            {
+                "value": "repos",
+                "label": "open-source repositories, from ROS 2 drivers to swarm firmware"
+            }
+        ],
+        "papers_title": "Selected papers.",
+        "talks_title": "Talks, workshops & media."
     },
-    "about": {
-      "image": "assets/img/prof_pic_color.png",
-      "lead": "I'm Adnan, a mechatronics engineer who became a roboticist because I wanted machines to be gentler with people.",
-      "body": [
-        "My PhD at U2IS, ENSTA Paris, is about socio-affective touch. I design silicone tactile arrays for humanoid hands and build models that turn raw pressure into meaning, so a robot can tell a reassuring pat from a firm grip.",
-        "Before that I worked on medical robotics at the ICube laboratory in Strasbourg, where my Master's work on robot-assisted focused ultrasound became a patent that is now licensed to Therasonic. I still enjoy the hardware side most, from embedded firmware to ROS 2 drivers."
-      ]
-    },
-    "facts": [
-      {
-        "label": "Now",
-        "value": "PhD candidate · U2IS, ENSTA Paris"
-      },
-      {
-        "label": "Also",
-        "value": "Engineering consultant · Therasonic"
-      },
-      {
-        "label": "Before",
-        "value": "Research engineer · ICube, Strasbourg"
-      },
-      {
-        "label": "Studied",
-        "value": "M2 Medical Robotics · Univ. of Strasbourg"
-      }
-    ],
-    "keywords": [
-      "tactile sensing",
-      "socio-affective touch",
-      "humanoid hands",
-      "soft silicone skins",
-      "haptic interfaces",
-      "human–robot handshakes",
-      "focused ultrasound",
-      "ROS 2",
-      "generative touch models",
-      "swarm robotics"
-    ],
-    "research_title": "Three threads, one question — how should a robot touch?",
-    "pillars": [
-      {
-        "title": "Tactile perception",
-        "icon": "ti-hand-finger",
-        "text": "Silicone skins with embedded taxel arrays for humanoid hands, and the signal processing that turns raw pressure into something a robot can reason about."
-      },
-      {
-        "title": "Socio-affective interaction",
-        "icon": "ti-heart-handshake",
-        "text": "What makes a robot's touch feel natural and kind? Handshake studies, soft haptic interfaces that calm, and generative models of touch."
-      },
-      {
-        "title": "Medical robotics",
-        "icon": "ti-activity-heartbeat",
-        "text": "Robot-assisted focused ultrasound to open the blood–brain barrier for drug delivery, now licensed to Therasonic."
-      }
-    ],
-    "robots_title": "Robots I've designed, in 3D.",
-    "work_title": "Things I've built, measured and shipped.",
-    "stats": [
-      {
-        "value": "1",
-        "label": "focused-ultrasound patent licensed to Therasonic (2026)"
-      },
-      {
-        "value": "3",
-        "label": "research awards in 2026, including the Fédération Demeny Vaucanson prize"
-      },
-      {
-        "value": "2",
-        "label": "editions of the Beyond Words workshop on touch in social robotics, co-organised"
-      },
-      {
-        "value": "repos",
-        "label": "open-source repositories, from ROS 2 drivers to swarm firmware"
-      }
-    ],
-    "papers_title": "Selected papers.",
-    "talks_title": "Talks, workshops & media."
-  },
-  "fr": {}
+    "fr": {
+        "hero": {
+            "kicker": "Doctorant · U2IS, ENSTA Paris — IP Paris",
+            "title": "Apprendre aux robots le langage du *toucher*.",
+            "lede": "Je conçois des peaux tactiles, des interfaces haptiques et des modèles temps réel pour que les robots humanoïdes ressentent le toucher humain, et y répondent avec délicatesse.",
+            "status": "Ouvert aux collaborations",
+            "seeking": "Postdoc et postes de R&D en interaction humain-robot tactile"
+        },
+        "proof": [
+            {
+                "label": "Brevet licencié à Therasonic",
+                "icon": "ti-certificate",
+                "link": "news/?n=therasonic-patent-2026"
+            },
+            {
+                "label": "Prix de la Fédération Demeny Vaucanson 2026",
+                "icon": "ti-award",
+                "link": "news/?n=federation-demeny-vaucanson-2026"
+            },
+            {
+                "label": "Meilleur poster & meilleure présentation · Lab Day U2IS 2026",
+                "icon": "ti-trophy",
+                "link": "news/?n=best-awards-lab-day-2026"
+            },
+            {
+                "label": "ICRA 2026 · la poignée de main humain-robot",
+                "icon": "ti-microphone",
+                "link": "talks/#icra-2026-handshake"
+            }
+        ],
+        "now": {
+            "title": "Ce sur quoi je *travaille*.",
+            "text": "Apprendre à une main humanoïde à distinguer une tape rassurante d'une prise ferme : peaux tactiles en silicone, modèles du toucher en temps réel, et le workshop Beyond Words 2 sur le toucher en robotique sociale."
+        },
+        "about": {
+            "lead": "Je suis Adnan, ingénieur en mécatronique devenu roboticien parce que je voulais des machines plus douces avec les gens.",
+            "body": [
+                "Ma thèse au U2IS, ENSTA Paris, porte sur le toucher socio-affectif. Je conçois des matrices tactiles en silicone pour des mains humanoïdes et je développe des modèles qui transforment la pression brute en sens, pour qu'un robot sache distinguer une tape rassurante d'une prise ferme.",
+                "Auparavant, j'ai travaillé en robotique médicale au laboratoire ICube à Strasbourg, où mon travail de Master sur les ultrasons focalisés assistés par robot est devenu un brevet, aujourd'hui licencié à Therasonic. C'est toujours le matériel qui me passionne le plus, du firmware embarqué aux drivers ROS 2."
+            ]
+        },
+        "facts": [
+            {
+                "label": "Aujourd'hui",
+                "value": "Doctorant · U2IS, ENSTA Paris"
+            },
+            {
+                "label": "Aussi",
+                "value": "Ingénieur consultant · Therasonic"
+            },
+            {
+                "label": "Avant",
+                "value": "Ingénieur de recherche · ICube, Strasbourg"
+            },
+            {
+                "label": "Études",
+                "value": "M2 Robotique médicale · Univ. de Strasbourg"
+            }
+        ],
+        "keywords": [
+            "capteurs tactiles",
+            "toucher socio-affectif",
+            "mains humanoïdes",
+            "peaux en silicone",
+            "interfaces haptiques",
+            "poignées de main humain-robot",
+            "ultrasons focalisés",
+            "ROS 2",
+            "modèles génératifs du toucher",
+            "robotique en essaim"
+        ],
+        "research_title": "Trois axes, une question : comment un robot doit-il toucher ?",
+        "pillars": [
+            {
+                "title": "Perception tactile",
+                "icon": "ti-hand-finger",
+                "text": "Des peaux en silicone intégrant des matrices de taxels pour mains humanoïdes, et le traitement du signal qui transforme la pression brute en information exploitable par le robot."
+            },
+            {
+                "title": "Interaction socio-affective",
+                "icon": "ti-heart-handshake",
+                "text": "Qu'est-ce qui rend le toucher d'un robot naturel et bienveillant ? Études sur la poignée de main, interfaces haptiques douces qui apaisent, et modèles génératifs du toucher."
+            },
+            {
+                "title": "Robotique médicale",
+                "icon": "ti-activity-heartbeat",
+                "text": "Ultrasons focalisés assistés par robot pour ouvrir la barrière hémato-encéphalique et délivrer des médicaments, technologie licenciée à Therasonic."
+            }
+        ],
+        "robots_title": "Les robots que j'ai conçus, en 3D.",
+        "work_title": "Ce que j'ai construit, mesuré et livré.",
+        "stats": [
+            {
+                "value": "1",
+                "label": "brevet sur les ultrasons focalisés licencié à Therasonic (2026)"
+            },
+            {
+                "value": "3",
+                "label": "prix de recherche en 2026, dont le prix de la Fédération Demeny Vaucanson"
+            },
+            {
+                "value": "2",
+                "label": "éditions du workshop Beyond Words sur le toucher en robotique sociale, co-organisées"
+            },
+            {
+                "value": "repos",
+                "label": "dépôts open source, des drivers ROS 2 au firmware d'essaims"
+            }
+        ],
+        "papers_title": "Publications choisies.",
+        "talks_title": "Conférences, workshops et médias."
+    }
 }

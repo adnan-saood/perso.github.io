@@ -64,6 +64,22 @@ function cms_i18n_dict()
         'Copied!' => 'Copié !',
         'Interested in tactile interaction, social robotics, a collaboration or an internship? Drop me a line. I usually reply within a few days.' => 'Intéressé·e par l’interaction tactile, la robotique sociale, une collaboration ou un stage ? Écrivez-moi, je réponds en général sous quelques jours.',
         'Not found' => 'Page introuvable',
+        'That page does not exist (anymore).' => 'Cette page n’existe pas (ou plus).', 'Back to the blog' => 'Retour au blog',
+        'Posts' => 'Articles', 'No news so far.' => 'Pas encore d’actualités.', 'No projects yet.' => 'Pas encore de projets.',
+        'No talks yet.' => 'Pas encore d’interventions.', 'Undated' => 'Sans date', 'Upcoming' => 'À venir',
+        'Research and engineering projects by' => 'Projets de recherche et d’ingénierie de', 'Publications by' => 'Publications de',
+        'Open-source repositories by' => 'Dépôts open source de', 'Talks, workshops and media by' => 'Conférences, ateliers et médias de',
+        'PDF' => 'PDF', 'Code' => 'Code',
+        'ROS 2 drivers, robot descriptions, embedded firmware and research tools, live from GitHub.' => 'Pilotes ROS 2, descriptions de robots, firmware embarqué et outils de recherche, en direct de GitHub.',
+        // talk kinds & publication types (labels)
+        'Keynote' => 'Keynote', 'Paper presentation' => 'Présentation d’article', 'Poster' => 'Poster', 'Panel' => 'Table ronde',
+        'Press' => 'Presse', 'Podcast' => 'Podcast',
+        // homepage: recruiter strip, Now panel, 3D
+        'Now' => 'En ce moment', 'Currently working on' => 'En cours', 'Read more' => 'En savoir plus',
+        'Next talk' => 'Prochaine intervention', 'Latest talk' => 'Dernière intervention', 'Latest commit' => 'Dernier commit',
+        'On GitHub' => 'Sur GitHub', 'Demo robot' => 'Robot de démonstration', '3D demo' => 'Démo 3D', '3D model' => 'Modèle 3D',
+        'View in your space' => 'Voir chez vous (RA)',
+        'A placeholder robot built from cubes, to show how the 3D viewer works: drag it, zoom, or open it in augmented reality on a phone. My own robot designs will appear here.' => 'Un robot provisoire fait de cubes, pour montrer le fonctionnement de la visionneuse 3D : faites-le tourner, zoomez, ou ouvrez-le en réalité augmentée sur un téléphone. Mes propres robots apparaîtront ici.',
     );
 }
 
@@ -92,7 +108,7 @@ function cms_date($fmt, $ts)
 function cms_localize(array $item)
 {
     if (cms_lang() !== 'fr' || empty($item['meta'])) return $item;
-    foreach (array('title', 'description', 'event', 'location') as $k) {
+    foreach (array('title', 'description', 'event', 'location', 'award', 'category') as $k) {
         if (!empty($item['meta'][$k . '_fr'])) $item[$k] = (string) $item['meta'][$k . '_fr'];
     }
     if (!empty($item['meta']['body_fr'])) $item['body'] = (string) $item['meta']['body_fr'];

@@ -25,7 +25,9 @@
         "username": "invKfxYAAAAJ",
         "url": "https://scholar.google.com/citations?user=invKfxYAAAAJ"
       }
-    ]
+    ],
+    "label_fr": "Doctorant en robotique",
+    "summary_fr": "Doctorant spécialisé dans le toucher socio-affectif en robotique, avec une solide expérience en robotique médicale, traitement du signal et optimisation. Habitué à mener des projets de recherche et à développer des solutions robotiques innovantes."
   },
   "work": [
     {
@@ -41,6 +43,15 @@
         "Tactility",
         "Signal Processing",
         "Real time Estimation"
+      ],
+      "position_fr": "Doctorant",
+      "summary_fr": "Recherche sur le toucher socio-affectif en robotique : haptique, tactilité, traitement du signal et estimation en temps réel.",
+      "highlights_fr": [
+        "Toucher socio-affectif en robotique",
+        "Haptique",
+        "Tactilité",
+        "Traitement du signal",
+        "Estimation en temps réel"
       ]
     },
     {
@@ -53,6 +64,13 @@
       "highlights": [
         "Medical Robotics Development",
         "Assisted Drug Delivery"
+      ],
+      "name_fr": "Therasonic, start-up issue de NeuroSpin (CEA)",
+      "position_fr": "Ingénieur consultant",
+      "summary_fr": "Contribution au développement de la robotique médicale et de systèmes d'administration assistée de médicaments.",
+      "highlights_fr": [
+        "Développement en robotique médicale",
+        "Administration assistée de médicaments"
       ]
     },
     {
@@ -66,6 +84,14 @@
         "Team Lead: Jonathan VAPPOU",
         "Optimization-based Coverage Path Planning",
         "Control pipeline design for industrial manipulator"
+      ],
+      "name_fr": "Laboratoire ICube",
+      "position_fr": "Ingénieur de recherche",
+      "summary_fr": "Direction d'une équipe sur la planification de trajectoires de couverture par optimisation ; conception et mise en œuvre d'une chaîne de contrôle pour un manipulateur industriel en contexte médical.",
+      "highlights_fr": [
+        "Responsable d'équipe : Jonathan VAPPOU",
+        "Planification de trajectoires de couverture par optimisation",
+        "Chaîne de contrôle pour manipulateur industriel"
       ]
     },
     {
@@ -78,6 +104,13 @@
       "highlights": [
         "Thesis: Robotic Assistance for Blood-Brain-Barrier Opening Using Focused Ultrasound",
         "Supervisors: Jonathan VAPPOU, Florent NAGEOTTE"
+      ],
+      "name_fr": "Laboratoire ICube",
+      "position_fr": "Stagiaire de fin d'études (master)",
+      "summary_fr": "Mémoire sur l'assistance robotique à l'ouverture de la barrière hémato-encéphalique par ultrasons focalisés.",
+      "highlights_fr": [
+        "Mémoire : assistance robotique à l'ouverture de la barrière hémato-encéphalique par ultrasons focalisés",
+        "Encadrants : Jonathan VAPPOU, Florent NAGEOTTE"
       ]
     },
     {
@@ -91,6 +124,14 @@
         "International and regional robotics competitions",
         "Robotics training",
         "Teaching courses (Embedded systems, C/C++ Programming, Matlab)"
+      ],
+      "name_fr": "Syrian Computer Society",
+      "position_fr": "Vice-président du club de robotique",
+      "summary_fr": "Organisation de compétitions de robotique internationales et régionales ; formations en systèmes embarqués, programmation C/C++ et Matlab pour la robotique.",
+      "highlights_fr": [
+        "Compétitions de robotique internationales et régionales",
+        "Formations en robotique",
+        "Enseignement (systèmes embarqués, programmation C/C++, Matlab)"
       ]
     },
     {
@@ -99,7 +140,9 @@
       "url": "www.sso.sy",
       "startDate": "2017-11-01",
       "endDate": "2019-10-01",
-      "summary": ""
+      "summary": "",
+      "name_fr": "Olympiade scientifique syrienne (SSO)",
+      "position_fr": "Membre du comité scientifique de physique"
     },
     {
       "name": "National Center for the Distinguished",
@@ -107,7 +150,10 @@
       "url": "www.ncd.sy",
       "startDate": "2021-09-01",
       "endDate": "2022-06-01",
-      "summary": "Supervised academic projects for distinguished students."
+      "summary": "Supervised academic projects for distinguished students.",
+      "name_fr": "Centre national des élèves distingués",
+      "position_fr": "Encadrant de projets",
+      "summary_fr": "Encadrement de projets académiques pour des élèves distingués."
     }
   ],
   "education": [
@@ -126,6 +172,13 @@
       "highlights": [
         "ITI HealthTech fellowship (Excellence Merit)",
         "Interdisciplinary Thematic Institute, Excellence Initiative Program"
+      ],
+      "institution_fr": "Université de Strasbourg",
+      "area_fr": "Robotique médicale",
+      "studyType_fr": "Master 2 en ingénierie",
+      "highlights_fr": [
+        "Bourse d'excellence de l'ITI HealthTech",
+        "Institut thématique interdisciplinaire, programme Initiative d'excellence"
       ]
     },
     {
@@ -143,6 +196,14 @@
       "highlights": [
         "Distinction and Creativity Agency Scholarship (Excellence Merit)",
         "[Full program description here](https://1f11fc48-c7ab-4fb0-b7e9-79d2b17414ee.filesusr.com/ugd/f82b31_26015136aca34f65a9d74e54ee970dda.pdf)"
+      ],
+      "institution_fr": "Université Tishreen",
+      "location_fr": "Lattaquié, Syrie",
+      "area_fr": "Mécatronique",
+      "studyType_fr": "Diplôme d'ingénieur",
+      "highlights_fr": [
+        "Bourse de l'Agence pour la distinction et la créativité (excellence)",
+        "[Description complète du programme](https://1f11fc48-c7ab-4fb0-b7e9-79d2b17414ee.filesusr.com/ugd/f82b31_26015136aca34f65a9d74e54ee970dda.pdf)"
       ]
     },
     {
@@ -157,6 +218,14 @@
       "highlights": [
         "Excellence Merit Scholarship",
         "Second rank in the entrance exams out of 3500+ applicants from the top 10% nationally."
+      ],
+      "institution_fr": "Centre national des élèves distingués",
+      "location_fr": "Damas, Syrie",
+      "area_fr": "Sciences",
+      "studyType_fr": "Baccalauréat",
+      "highlights_fr": [
+        "Bourse d'excellence",
+        "Classé deuxième au concours d'entrée parmi plus de 3 500 candidats issus des 10 % meilleurs du pays."
       ]
     }
   ],
@@ -166,42 +235,57 @@
       "date": "2021",
       "awarder": "University of Strasbourg",
       "url": "",
-      "summary": "Awarded for excellence in the Interdisciplinary Thematic Institute (HealthTech) program."
+      "summary": "Awarded for excellence in the Interdisciplinary Thematic Institute (HealthTech) program.",
+      "title_fr": "Bourse d'excellence de l'Institut thématique interdisciplinaire (HealthTech)",
+      "awarder_fr": "Université de Strasbourg",
+      "summary_fr": "Récompense l'excellence dans le programme de l'Institut thématique interdisciplinaire HealthTech."
     },
     {
       "title": "First place at Annual Robotics Competition, Senior SUMO cat.",
       "date": "2019",
       "awarder": "Syrian Computer Society",
       "url": "",
-      "summary": "Achieved first place in the Senior SUMO category at the annual robotics competition."
+      "summary": "Achieved first place in the Senior SUMO category at the annual robotics competition.",
+      "title_fr": "1re place au concours annuel de robotique, catégorie SUMO senior",
+      "summary_fr": "Première place dans la catégorie SUMO senior du concours annuel de robotique."
     },
     {
       "title": "Best paper award at ICASSDA 2018",
       "date": "2018",
       "awarder": "ICASSDA",
       "url": "https://ieeexplore.ieee.org/xpl/conhome/8467552/proceeding",
-      "summary": "Received the best paper award at the International Conference on Advanced Science and Sustainable Development Applications."
+      "summary": "Received the best paper award at the International Conference on Advanced Science and Sustainable Development Applications.",
+      "title_fr": "Prix du meilleur article à ICASSDA 2018",
+      "summary_fr": "Prix du meilleur article à l'International Conference on Advanced Science and Sustainable Development Applications."
     },
     {
       "title": "Second place at ULFG2 (regional robotics contest)",
       "date": "2017",
       "awarder": "ULFG2",
       "url": "",
-      "summary": "Secured second place in the ULFG2 regional robotics contest."
+      "summary": "Secured second place in the ULFG2 regional robotics contest.",
+      "title_fr": "2e place à l'ULFG2 (concours régional de robotique)",
+      "summary_fr": "Deuxième place au concours régional de robotique ULFG2."
     },
     {
       "title": "Participant in the 46th International Physics Olympiad",
       "date": "2015",
       "awarder": "International Physics Olympiad",
       "url": "http://www.ipho2015.in/",
-      "summary": "Represented Syria in the prestigious International Physics Olympiad."
+      "summary": "Represented Syria in the prestigious International Physics Olympiad.",
+      "title_fr": "Participant à la 46e Olympiade internationale de physique",
+      "awarder_fr": "Olympiade internationale de physique",
+      "summary_fr": "Représentant de la Syrie à la prestigieuse Olympiade internationale de physique."
     },
     {
       "title": "National third rank, National Physics Olympiad",
       "date": "2014",
       "awarder": "National Physics Olympiad",
       "url": "",
-      "summary": "Achieved the third national rank in the National Physics Olympiad."
+      "summary": "Achieved the third national rank in the National Physics Olympiad.",
+      "title_fr": "3e place nationale à l'Olympiade nationale de physique",
+      "awarder_fr": "Olympiade nationale de physique",
+      "summary_fr": "Troisième place nationale à l'Olympiade nationale de physique."
     }
   ],
   "skills": [
@@ -215,6 +299,15 @@
         "Computer Vision",
         "Signal Processing",
         "Mechanical Design"
+      ],
+      "name_fr": "Mécatronique",
+      "level_fr": "Expert",
+      "keywords_fr": [
+        "Conception de robots",
+        "Systèmes embarqués",
+        "Vision par ordinateur",
+        "Traitement du signal",
+        "Conception mécanique"
       ]
     },
     {
@@ -225,6 +318,12 @@
         "Deep Learning and Machine Learning",
         "Optimization",
         "System Identification"
+      ],
+      "level_fr": "Expert",
+      "keywords_fr": [
+        "Apprentissage profond et apprentissage automatique",
+        "Optimisation",
+        "Identification de systèmes"
       ]
     },
     {
@@ -241,6 +340,19 @@
         "Qt",
         "Git & Clean Code Practices",
         "Assembly Intel 8086"
+      ],
+      "name_fr": "Outils techniques",
+      "level_fr": "Confirmé",
+      "keywords_fr": [
+        "C++",
+        "ROS/ROS2",
+        "C et C embarqué",
+        "NVidia CUDA",
+        "Python",
+        "OpenCV",
+        "Qt",
+        "Git et bonnes pratiques de code",
+        "Assembleur Intel 8086"
       ]
     },
     {
@@ -252,7 +364,9 @@
         "Altium PCB Designer",
         "Proteus Suite",
         "Autodesk Inventor"
-      ]
+      ],
+      "name_fr": "CAO",
+      "level_fr": "Confirmé"
     }
   ],
   "languages": [],
@@ -269,7 +383,14 @@
       ],
       "startDate": "2024-04-01",
       "endDate": "Present",
-      "url": ""
+      "url": "",
+      "name_fr": "Matrice tactile pour main humanoïde au service du toucher socio-affectif",
+      "summary_fr": "Conception, fabrication et validation d'une matrice tactile intégrée dans un substrat en silicone pour mains humanoïdes, dans le cadre de ma thèse.",
+      "highlights_fr": [
+        "Projet de thèse",
+        "Conception de capteurs tactiles",
+        "Robotique humanoïde"
+      ]
     },
     {
       "name": "Robotic Assistance for Blood-Brain Barrier Opening using Focused Ultrasound",
@@ -282,7 +403,15 @@
       ],
       "startDate": "2022-01-01",
       "endDate": "2022-12-31",
-      "url": ""
+      "url": "",
+      "name_fr": "Assistance robotique à l'ouverture de la barrière hémato-encéphalique par ultrasons focalisés",
+      "summary_fr": "Conception et optimisation de la planification de trajectoires sous ROS 2 sur un Universal Robots UR5, pour gagner en exactitude et en précision dans cette avancée prometteuse de la médecine du cerveau.",
+      "highlights_fr": [
+        "ROS2",
+        "Universal Robots UR5",
+        "Planification de trajectoires",
+        "Robotique médicale"
+      ]
     },
     {
       "name": "ROS2 Driver for NDI medical-grade visual localization system using ros2-control",
@@ -295,7 +424,15 @@
       ],
       "startDate": "2022-01-01",
       "endDate": "2022-12-31",
-      "url": "https://github.com/ICube-Robotics/ndisys_ros2"
+      "url": "https://github.com/ICube-Robotics/ndisys_ros2",
+      "name_fr": "Driver ROS 2 pour le système de localisation visuelle médical NDI, avec ros2_control",
+      "summary_fr": "Développement de drivers `ros2_control` pour communiquer avec les systèmes de localisation NDI, essentiels pour des applications à hautes performances.",
+      "highlights_fr": [
+        "ROS2",
+        "Systèmes de localisation NDI",
+        "Applications à hautes performances",
+        "GitHub"
+      ]
     },
     {
       "name": "Design and Implementation of a SWARM motion planning algorithm based on fluid dynamics",
@@ -309,7 +446,16 @@
       ],
       "startDate": "2021-01-01",
       "endDate": "2021-12-31",
-      "url": "https://adnan-saood.github.io/swarm-robot-firmware/"
+      "url": "https://adnan-saood.github.io/swarm-robot-firmware/",
+      "name_fr": "Conception et mise en œuvre d'un algorithme de planification de mouvement d'essaim fondé sur la dynamique des fluides",
+      "summary_fr": "Nouvel algorithme de planification de mouvement pour un essaim de robots non holonomes, fondé sur la résolution numérique des équations de Navier-Stokes, et création d'une plateforme de 15 robots mobiles.",
+      "highlights_fr": [
+        "Robotique en essaim",
+        "Planification de mouvement",
+        "Dynamique des fluides",
+        "Équations de Navier-Stokes",
+        "GitHub"
+      ]
     },
     {
       "name": "COVID-19 Lung CT Image Segmentation using Deep Learning",
@@ -324,7 +470,17 @@
       ],
       "startDate": "2020-01-01",
       "endDate": "2020-12-31",
-      "url": "https://github.com/adnan-saood/COVID19-DL"
+      "url": "https://github.com/adnan-saood/COVID19-DL",
+      "name_fr": "Segmentation d'images scanner pulmonaires COVID-19 par apprentissage profond",
+      "summary_fr": "Étude et comparaison de SegNet et U-Net pour la segmentation sémantique des tissus infectés par la COVID-19 sur des images scanner des poumons.",
+      "highlights_fr": [
+        "Apprentissage profond",
+        "Segmentation d'images",
+        "COVID-19",
+        "U-NET",
+        "SegNet",
+        "GitHub"
+      ]
     }
   ]
 }

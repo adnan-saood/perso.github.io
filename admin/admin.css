@@ -301,3 +301,8 @@ select { font: inherit; color: var(--text); background: var(--panel); border: 1p
 .fr-card > summary { cursor: pointer; list-style: none; }
 .fr-card > summary::-webkit-details-marker { display: none; }
 .fr-card > summary::before { content: "🇫🇷 "; }
+
+/* French sub-sections in the CV editor */
+.fr-sub { border: 1px dashed var(--line, #ddd); border-radius: 10px; padding: .5rem .8rem; }
+.fr-sub > summary { cursor: pointer; font-weight: 600; }
+.fr-sub[open] > summary { margin-bottom: .6rem; }
