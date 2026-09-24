@@ -1,0 +1,115 @@
+backend:
+  name: git-gateway
+  branch: main
+
+media_folder: "assets/img/upload"
+public_folder: "/~saood/assets/img/upload"
+site_url: "https://perso.ensta.fr/~saood"
+
+collections:
+  - name: "posts"
+    label: "Blog Posts"
+    folder: "_posts"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    fields:
+      - {label: "Layout", name: "layout", widget: "hidden", default: "post"}
+      - {label: "Title", name: "title", widget: "string"}
+      - {label: "Date", name: "date", widget: "datetime"}
+      - {label: "Description", name: "description", widget: "text", required: false}
+      - {label: "Tags", name: "tags", widget: "list", required: false}
+      - {label: "Categories", name: "categories", widget: "list", required: false}
+      - {label: "Featured", name: "featured", widget: "boolean", default: false}
+      - {label: "Body", name: "body", widget: "markdown"}
+
+  - name: "projects"
+    label: "Projects"
+    folder: "_projects"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - {label: "Layout", name: "layout", widget: "hidden", default: "page"}
+      - {label: "Title", name: "title", widget: "string"}
+      - {label: "Description", name: "description", widget: "text"}
+      - {label: "Image", name: "img", widget: "image", required: false}
+      - {label: "Importance", name: "importance", widget: "number", default: 1}
+      - {label: "Category", name: "category", widget: "string"}
+      - {label: "GitHub", name: "github", widget: "string", required: false}
+      - {label: "Related Publications", name: "related_publications", widget: "boolean", default: false}
+      - {label: "Body", name: "body", widget: "markdown"}
+
+  - name: "news"
+    label: "News"
+    folder: "_news"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    fields:
+      - {label: "Layout", name: "layout", widget: "hidden", default: "post"}
+      - {label: "Date", name: "date", widget: "datetime"}
+      - {label: "Inline", name: "inline", widget: "boolean", default: true}
+      - {label: "Related Posts", name: "related_posts", widget: "boolean", default: false}
+      - {label: "Body", name: "body", widget: "markdown"}
+
+  - name: "teaching"
+    label: "Teaching"
+    folder: "_teaching"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - {label: "Layout", name: "layout", widget: "hidden", default: "page"}
+      - {label: "Title", name: "title", widget: "string"}
+      - {label: "Description", name: "description", widget: "text"}
+      - {label: "Image", name: "img", widget: "image", required: false}
+      - {label: "Category", name: "category", widget: "string"}
+      - {label: "Importance", name: "importance", widget: "number", default: 1}
+      - {label: "Body", name: "body", widget: "markdown"}
+
+  - name: "pages"
+    label: "Pages"
+    files:
+      - label: "About"
+        name: "about"
+        file: "_pages/about.md"
+        fields:
+          - {label: "Layout", name: "layout", widget: "hidden", default: "about"}
+          - {label: "Permalink", name: "permalink", widget: "hidden", default: "/"}
+          - {label: "Title", name: "title", widget: "string"}
+          - {label: "Subtitle", name: "subtitle", widget: "string", required: false}
+          - {label: "Body", name: "body", widget: "markdown"}
+      
+      - label: "CV"
+        name: "cv" 
+        file: "_pages/cv.md"
+        fields:
+          - {label: "Layout", name: "layout", widget: "hidden", default: "cv"}
+          - {label: "Permalink", name: "permalink", widget: "hidden", default: "/cv/"}
+          - {label: "Title", name: "title", widget: "string"}
+          - {label: "Description", name: "description", widget: "string"}
+          - {label: "Body", name: "body", widget: "markdown"}
+
+  - name: "data"
+    label: "Data Files"
+    files:
+      - label: "CV Data"
+        name: "cv_data"
+        file: "_data/cv.yml"
+        fields:
+          - label: "CV Sections"
+            name: "cv_sections"
+            widget: "list"
+            fields:
+              - {label: "Title", name: "title", widget: "string"}
+              - {label: "Type", name: "type", widget: "string"}
+              - {label: "Contents", name: "contents", widget: "text"}
+      
+      - label: "Social Links"
+        name: "socials"
+        file: "_data/socials.yml"
+        fields:
+          - label: "Social Networks"
+            name: "social_networks"
+            widget: "list"
+            fields:
+              - {label: "Name", name: "name", widget: "string"}
+              - {label: "URL", name: "url", widget: "string"}
+              - {label: "Icon", name: "icon", widget: "string"}

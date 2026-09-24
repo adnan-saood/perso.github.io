@@ -1,811 +1,985 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://perso.ensta-paris.fr/~saood/feed.xml" rel="self" type="application/atom+xml"/><link href="https://perso.ensta-paris.fr/~saood/" rel="alternate" type="text/html" hreflang="en"/><updated>2025-10-30T23:58:40+00:00</updated><id>https://perso.ensta-paris.fr/~saood/feed.xml</id><title type="html">blank</title><subtitle>A simple, whitespace theme for academics. Based on [*folio](https://github.com/bogoli/-folio) design. </subtitle><entry><title type="html">a post with plotly.js</title><link href="https://perso.ensta-paris.fr/~saood/blog/2025/plotly/" rel="alternate" type="text/html" title="a post with plotly.js"/><published>2025-03-26T14:24:00+00:00</published><updated>2025-03-26T14:24:00+00:00</updated><id>https://perso.ensta-paris.fr/~saood/blog/2025/plotly</id><content type="html" xml:base="https://perso.ensta-paris.fr/~saood/blog/2025/plotly/"><![CDATA[<p>This is an example post with some <a href="https://plotly.com/javascript/">plotly</a> code.</p> <div class="language-markdown highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">```</span><span class="nl">plotly
-</span><span class="sb">{
-  "data": [
-    {
-      "x": [1, 2, 3, 4],
-      "y": [10, 15, 13, 17],
-      "type": "scatter"
-    },
-    {
-      "x": [1, 2, 3, 4],
-      "y": [16, 5, 11, 9],
-      "type": "scatter"
-    }
-  ]
-}</span>
-<span class="p">```</span>
-</code></pre></div></div> <p>Which generates:</p> <pre><code class="language-plotly">{
-  "data": [
-    {
-      "x": [1, 2, 3, 4],
-      "y": [10, 15, 13, 17],
-      "type": "scatter"
-    },
-    {
-      "x": [1, 2, 3, 4],
-      "y": [16, 5, 11, 9],
-      "type": "scatter"
-    }
-  ]
-}
-</code></pre> <p>Also another example chart.</p> <div class="language-markdown highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">```</span><span class="nl">plotly
-</span><span class="sb">{
-  "data": [
-    {
-      "x": [1, 2, 3, 4],
-      "y": [10, 15, 13, 17],
-      "mode": "markers"
-    },
-    {
-      "x": [2, 3, 4, 5],
-      "y": [16, 5, 11, 9],
-      "mode": "lines"
-    },
-    {
-      "x": [1, 2, 3, 4],
-      "y": [12, 9, 15, 12],
-      "mode": "lines+markers"
-    }
-  ],
-  "layout": {
-    "title": {
-      "text": "Line and Scatter Plot"
-    }
-  }
-}</span>
-<span class="p">```</span>
-</code></pre></div></div> <p>This is how it looks like:</p> <pre><code class="language-plotly">{
-  "data": [
-    {
-      "x": [1, 2, 3, 4],
-      "y": [10, 15, 13, 17],
-      "mode": "markers"
-    },
-    {
-      "x": [2, 3, 4, 5],
-      "y": [16, 5, 11, 9],
-      "mode": "lines"
-    },
-    {
-      "x": [1, 2, 3, 4],
-      "y": [12, 9, 15, 12],
-      "mode": "lines+markers"
-    }
-  ],
-  "layout": {
-    "title": {
-      "text": "Line and Scatter Plot"
-    }
-  }
-}
-</code></pre>]]></content><author><name></name></author><category term="sample-posts"/><category term="formatting"/><category term="charts"/><summary type="html"><![CDATA[this is what included plotly.js code could look like]]></summary></entry><entry><title type="html">a post with image galleries</title><link href="https://perso.ensta-paris.fr/~saood/blog/2024/photo-gallery/" rel="alternate" type="text/html" title="a post with image galleries"/><published>2024-12-04T01:59:00+00:00</published><updated>2024-12-04T01:59:00+00:00</updated><id>https://perso.ensta-paris.fr/~saood/blog/2024/photo-gallery</id><content type="html" xml:base="https://perso.ensta-paris.fr/~saood/blog/2024/photo-gallery/"><![CDATA[<p>The images in this post are all zoomable, arranged into different mini-galleries using different libraries.</p> <h2 id="lightbox2"><a href="https://lokeshdhakar.com/projects/lightbox2/">Lightbox2</a></h2> <p><a href="https://cdn.photoswipe.com/photoswipe-demo-images/photos/1/img-2500.jpg" data-lightbox="roadtrip"><img src="https://cdn.photoswipe.com/photoswipe-demo-images/photos/1/img-200.jpg"/></a> <a href="https://cdn.photoswipe.com/photoswipe-demo-images/photos/2/img-2500.jpg" data-lightbox="roadtrip"><img src="https://cdn.photoswipe.com/photoswipe-demo-images/photos/2/img-200.jpg"/></a> <a href="https://cdn.photoswipe.com/photoswipe-demo-images/photos/3/img-2500.jpg" data-lightbox="roadtrip"><img src="https://cdn.photoswipe.com/photoswipe-demo-images/photos/3/img-200.jpg"/></a></p> <hr/> <h2 id="photoswipe"><a href="https://photoswipe.com/">PhotoSwipe</a></h2> <div class="pswp-gallery pswp-gallery--single-column" id="gallery--getting-started"> <a href="https://cdn.photoswipe.com/photoswipe-demo-images/photos/2/img-2500.jpg" data-pswp-width="1669" data-pswp-height="2500" target="_blank"> <img src="https://cdn.photoswipe.com/photoswipe-demo-images/photos/2/img-200.jpg" alt=""/> </a> <a href="https://cdn.photoswipe.com/photoswipe-demo-images/photos/7/img-2500.jpg" data-pswp-width="1875" data-pswp-height="2500" data-cropped="true" target="_blank"> <img src="https://cdn.photoswipe.com/photoswipe-demo-images/photos/7/img-200.jpg" alt=""/> </a> <a href="https://unsplash.com" data-pswp-src="https://cdn.photoswipe.com/photoswipe-demo-images/photos/3/img-2500.jpg" data-pswp-width="2500" data-pswp-height="1666" target="_blank"> <img src="https://cdn.photoswipe.com/photoswipe-demo-images/photos/3/img-200.jpg" alt=""/> </a> <div> <a href="https://cdn.photoswipe.com/photoswipe-demo-images/photos/6/img-2500.jpg" data-pswp-width="2500" data-pswp-height="1667" target="_blank"> <img src="https://cdn.photoswipe.com/photoswipe-demo-images/photos/6/img-200.jpg" alt=""/> </a> </div> </div> <hr/> <h2 id="spotlight-js"><a href="https://nextapps-de.github.io/spotlight/">Spotlight JS</a></h2> <div class="spotlight-group"> <a class="spotlight" href="https://cdn.photoswipe.com/photoswipe-demo-images/photos/1/img-2500.jpg"> <img src="https://cdn.photoswipe.com/photoswipe-demo-images/photos/1/img-200.jpg"/> </a> <a class="spotlight" href="https://cdn.photoswipe.com/photoswipe-demo-images/photos/2/img-2500.jpg"> <img src="https://cdn.photoswipe.com/photoswipe-demo-images/photos/2/img-200.jpg"/> </a> <a class="spotlight" href="https://cdn.photoswipe.com/photoswipe-demo-images/photos/3/img-2500.jpg"> <img src="https://cdn.photoswipe.com/photoswipe-demo-images/photos/3/img-200.jpg"/> </a> </div> <div class="spotlight-group"> <a class="spotlight" href="https://cdn.photoswipe.com/photoswipe-demo-images/photos/4/img-2500.jpg"> <img src="https://cdn.photoswipe.com/photoswipe-demo-images/photos/4/img-200.jpg"/> </a> <a class="spotlight" href="https://cdn.photoswipe.com/photoswipe-demo-images/photos/5/img-2500.jpg"> <img src="https://cdn.photoswipe.com/photoswipe-demo-images/photos/5/img-200.jpg"/> </a> <a class="spotlight" href="https://cdn.photoswipe.com/photoswipe-demo-images/photos/6/img-2500.jpg"> <img src="https://cdn.photoswipe.com/photoswipe-demo-images/photos/6/img-200.jpg"/> </a> </div> <hr/> <h2 id="venobox"><a href="https://veno.es/venobox/">Venobox</a></h2> <p><a class="venobox" data-gall="myGallery" href="https://cdn.photoswipe.com/photoswipe-demo-images/photos/1/img-2500.jpg"><img src="https://cdn.photoswipe.com/photoswipe-demo-images/photos/1/img-200.jpg"/></a> <a class="venobox" data-gall="myGallery" href="https://cdn.photoswipe.com/photoswipe-demo-images/photos/2/img-2500.jpg"><img src="https://cdn.photoswipe.com/photoswipe-demo-images/photos/2/img-200.jpg"/></a> <a class="venobox" data-gall="myGallery" href="https://cdn.photoswipe.com/photoswipe-demo-images/photos/3/img-2500.jpg"><img src="https://cdn.photoswipe.com/photoswipe-demo-images/photos/3/img-200.jpg"/></a></p>]]></content><author><name></name></author><category term="sample-posts"/><category term="formatting"/><category term="images"/><summary type="html"><![CDATA[this is what included image galleries could look like]]></summary></entry><entry><title type="html">a post with tabs</title><link href="https://perso.ensta-paris.fr/~saood/blog/2024/tabs/" rel="alternate" type="text/html" title="a post with tabs"/><published>2024-05-01T00:32:13+00:00</published><updated>2024-05-01T00:32:13+00:00</updated><id>https://perso.ensta-paris.fr/~saood/blog/2024/tabs</id><content type="html" xml:base="https://perso.ensta-paris.fr/~saood/blog/2024/tabs/"><![CDATA[<p>This is how a post with <a href="https://github.com/Ovski4/jekyll-tabs">tabs</a> looks like. Note that the tabs could be used for different purposes, not only for code.</p> <h2 id="first-tabs">First tabs</h2> <p>To add tabs, use the following syntax:</p> <div class="language-liquid highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">{%</span><span class="w"> </span><span class="nt">tabs</span><span class="w"> </span><span class="nv">group-name</span><span class="w"> </span><span class="cp">%}</span>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://perso.ensta.fr/~saood/feed.xml" rel="self" type="application/atom+xml" /><link href="https://perso.ensta.fr/~saood/" rel="alternate" type="text/html" hreflang="en" /><updated>2026-09-24T09:38:30+00:00</updated><id>https://perso.ensta.fr/~saood/feed.xml</id><title type="html">blank</title><subtitle>Based on [*folio](https://github.com/bogoli/-folio) design.
+</subtitle><entry><title type="html">Beyond Words 2: What We Learned Organizing ICSR 2026’s Touch Workshop</title><link href="https://perso.ensta.fr/~saood/blog/2026/beyond-words-2-recap/" rel="alternate" type="text/html" title="Beyond Words 2: What We Learned Organizing ICSR 2026’s Touch Workshop" /><published>2026-07-25T00:00:00+00:00</published><updated>2026-07-25T00:00:00+00:00</updated><id>https://perso.ensta.fr/~saood/blog/2026/beyond-words-2-recap</id><content type="html" xml:base="https://perso.ensta.fr/~saood/blog/2026/beyond-words-2-recap/"><![CDATA[<h2 id="building-on-success">Building on Success</h2>
 
-<span class="cp">{%</span><span class="w"> </span><span class="nt">tab</span><span class="w"> </span><span class="nv">group-name</span><span class="w"> </span><span class="nv">tab-name-1</span><span class="w"> </span><span class="cp">%}</span>
+<p>Last September, we organized the <strong>first Beyond Words workshop</strong> at ICSR 2025 in Naples—an event that brought together researchers from robotics, neuroscience, psychology, and design to explore how touch shapes human-robot interaction. It was a resounding success, with standing-room-only attendance and vibrant discussions.</p>
 
-Content 1
+<p>This July, we returned to <strong>ICSR 2026</strong> (also in Europe) to continue the conversation with <strong>Beyond Words 2</strong>.</p>
 
-<span class="cp">{%</span><span class="w"> </span><span class="nt">endtab</span><span class="w"> </span><span class="cp">%}</span>
+<hr />
 
-<span class="cp">{%</span><span class="w"> </span><span class="nt">tab</span><span class="w"> </span><span class="nv">group-name</span><span class="w"> </span><span class="nv">tab-name-2</span><span class="w"> </span><span class="cp">%}</span>
+<h2 id="the-2026-program">The 2026 Program</h2>
 
-Content 2
+<p>This year’s workshop featured an incredible lineup:</p>
 
-<span class="cp">{%</span><span class="w"> </span><span class="nt">endtab</span><span class="w"> </span><span class="cp">%}</span>
+<p><strong>Keynote Speakers:</strong></p>
+<ul>
+  <li><strong>Prof. Shan Luo</strong> (King’s College London) — “Touchable AI for Social Robotics”</li>
+  <li><strong>Dr. Caroline Y. Zheng</strong> (Robotics &amp; Human-Computer Interaction)</li>
+  <li><strong>Raffaelle Buono</strong> (Tactile Sensing &amp; Wearable Haptics)</li>
+  <li><strong>Madeleine Rischer</strong> (Psychology &amp; Social Touch)</li>
+  <li><strong>Teodor-Alexandru Dicu</strong> (ENSTA U2IS, co-organizer)</li>
+</ul>
 
-<span class="cp">{%</span><span class="w"> </span><span class="nt">endtabs</span><span class="w"> </span><span class="cp">%}</span>
-</code></pre></div></div> <p>With this you can generate visualizations like:</p> <ul id="log" class="tab" data-tab="42a02908-f84b-45cf-a449-9db81440dce5" data-name="log"> <li class="active" id="log-php"> <a href="#">php </a> </li> <li id="log-js"> <a href="#">js </a> </li> <li id="log-ruby"> <a href="#">ruby </a> </li> </ul> <ul class="tab-content" id="42a02908-f84b-45cf-a449-9db81440dce5" data-name="log"> <li class="active"> <div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">var_dump</span><span class="p">(</span><span class="s1">'hello'</span><span class="p">);</span>
-</code></pre></div></div> </li> <li> <div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">console</span><span class="p">.</span><span class="nf">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">hello</span><span class="dl">"</span><span class="p">);</span>
-</code></pre></div></div> </li> <li> <div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">pputs</span> <span class="dl">'</span><span class="s1">hello</span><span class="dl">'</span>
-</code></pre></div></div> </li> </ul> <h2 id="another-example">Another example</h2> <ul id="data-struct" class="tab" data-tab="8e14d4d5-d776-4974-ad84-76eea6f7760d" data-name="data-struct"> <li class="active" id="data-struct-yaml"> <a href="#">yaml </a> </li> <li id="data-struct-json"> <a href="#">json </a> </li> </ul> <ul class="tab-content" id="8e14d4d5-d776-4974-ad84-76eea6f7760d" data-name="data-struct"> <li class="active"> <div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">hello</span><span class="pi">:</span>
-  <span class="pi">-</span> <span class="s2">"</span><span class="s">whatsup"</span>
-  <span class="pi">-</span> <span class="s2">"</span><span class="s">hi"</span>
-</code></pre></div></div> </li> <li> <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="nl">"hello"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"whatsup"</span><span class="p">,</span><span class="w"> </span><span class="s2">"hi"</span><span class="p">]</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre></div></div> </li> </ul> <h2 id="tabs-for-something-else">Tabs for something else</h2> <ul id="something-else" class="tab" data-tab="7b3465b8-2b83-4466-903c-662fa3306f56" data-name="something-else"> <li class="active" id="something-else-text"> <a href="#">text </a> </li> <li id="something-else-quote"> <a href="#">quote </a> </li> <li id="something-else-list"> <a href="#">list </a> </li> </ul> <ul class="tab-content" id="7b3465b8-2b83-4466-903c-662fa3306f56" data-name="something-else"> <li class="active"> <p>Regular text</p> </li> <li> <blockquote> <p>A quote</p> </blockquote> </li> <li> <p>Hipster list</p> <ul> <li>brunch</li> <li>fixie</li> <li>raybans</li> <li>messenger bag</li> </ul> </li> </ul>]]></content><author><name></name></author><category term="sample-posts"/><category term="formatting"/><category term="code"/><summary type="html"><![CDATA[this is what included tabs in a post could look like]]></summary></entry><entry><title type="html">a post with typograms</title><link href="https://perso.ensta-paris.fr/~saood/blog/2024/typograms/" rel="alternate" type="text/html" title="a post with typograms"/><published>2024-04-29T23:36:10+00:00</published><updated>2024-04-29T23:36:10+00:00</updated><id>https://perso.ensta-paris.fr/~saood/blog/2024/typograms</id><content type="html" xml:base="https://perso.ensta-paris.fr/~saood/blog/2024/typograms/"><![CDATA[<p>This is an example post with some <a href="https://github.com/google/typograms/">typograms</a> code.</p> <div class="language-markdown highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">```</span><span class="nl">typograms
-</span><span class="sb">+----+
-|    |---&gt; My first diagram!
-+----+</span>
-<span class="p">```</span>
-</code></pre></div></div> <p>Which generates:</p> <pre><code class="language-typograms">+----+
-|    |---&gt; My first diagram!
-+----+
-</code></pre> <p>Another example:</p> <div class="language-markdown highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">```</span><span class="nl">typograms
-</span><span class="sb">.------------------------.
-|.----------------------.|
-||"https://example.com" ||
-|'----------------------'|
-| ______________________ |
-||                      ||
-||   Welcome!           ||
-||                      ||
-||                      ||
-||  .----------------.  ||
-||  | username       |  ||
-||  '----------------'  ||
-||  .----------------.  ||
-||  |"*******"       |  ||
-||  '----------------'  ||
-||                      ||
-||  .----------------.  ||
-||  |   "Sign-up"    |  ||
-||  '----------------'  ||
-||                      ||
-|+----------------------+|
-.------------------------.</span>
-<span class="p">```</span>
-</code></pre></div></div> <p>which generates:</p> <pre><code class="language-typograms">.------------------------.
-|.----------------------.|
-||"https://example.com" ||
-|'----------------------'|
-| ______________________ |
-||                      ||
-||   Welcome!           ||
-||                      ||
-||                      ||
-||  .----------------.  ||
-||  | username       |  ||
-||  '----------------'  ||
-||  .----------------.  ||
-||  |"*******"       |  ||
-||  '----------------'  ||
-||                      ||
-||  .----------------.  ||
-||  |   "Sign-up"    |  ||
-||  '----------------'  ||
-||                      ||
-|+----------------------+|
-.------------------------.
-</code></pre> <p>For more examples, check out the <a href="https://google.github.io/typograms/#examples">typograms documentation</a>.</p>]]></content><author><name></name></author><category term="sample-posts"/><category term="formatting"/><category term="diagrams"/><summary type="html"><![CDATA[this is what included typograms code could look like]]></summary></entry><entry><title type="html">a post that can be cited</title><link href="https://perso.ensta-paris.fr/~saood/blog/2024/post-citation/" rel="alternate" type="text/html" title="a post that can be cited"/><published>2024-04-28T15:06:00+00:00</published><updated>2024-04-28T15:06:00+00:00</updated><id>https://perso.ensta-paris.fr/~saood/blog/2024/post-citation</id><content type="html" xml:base="https://perso.ensta-paris.fr/~saood/blog/2024/post-citation/"><![CDATA[<p>This is an example post that can be cited. The content of the post ends here, while the citation information is automatically provided below. The only thing needed is for you to set the <code class="language-plaintext highlighter-rouge">citation</code> key in the front matter to <code class="language-plaintext highlighter-rouge">true</code>.</p>]]></content><author><name></name></author><category term="sample-posts"/><category term="formatting"/><category term="citation"/><summary type="html"><![CDATA[this is what a post that can be cited looks like]]></summary></entry><entry><title type="html">a post with pseudo code</title><link href="https://perso.ensta-paris.fr/~saood/blog/2024/pseudocode/" rel="alternate" type="text/html" title="a post with pseudo code"/><published>2024-04-15T00:01:00+00:00</published><updated>2024-04-15T00:01:00+00:00</updated><id>https://perso.ensta-paris.fr/~saood/blog/2024/pseudocode</id><content type="html" xml:base="https://perso.ensta-paris.fr/~saood/blog/2024/pseudocode/"><![CDATA[<p>This is an example post with some pseudo code rendered by <a href="https://github.com/SaswatPadhi/pseudocode.js">pseudocode</a>. The example presented here is the same as the one in the <a href="https://saswat.padhi.me/pseudocode.js/">pseudocode.js</a> documentation, with only one simple but important change: everytime you would use <code class="language-plaintext highlighter-rouge">$</code>, you should use <code class="language-plaintext highlighter-rouge">$$</code> instead. Also, note that the <code class="language-plaintext highlighter-rouge">pseudocode</code> key in the front matter is set to <code class="language-plaintext highlighter-rouge">true</code> to enable the rendering of pseudo code. As an example, using this code:</p> <div class="language-markdown highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">```</span><span class="nl">pseudocode
-</span><span class="sb">% This quicksort algorithm is extracted from Chapter 7, Introduction to Algorithms (3rd edition)
-\begin{algorithm}
-\caption{Quicksort}
-\begin{algorithmic}
-\PROCEDURE{Quicksort}{$$A, p, r$$}
-    \IF{$$p &lt; r$$}
-        \STATE $$q = $$ \CALL{Partition}{$$A, p, r$$}
-        \STATE \CALL{Quicksort}{$$A, p, q - 1$$}
-        \STATE \CALL{Quicksort}{$$A, q + 1, r$$}
-    \ENDIF
-\ENDPROCEDURE
-\PROCEDURE{Partition}{$$A, p, r$$}
-    \STATE $$x = A[r]$$
-    \STATE $$i = p - 1$$
-    \FOR{$$j = p$$ \TO $$r - 1$$}
-        \IF{$$A[j] &lt; x$$}
-            \STATE $$i = i + 1$$
-            \STATE exchange
-            $$A[i]$$ with $$A[j]$$
-        \ENDIF
-        \STATE exchange $$A[i]$$ with $$A[r]$$
-    \ENDFOR
-\ENDPROCEDURE
-\end{algorithmic}
-\end{algorithm}</span>
-<span class="p">```</span>
-</code></pre></div></div> <p>Generates:</p> <pre><code class="language-pseudocode">% This quicksort algorithm is extracted from Chapter 7, Introduction to Algorithms (3rd edition)
-\begin{algorithm}
-\caption{Quicksort}
-\begin{algorithmic}
-\PROCEDURE{Quicksort}{$$A, p, r$$}
-    \IF{$$p &lt; r$$}
-        \STATE $$q = $$ \CALL{Partition}{$$A, p, r$$}
-        \STATE \CALL{Quicksort}{$$A, p, q - 1$$}
-        \STATE \CALL{Quicksort}{$$A, q + 1, r$$}
-    \ENDIF
-\ENDPROCEDURE
-\PROCEDURE{Partition}{$$A, p, r$$}
-    \STATE $$x = A[r]$$
-    \STATE $$i = p - 1$$
-    \FOR{$$j = p$$ \TO $$r - 1$$}
-        \IF{$$A[j] &lt; x$$}
-            \STATE $$i = i + 1$$
-            \STATE exchange
-            $$A[i]$$ with $$A[j]$$
-        \ENDIF
-        \STATE exchange $$A[i]$$ with $$A[r]$$
-    \ENDFOR
-\ENDPROCEDURE
-\end{algorithmic}
-\end{algorithm}
-</code></pre>]]></content><author><name></name></author><category term="sample-posts"/><category term="formatting"/><category term="code"/><summary type="html"><![CDATA[this is what included pseudo code could look like]]></summary></entry><entry><title type="html">a post with code diff</title><link href="https://perso.ensta-paris.fr/~saood/blog/2024/code-diff/" rel="alternate" type="text/html" title="a post with code diff"/><published>2024-01-27T19:22:00+00:00</published><updated>2024-01-27T19:22:00+00:00</updated><id>https://perso.ensta-paris.fr/~saood/blog/2024/code-diff</id><content type="html" xml:base="https://perso.ensta-paris.fr/~saood/blog/2024/code-diff/"><![CDATA[<p>You can display diff code by using the regular markdown syntax:</p> <div class="language-markdown highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">```</span><span class="nl">diff
-</span><span class="gh">diff --git a/sample.js b/sample.js
-index 0000001..0ddf2ba
-</span><span class="gd">--- a/sample.js
-</span><span class="gi">+++ b/sample.js
-</span><span class="p">@@ -1 +1 @@</span>
-<span class="gd">-console.log("Hello World!")
-</span><span class="gi">+console.log("Hello from Diff2Html!")</span>
-<span class="p">```</span>
-</code></pre></div></div> <p>Which generates:</p> <div class="language-diff highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="gh">diff --git a/sample.js b/sample.js
-index 0000001..0ddf2ba
-</span><span class="gd">--- a/sample.js
-</span><span class="gi">+++ b/sample.js
-</span><span class="p">@@ -1 +1 @@</span>
-<span class="gd">-console.log("Hello World!")
-</span><span class="gi">+console.log("Hello from Diff2Html!")
-</span></code></pre></div></div> <p>But this is difficult to read, specially if you have a large diff. You can use <a href="https://diff2html.xyz/">diff2html</a> to display a more readable version of the diff. For this, just use <code class="language-plaintext highlighter-rouge">diff2html</code> instead of <code class="language-plaintext highlighter-rouge">diff</code> for the code block language:</p> <div class="language-markdown highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">```</span><span class="nl">diff2html
-</span><span class="sb">diff --git a/sample.js b/sample.js
-index 0000001..0ddf2ba
---- a/sample.js
-+++ b/sample.js
-@@ -1 +1 @@
--console.log("Hello World!")
-+console.log("Hello from Diff2Html!")</span>
-<span class="p">```</span>
-</code></pre></div></div> <p>If we use a longer example, for example <a href="https://github.com/rtfpessoa/diff2html/commit/c2c253d3e3f8b8b267f551e659f72b44ca2ac927">this commit from diff2html</a>, it will generate the following output:</p> <pre><code class="language-diff2html">From 2aaae31cc2a37bfff83430c2c914b140bee59b6a Mon Sep 17 00:00:00 2001
-From: Rodrigo Fernandes &lt;rtfrodrigo@gmail.com&gt;
-Date: Sun, 9 Oct 2016 16:41:54 +0100
-Subject: [PATCH 1/2] Initial template override support
+<p><strong>Panel Discussion:</strong> “Touch and Interactive Robots: The Next Frontier in Human-Robot Interaction”</p>
 
----
- scripts/hulk.js                    |  4 ++--
- src/diff2html.js                   |  3 +--
- src/file-list-printer.js           | 11 ++++++++---
- src/hoganjs-utils.js               | 29 +++++++++++++++++------------
- src/html-printer.js                |  6 ++++++
- src/line-by-line-printer.js        |  6 +++++-
- src/side-by-side-printer.js        |  6 +++++-
- test/file-list-printer-tests.js    |  2 +-
- test/hogan-cache-tests.js          | 18 +++++++++++++++---
- test/line-by-line-tests.js         |  3 +--
- test/side-by-side-printer-tests.js |  3 +--
- 11 files changed, 62 insertions(+), 29 deletions(-)
+<p><strong>Co-Organizers:</strong></p>
+<ul>
+  <li>Prof. Patrick Henaff (ENIB, Lab-STICC)</li>
+  <li>Adnan Saood (ENSTA U2IS) — that’s me!</li>
+  <li>Teodor-Alexandru Dicu (ENSTA U2IS)</li>
+  <li>Prof. Adriana Tapus (ENSTA U2IS)</li>
+</ul>
 
-diff --git a/scripts/hulk.js b/scripts/hulk.js
-index 5a793c18..a4b1a4d5 100755
---- a/scripts/hulk.js
-+++ b/scripts/hulk.js
-@@ -173,11 +173,11 @@ function namespace(name) {
- // write a template foreach file that matches template extension
- templates = extractFiles(options.argv.remain)
-   .map(function(file) {
--    var openedFile = fs.readFileSync(file, 'utf-8');
-+    var openedFile = fs.readFileSync(file, 'utf-8').trim();
-     var name;
-     if (!openedFile) return;
-     name = namespace(path.basename(file).replace(/\..*$/, ''));
--    openedFile = removeByteOrderMark(openedFile.trim());
-+    openedFile = removeByteOrderMark(openedFile);
-     openedFile = wrap(file, name, openedFile);
-     if (!options.outputdir) return openedFile;
-     fs.writeFileSync(path.join(options.outputdir, name + '.js')
-diff --git a/src/diff2html.js b/src/diff2html.js
-index 21b0119e..64e138f5 100644
---- a/src/diff2html.js
-+++ b/src/diff2html.js
-@@ -7,7 +7,6 @@
+<div class="row mt-3 mb-3">
+    <div class="col-12">
+        
 
- (function() {
-   var diffParser = require('./diff-parser.js').DiffParser;
--  var fileLister = require('./file-list-printer.js').FileListPrinter;
-   var htmlPrinter = require('./html-printer.js').HtmlPrinter;
 
-   function Diff2Html() {
-@@ -43,7 +42,7 @@
 
-     var fileList = '';
-     if (configOrEmpty.showFiles === true) {
--      fileList = fileLister.generateFileList(diffJson, configOrEmpty);
-+      fileList = htmlPrinter.generateFileListSummary(diffJson, configOrEmpty);
-     }
+<figure>
+  <picture>
+    <!-- Auto scaling with imagemagick -->
+    <!--
+      See https://www.debugbear.com/blog/responsive-images#w-descriptors-and-the-sizes-attribute and
+      https://developer.mozilla.org/en-US/docs/Learn/HTML/Multimedia_and_embedding/Responsive_images for info on defining 'sizes' for responsive images
+    -->
+    
+    <img src="/~saood/assets/img/blog/post01.jpg" class="img-fluid rounded z-depth-1" width="100%" height="auto" title="Beyond Words 2 Workshop at ICSR 2026" loading="lazy" onerror="this.onerror=null; $('.responsive-img-srcset').remove();" />
+  </picture>
 
-     var diffOutput = '';
-diff --git a/src/file-list-printer.js b/src/file-list-printer.js
-index e408d9b2..1e0a2c61 100644
---- a/src/file-list-printer.js
-+++ b/src/file-list-printer.js
-@@ -8,11 +8,16 @@
- (function() {
-   var printerUtils = require('./printer-utils.js').PrinterUtils;
+  
+</figure>
 
--  var hoganUtils = require('./hoganjs-utils.js').HoganJsUtils;
-+  var hoganUtils;
-+
-   var baseTemplatesPath = 'file-summary';
-   var iconsBaseTemplatesPath = 'icon';
+    </div>
+</div>
 
--  function FileListPrinter() {
-+  function FileListPrinter(config) {
-+    this.config = config;
-+
-+    var HoganJsUtils = require('./hoganjs-utils.js').HoganJsUtils;
-+    hoganUtils = new HoganJsUtils(config);
-   }
+<hr />
 
-   FileListPrinter.prototype.generateFileList = function(diffFiles) {
-@@ -38,5 +43,5 @@
-     });
-   };
+<h2 id="what-made-beyond-words-2-special">What Made Beyond Words 2 Special</h2>
 
--  module.exports.FileListPrinter = new FileListPrinter();
-+  module.exports.FileListPrinter = FileListPrinter;
- })();
-diff --git a/src/hoganjs-utils.js b/src/hoganjs-utils.js
-index 9949e5fa..0dda08d7 100644
---- a/src/hoganjs-utils.js
-+++ b/src/hoganjs-utils.js
-@@ -8,18 +8,19 @@
- (function() {
-   var fs = require('fs');
-   var path = require('path');
--
-   var hogan = require('hogan.js');
+<h3 id="1-interdisciplinary-breadth">1. Interdisciplinary Breadth</h3>
+<p>The beauty of touch research is that it spans neuroscience (how does the brain process tactile signals?), robotics (how do we sense and express touch?), psychology (what does touch mean to humans?), and design (how do we build systems people want to touch?). Our speakers brought all these perspectives.</p>
 
-   var hoganTemplates = require('./templates/diff2html-templates.js');
+<h3 id="2-both-sensing--expression">2. Both Sensing &amp; Expression</h3>
+<p>Unlike some HRI workshops that focus only on perception, we emphasized both directions:</p>
+<ul>
+  <li><strong>Tactile sensing:</strong> How robots <em>perceive</em> human touch (our tactile array work)</li>
+  <li><strong>Haptic feedback:</strong> How robots <em>express</em> emotion through touch (our soft haptic interface work)</li>
+</ul>
 
--  var templatesPath = path.resolve(__dirname, 'templates');
-+  var extraTemplates;
+<h3 id="3-practical-demonstrations">3. Practical Demonstrations</h3>
+<p>Beyond talks, we had live demos:</p>
+<ul>
+  <li>Artificial skin prototypes</li>
+  <li>Soft robotic gripper systems</li>
+  <li>Wearable haptic vests</li>
+  <li>Real-time tactile feedback systems</li>
+</ul>
 
--  function HoganJsUtils() {
-+  function HoganJsUtils(configuration) {
-+    this.config = configuration || {};
-+    extraTemplates = this.config.templates || {};
-   }
+<p>Seeing and touching (literally!) the hardware makes the research tangible.</p>
 
--  HoganJsUtils.prototype.render = function(namespace, view, params, configuration) {
--    var template = this.template(namespace, view, configuration);
-+  HoganJsUtils.prototype.render = function(namespace, view, params) {
-+    var template = this.template(namespace, view);
-     if (template) {
-       return template.render(params);
-     }
-@@ -27,17 +28,16 @@
-     return null;
-   };
+<h3 id="4-community-building">4. Community Building</h3>
+<p>The workshop isn’t just about papers—it’s about building a community. We had networking sessions, a panel discussion, and informal conversations over coffee. Several collaborations sprouted from this event.</p>
 
--  HoganJsUtils.prototype.template = function(namespace, view, configuration) {
--    var config = configuration || {};
-+  HoganJsUtils.prototype.template = function(namespace, view) {
-     var templateKey = this._templateKey(namespace, view);
+<hr />
 
--    return this._getTemplate(templateKey, config);
-+    return this._getTemplate(templateKey);
-   };
+<h2 id="key-themes-that-emerged">Key Themes That Emerged</h2>
 
--  HoganJsUtils.prototype._getTemplate = function(templateKey, config) {
-+  HoganJsUtils.prototype._getTemplate = function(templateKey) {
-     var template;
+<h3 id="safety-through-softness">Safety Through Softness</h3>
+<p>A recurring theme: <strong>soft, compliant robotics are perceived as safer and more approachable</strong>. Whether it’s a soft gripper, a compliant arm, or a flexible skin, softness matters. (This aligns perfectly with our handshake study findings—see related post.)</p>
 
--    if (!config.noCache) {
-+    if (!this.config.noCache) {
-       template = this._readFromCache(templateKey);
-     }
+<h3 id="the-uncanny-valley-of-touch">The “Uncanny Valley” of Touch</h3>
+<p>Interestingly, visual uncanny valley is well-studied, but <strong>tactile uncanny valley</strong> is not. What makes a robotic touch feel <em>creepy</em> versus <em>comforting</em>? We don’t fully know yet. This is fertile research ground.</p>
 
-@@ -53,6 +53,7 @@
+<h3 id="cross-disciplinary-translation">Cross-Disciplinary Translation</h3>
+<p>Neuroscientists are discovering fascinating things about human touch and stress (e.g., vagal activation through light touch), but this knowledge isn’t always making it into robotics design. Workshops like Beyond Words help close that gap.</p>
 
-     try {
-       if (fs.readFileSync) {
-+        var templatesPath = path.resolve(__dirname, 'templates');
-         var templatePath = path.join(templatesPath, templateKey);
-         var templateContent = fs.readFileSync(templatePath + '.mustache', 'utf8');
-         template = hogan.compile(templateContent);
-@@ -66,12 +67,16 @@
-   };
+<h3 id="accessibility--assistive-robotics">Accessibility &amp; Assistive Robotics</h3>
+<p>A powerful session focused on how tactile feedback could help people with sensory impairments or disabilities. Robots that are gentle, responsive, and communicative through touch could be transformative for care and therapy.</p>
 
-   HoganJsUtils.prototype._readFromCache = function(templateKey) {
--    return hoganTemplates[templateKey];
-+    return extraTemplates[templateKey] || hoganTemplates[templateKey];
-   };
+<hr />
 
-   HoganJsUtils.prototype._templateKey = function(namespace, view) {
-     return namespace + '-' + view;
-   };
+<h2 id="personal-reflections">Personal Reflections</h2>
 
--  module.exports.HoganJsUtils = new HoganJsUtils();
-+  HoganJsUtils.prototype.compile = function(templateStr) {
-+    return hogan.compile(templateStr);
-+  };
-+
-+  module.exports.HoganJsUtils = HoganJsUtils;
- })();
-diff --git a/src/html-printer.js b/src/html-printer.js
-index 585d5b66..13f83047 100644
---- a/src/html-printer.js
-+++ b/src/html-printer.js
-@@ -8,6 +8,7 @@
- (function() {
-   var LineByLinePrinter = require('./line-by-line-printer.js').LineByLinePrinter;
-   var SideBySidePrinter = require('./side-by-side-printer.js').SideBySidePrinter;
-+  var FileListPrinter = require('./file-list-printer.js').FileListPrinter;
+<p>Organizing Beyond Words 2 was both humbling and energizing. As someone whose entire PhD centers on touch in robotics, to see the field grow—to see more researchers, more companies, more applications—is validating.</p>
 
-   function HtmlPrinter() {
-   }
-@@ -22,5 +23,10 @@
-     return sideBySidePrinter.generateSideBySideJsonHtml(diffFiles);
-   };
+<p>But it also underscores how much <em>we don’t know yet</em>. Touch is perhaps the least-studied sense in HRI. We have visual robots, auditory robots, even olfactory robots (yes, smell!), but tactile robots are still rare. This is our frontier.</p>
 
-+  HtmlPrinter.prototype.generateFileListSummary = function(diffJson, config) {
-+    var fileListPrinter = new FileListPrinter(config);
-+    return fileListPrinter.generateFileList(diffJson);
-+  };
-+
-   module.exports.HtmlPrinter = new HtmlPrinter();
- })();
-diff --git a/src/line-by-line-printer.js b/src/line-by-line-printer.js
-index b07eb53c..d230bedd 100644
---- a/src/line-by-line-printer.js
-+++ b/src/line-by-line-printer.js
-@@ -11,7 +11,8 @@
-   var utils = require('./utils.js').Utils;
-   var Rematch = require('./rematch.js').Rematch;
+<hr />
 
--  var hoganUtils = require('./hoganjs-utils.js').HoganJsUtils;
-+  var hoganUtils;
-+
-   var genericTemplatesPath = 'generic';
-   var baseTemplatesPath = 'line-by-line';
-   var iconsBaseTemplatesPath = 'icon';
-@@ -19,6 +20,9 @@
+<h2 id="whats-next">What’s Next?</h2>
 
-   function LineByLinePrinter(config) {
-     this.config = config;
-+
-+    var HoganJsUtils = require('./hoganjs-utils.js').HoganJsUtils;
-+    hoganUtils = new HoganJsUtils(config);
-   }
+<p>We’re already discussing <strong>Beyond Words 3</strong>. Ideas on the table:</p>
+<ul>
+  <li>A hackathon component (build tactile interfaces in real time)</li>
+  <li>Clinical applications focus (hospitals, therapy, assistive care)</li>
+  <li>Standardization of tactile sensors and benchmarking protocols</li>
+</ul>
 
-   LineByLinePrinter.prototype.makeFileDiffHtml = function(file, diffs) {
-diff --git a/src/side-by-side-printer.js b/src/side-by-side-printer.js
-index bbf1dc8d..5e3033b3 100644
---- a/src/side-by-side-printer.js
-+++ b/src/side-by-side-printer.js
-@@ -11,7 +11,8 @@
-   var utils = require('./utils.js').Utils;
-   var Rematch = require('./rematch.js').Rematch;
+<p>The workshop has grown from a niche conversation to a visible part of ICSR’s program. That’s incredible.</p>
 
--  var hoganUtils = require('./hoganjs-utils.js').HoganJsUtils;
-+  var hoganUtils;
-+
-   var genericTemplatesPath = 'generic';
-   var baseTemplatesPath = 'side-by-side';
-   var iconsBaseTemplatesPath = 'icon';
-@@ -26,6 +27,9 @@
+<hr />
 
-   function SideBySidePrinter(config) {
-     this.config = config;
-+
-+    var HoganJsUtils = require('./hoganjs-utils.js').HoganJsUtils;
-+    hoganUtils = new HoganJsUtils(config);
-   }
+<h2 id="thank-you">Thank You</h2>
 
-   SideBySidePrinter.prototype.makeDiffHtml = function(file, diffs) {
-diff --git a/test/file-list-printer-tests.js b/test/file-list-printer-tests.js
-index a502a46f..60ea3208 100644
---- a/test/file-list-printer-tests.js
-+++ b/test/file-list-printer-tests.js
-@@ -1,6 +1,6 @@
- var assert = require('assert');
+<p>To our speakers for bringing their expertise and passion. To our participants for asking hard questions. To Teodor, Patrick, and Adriana for co-organizing and supporting the vision. And to ICSR for providing the platform.</p>
 
--var fileListPrinter = require('../src/file-list-printer.js').FileListPrinter;
-+var fileListPrinter = new (require('../src/file-list-printer.js').FileListPrinter)();
+<p>If you’re interested in touch and social robotics, mark your calendar for next year. And if you have a paper, demo, or idea to contribute, reach out—we’re always looking for fresh perspectives.</p>
 
- describe('FileListPrinter', function() {
-   describe('generateFileList', function() {
-diff --git a/test/hogan-cache-tests.js b/test/hogan-cache-tests.js
-index 190bf6f8..3bb754ac 100644
---- a/test/hogan-cache-tests.js
-+++ b/test/hogan-cache-tests.js
-@@ -1,6 +1,6 @@
- var assert = require('assert');
+<hr />
 
--var HoganJsUtils = require('../src/hoganjs-utils.js').HoganJsUtils;
-+var HoganJsUtils = new (require('../src/hoganjs-utils.js').HoganJsUtils)();
- var diffParser = require('../src/diff-parser.js').DiffParser;
+<p><strong>Related:</strong></p>
+<ul>
+  <li><a href="https://www.icsr-conference.org/workshops/">Beyond Words workshop series</a> @ ICSR</li>
+  <li>See the <a href="/~saood//projects/#soft-robotic-haptic-interface-for-anxiety-reduction">Soft Robotic Haptic Interface</a> and <a href="/~saood//projects/#tactile-array-for-humanoid-hand">Tactile Array</a> projects</li>
+  <li>Blog: “A Touch of Feeling in Robotics” (ENSTA feature article)</li>
+</ul>]]></content><author><name></name></author><category term="research" /><category term="community" /><category term="ICSR" /><category term="workshop" /><category term="HRI" /><category term="touch" /><category term="haptics" /><category term="social-robotics" /><category term="conference" /><summary type="html"><![CDATA[Reflections on hosting the 2nd Workshop on The Role of Touch in Social Robotics at ICSR 2026]]></summary></entry><entry><title type="html">From PhD Thesis to Licensed Technology: How Our Focused-Ultrasound Robot Became Therasonic</title><link href="https://perso.ensta.fr/~saood/blog/2026/therasonic-licensed/" rel="alternate" type="text/html" title="From PhD Thesis to Licensed Technology: How Our Focused-Ultrasound Robot Became Therasonic" /><published>2026-07-15T00:00:00+00:00</published><updated>2026-07-15T00:00:00+00:00</updated><id>https://perso.ensta.fr/~saood/blog/2026/therasonic-licensed</id><content type="html" xml:base="https://perso.ensta.fr/~saood/blog/2026/therasonic-licensed/"><![CDATA[<h2 id="a-research-dream-realized">A Research Dream Realized</h2>
 
- describe('HoganJsUtils', function() {
-@@ -21,16 +21,28 @@ describe('HoganJsUtils', function() {
-       });
-       assert.equal(emptyDiffHtml, result);
-     });
-+
-     it('should render view without cache', function() {
-       var result = HoganJsUtils.render('generic', 'empty-diff', {
-         contentClass: 'd2h-code-line',
-         diffParser: diffParser
-       }, {noCache: true});
--      assert.equal(emptyDiffHtml + '\n', result);
-+      assert.equal(emptyDiffHtml, result);
-     });
-+
-     it('should return null if template is missing', function() {
--      var result = HoganJsUtils.render('generic', 'missing-template', {}, {noCache: true});
-+      var hoganUtils = new (require('../src/hoganjs-utils.js').HoganJsUtils)({noCache: true});
-+      var result = hoganUtils.render('generic', 'missing-template', {});
-       assert.equal(null, result);
-     });
-+
-+    it('should allow templates to be overridden', function() {
-+      var emptyDiffTemplate = HoganJsUtils.compile('&lt;p&gt;&lt;/p&gt;');
-+
-+      var config = {templates: {'generic-empty-diff': emptyDiffTemplate}};
-+      var hoganUtils = new (require('../src/hoganjs-utils.js').HoganJsUtils)(config);
-+      var result = hoganUtils.render('generic', 'empty-diff', {myName: 'Rodrigo Fernandes'});
-+      assert.equal('&lt;p&gt;Rodrigo Fernandes&lt;/p&gt;', result);
-+    });
-   });
- });
-diff --git a/test/line-by-line-tests.js b/test/line-by-line-tests.js
-index 1cd92073..8869b3df 100644
---- a/test/line-by-line-tests.js
-+++ b/test/line-by-line-tests.js
-@@ -14,7 +14,7 @@ describe('LineByLinePrinter', function() {
-         '            File without changes\n' +
-         '        &lt;/div&gt;\n' +
-         '    &lt;/td&gt;\n' +
--        '&lt;/tr&gt;\n';
-+        '&lt;/tr&gt;';
+<p>When I started my Master’s research at ICube Laboratory (University of Strasbourg) in 2022, I was tackling a fundamental challenge in neuromedicine: <strong>how do you safely deliver drugs across the blood-brain barrier?</strong> The BBB is a critical protective membrane, but it also blocks ~99% of large-molecule therapeutics from reaching brain tumors, Parkinson’s disease, Alzheimer’s, and other neurological conditions.</p>
 
-       assert.equal(expected, fileHtml);
-     });
-@@ -422,7 +422,6 @@ describe('LineByLinePrinter', function() {
-         '        &lt;/div&gt;\n' +
-         '    &lt;/td&gt;\n' +
-         '&lt;/tr&gt;\n' +
--        '\n' +
-         '                &lt;/tbody&gt;\n' +
-         '            &lt;/table&gt;\n' +
-         '        &lt;/div&gt;\n' +
-diff --git a/test/side-by-side-printer-tests.js b/test/side-by-side-printer-tests.js
-index 76625f8e..771daaa5 100644
---- a/test/side-by-side-printer-tests.js
-+++ b/test/side-by-side-printer-tests.js
-@@ -14,7 +14,7 @@ describe('SideBySidePrinter', function() {
-         '            File without changes\n' +
-         '        &lt;/div&gt;\n' +
-         '    &lt;/td&gt;\n' +
--        '&lt;/tr&gt;\n';
-+        '&lt;/tr&gt;';
+<p>The answer our team developed: <strong>a robot-assisted focused ultrasound system</strong> capable of temporarily, safely, and reversibly opening the BBB at precise target locations. It sounds like science fiction, but the physics is solid, and the clinical need is urgent.</p>
 
-       assert.equal(expectedRight, fileHtml.right);
-       assert.equal(expectedLeft, fileHtml.left);
-@@ -324,7 +324,6 @@ describe('SideBySidePrinter', function() {
-         '        &lt;/div&gt;\n' +
-         '    &lt;/td&gt;\n' +
-         '&lt;/tr&gt;\n' +
--        '\n' +
-         '                    &lt;/tbody&gt;\n' +
-         '                &lt;/table&gt;\n' +
-         '            &lt;/div&gt;\n' +
+<p>Fast-forward to July 2026, and I’m thrilled to announce that our work has been <strong>patented (EP4445859A1) and exclusively licensed to TheraSonic</strong>, a CEA Neurospin spin-off company. This isn’t just an academic milestone—it’s the beginning of a real therapeutic system that will reach patients.</p>
 
-From f3cadb96677d0eb82fc2752dc3ffbf35ca9b5bdb Mon Sep 17 00:00:00 2001
-From: Rodrigo Fernandes &lt;rtfrodrigo@gmail.com&gt;
-Date: Sat, 15 Oct 2016 13:21:22 +0100
-Subject: [PATCH 2/2] Allow uncompiled templates
+<hr />
 
----
- README.md                 |  3 +++
- src/hoganjs-utils.js      |  7 +++++++
- test/hogan-cache-tests.js | 24 +++++++++++++++++++++++-
- 3 files changed, 33 insertions(+), 1 deletion(-)
+<h2 id="the-research-behind-the-technology">The Research Behind the Technology</h2>
 
-diff --git a/README.md b/README.md
-index 132c8a28..46909f25 100644
---- a/README.md
-+++ b/README.md
-@@ -98,6 +98,9 @@ The HTML output accepts a Javascript object with configuration. Possible options
-   - `synchronisedScroll`: scroll both panes in side-by-side mode: `true` or `false`, default is `false`
-   - `matchWordsThreshold`: similarity threshold for word matching, default is 0.25
-   - `matchingMaxComparisons`: perform at most this much comparisons for line matching a block of changes, default is `2500`
-+  - `templates`: object with previously compiled templates to replace parts of the html
-+  - `rawTemplates`: object with raw not compiled templates to replace parts of the html
-+  &gt; For more information regarding the possible templates look into [src/templates](https://github.com/rtfpessoa/diff2html/tree/master/src/templates)
+<p>The technical approach combined three key innovations:</p>
 
- ## Diff2HtmlUI Helper
+<p><strong>1. Robotic Trajectory Planning</strong><br />
+We developed optimization-based algorithms to compute smooth, collision-free paths for robot end-effectors that position ultrasound transducers at precise angles. This ensures optimal acoustic coupling while minimizing off-target exposure and thermal side effects.</p>
 
-diff --git a/src/hoganjs-utils.js b/src/hoganjs-utils.js
-index 0dda08d7..b2e9c275 100644
---- a/src/hoganjs-utils.js
-+++ b/src/hoganjs-utils.js
-@@ -17,6 +17,13 @@
-   function HoganJsUtils(configuration) {
-     this.config = configuration || {};
-     extraTemplates = this.config.templates || {};
-+
-+    var rawTemplates = this.config.rawTemplates || {};
-+    for (var templateName in rawTemplates) {
-+      if (rawTemplates.hasOwnProperty(templateName)) {
-+        if (!extraTemplates[templateName]) extraTemplates[templateName] = this.compile(rawTemplates[templateName]);
-+      }
-+    }
-   }
+<p><strong>2. Real-Time Control &amp; Safety</strong><br />
+Building on ROS, we created closed-loop control pipelines that:</p>
+<ul>
+  <li>Adjust ultrasound power and frequency in real time</li>
+  <li>Monitor B-mode and Doppler ultrasound imaging for feedback</li>
+  <li>Automatically shut down upon detecting anomalies</li>
+</ul>
 
-   HoganJsUtils.prototype.render = function(namespace, view, params) {
-diff --git a/test/hogan-cache-tests.js b/test/hogan-cache-tests.js
-index 3bb754ac..a34839c0 100644
---- a/test/hogan-cache-tests.js
-+++ b/test/hogan-cache-tests.js
-@@ -36,7 +36,7 @@ describe('HoganJsUtils', function() {
-       assert.equal(null, result);
-     });
+<p><strong>3. Preclinical Validation</strong><br />
+Rigorous testing in ex-vivo and in-vivo models confirmed BBB opening and successful nanoparticle extravasation, paving the way for clinical translation.</p>
 
--    it('should allow templates to be overridden', function() {
-+    it('should allow templates to be overridden with compiled templates', function() {
-       var emptyDiffTemplate = HoganJsUtils.compile('&lt;p&gt;&lt;/p&gt;');
+<hr />
 
-       var config = {templates: {'generic-empty-diff': emptyDiffTemplate}};
-@@ -44,5 +44,27 @@ describe('HoganJsUtils', function() {
-       var result = hoganUtils.render('generic', 'empty-diff', {myName: 'Rodrigo Fernandes'});
-       assert.equal('&lt;p&gt;Rodrigo Fernandes&lt;/p&gt;', result);
-     });
-+
-+    it('should allow templates to be overridden with uncompiled templates', function() {
-+      var emptyDiffTemplate = '&lt;p&gt;&lt;/p&gt;';
-+
-+      var config = {rawTemplates: {'generic-empty-diff': emptyDiffTemplate}};
-+      var hoganUtils = new (require('../src/hoganjs-utils.js').HoganJsUtils)(config);
-+      var result = hoganUtils.render('generic', 'empty-diff', {myName: 'Rodrigo Fernandes'});
-+      assert.equal('&lt;p&gt;Rodrigo Fernandes&lt;/p&gt;', result);
-+    });
-+
-+    it('should allow templates to be overridden giving priority to compiled templates', function() {
-+      var emptyDiffTemplate = HoganJsUtils.compile('&lt;p&gt;&lt;/p&gt;');
-+      var emptyDiffTemplateUncompiled = '&lt;p&gt;Not used!&lt;/p&gt;';
-+
-+      var config = {
-+        templates: {'generic-empty-diff': emptyDiffTemplate},
-+        rawTemplates: {'generic-empty-diff': emptyDiffTemplateUncompiled}
-+      };
-+      var hoganUtils = new (require('../src/hoganjs-utils.js').HoganJsUtils)(config);
-+      var result = hoganUtils.render('generic', 'empty-diff', {myName: 'Rodrigo Fernandes'});
-+      assert.equal('&lt;p&gt;Rodrigo Fernandes&lt;/p&gt;', result);
-+    });
-   });
- });
-</code></pre>]]></content><author><name></name></author><category term="sample-posts"/><category term="formatting"/><category term="code"/><summary type="html"><![CDATA[this is how you can display code diffs]]></summary></entry><entry><title type="html">a post with advanced image components</title><link href="https://perso.ensta-paris.fr/~saood/blog/2024/advanced-images/" rel="alternate" type="text/html" title="a post with advanced image components"/><published>2024-01-27T11:46:00+00:00</published><updated>2024-01-27T11:46:00+00:00</updated><id>https://perso.ensta-paris.fr/~saood/blog/2024/advanced-images</id><content type="html" xml:base="https://perso.ensta-paris.fr/~saood/blog/2024/advanced-images/"><![CDATA[<p>This is an example post with advanced image components.</p> <h2 id="image-slider">Image Slider</h2> <p>This is a simple image slider. It uses the <a href="https://swiperjs.com/">Swiper</a> library. Check the <a href="https://swiperjs.com/demos">examples page</a> for more information of what you can achieve with it.</p> <swiper-container keyboard="true" navigation="true" pagination="true" pagination-clickable="true" pagination-dynamic-bullets="true" rewind="true"> <swiper-slide> <figure> <picture> <source class="responsive-img-srcset" srcset="/~saood/assets/img/9-480.webp 480w,/~saood/assets/img/9-800.webp 800w,/~saood/assets/img/9-1400.webp 1400w," type="image/webp" sizes="95vw"/> <img src="/~saood/assets/img/9.jpg" class="img-fluid rounded z-depth-1" width="100%" height="auto" loading="eager" onerror="this.onerror=null; $('.responsive-img-srcset').remove();"/> </picture> </figure> </swiper-slide> <swiper-slide> <figure> <picture> <source class="responsive-img-srcset" srcset="/~saood/assets/img/7-480.webp 480w,/~saood/assets/img/7-800.webp 800w,/~saood/assets/img/7-1400.webp 1400w," type="image/webp" sizes="95vw"/> <img src="/~saood/assets/img/7.jpg" class="img-fluid rounded z-depth-1" width="100%" height="auto" loading="eager" onerror="this.onerror=null; $('.responsive-img-srcset').remove();"/> </picture> </figure> </swiper-slide> <swiper-slide> <figure> <picture> <source class="responsive-img-srcset" srcset="/~saood/assets/img/8-480.webp 480w,/~saood/assets/img/8-800.webp 800w,/~saood/assets/img/8-1400.webp 1400w," type="image/webp" sizes="95vw"/> <img src="/~saood/assets/img/8.jpg" class="img-fluid rounded z-depth-1" width="100%" height="auto" loading="eager" onerror="this.onerror=null; $('.responsive-img-srcset').remove();"/> </picture> </figure> </swiper-slide> <swiper-slide> <figure> <picture> <source class="responsive-img-srcset" srcset="/~saood/assets/img/10-480.webp 480w,/~saood/assets/img/10-800.webp 800w,/~saood/assets/img/10-1400.webp 1400w," type="image/webp" sizes="95vw"/> <img src="/~saood/assets/img/10.jpg" class="img-fluid rounded z-depth-1" width="100%" height="auto" loading="eager" onerror="this.onerror=null; $('.responsive-img-srcset').remove();"/> </picture> </figure> </swiper-slide> <swiper-slide> <figure> <picture> <source class="responsive-img-srcset" srcset="/~saood/assets/img/12-480.webp 480w,/~saood/assets/img/12-800.webp 800w,/~saood/assets/img/12-1400.webp 1400w," type="image/webp" sizes="95vw"/> <img src="/~saood/assets/img/12.jpg" class="img-fluid rounded z-depth-1" width="100%" height="auto" loading="eager" onerror="this.onerror=null; $('.responsive-img-srcset').remove();"/> </picture> </figure> </swiper-slide> </swiper-container> <h2 id="image-comparison-slider">Image Comparison Slider</h2> <p>This is a simple image comparison slider. It uses the <a href="https://img-comparison-slider.sneas.io/">img-comparison-slider</a> library. Check the <a href="https://img-comparison-slider.sneas.io/examples.html">examples page</a> for more information of what you can achieve with it.</p> <img-comparison-slider> <figure slot="first"> <picture> <source class="responsive-img-srcset" srcset="/~saood/assets/img/prof_pic-480.webp 480w,/~saood/assets/img/prof_pic-800.webp 800w,/~saood/assets/img/prof_pic-1400.webp 1400w," type="image/webp" sizes="95vw"/> <img src="/~saood/assets/img/prof_pic.jpg" class="img-fluid rounded z-depth-1" width="100%" height="auto" loading="lazy" onerror="this.onerror=null; $('.responsive-img-srcset').remove();"/> </picture> </figure> <figure slot="second"> <picture> <source class="responsive-img-srcset" srcset="/~saood/assets/img/prof_pic_color-480.webp 480w,/~saood/assets/img/prof_pic_color-800.webp 800w,/~saood/assets/img/prof_pic_color-1400.webp 1400w," type="image/webp" sizes="95vw"/> <img src="/~saood/assets/img/prof_pic_color.png" class="img-fluid rounded z-depth-1" width="100%" height="auto" loading="lazy" onerror="this.onerror=null; $('.responsive-img-srcset').remove();"/> </picture> </figure> </img-comparison-slider>]]></content><author><name></name></author><category term="sample-posts"/><category term="formatting"/><category term="images"/><summary type="html"><![CDATA[this is what advanced image components could look like]]></summary></entry><entry><title type="html">a post with vega lite</title><link href="https://perso.ensta-paris.fr/~saood/blog/2024/vega-lite/" rel="alternate" type="text/html" title="a post with vega lite"/><published>2024-01-27T00:20:00+00:00</published><updated>2024-01-27T00:20:00+00:00</updated><id>https://perso.ensta-paris.fr/~saood/blog/2024/vega-lite</id><content type="html" xml:base="https://perso.ensta-paris.fr/~saood/blog/2024/vega-lite/"><![CDATA[<p>This is an example post with some <a href="https://vega.github.io/vega-lite/">vega lite</a> code.</p> <div class="language-markdown highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">```</span><span class="nl">vega_lite
-</span><span class="sb">{
-  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-  "description": "A dot plot showing each movie in the database, and the difference from the average movie rating. The display is sorted by year to visualize everything in sequential order. The graph is for all Movies before 2019.",
-  "data": {
-    "url": "https://raw.githubusercontent.com/vega/vega/main/docs/data/movies.json"
-  },
-  "transform": [
-    {"filter": "datum['IMDB Rating'] != null"},
-    {"filter": {"timeUnit": "year", "field": "Release Date", "range": [null, 2019]}},
-    {
-      "joinaggregate": [{
-        "op": "mean",
-        "field": "IMDB Rating",
-        "as": "AverageRating"
-      }]
-    },
-    {
-      "calculate": "datum['IMDB Rating'] - datum.AverageRating",
-      "as": "RatingDelta"
-    }
-  ],
-  "mark": "point",
-  "encoding": {
-    "x": {
-      "field": "Release Date",
-      "type": "temporal"
-    },
-    "y": {
-      "field": "RatingDelta",
-      "type": "quantitative",
-      "title": "Rating Delta"
-    },
-    "color": {
-      "field": "RatingDelta",
-      "type": "quantitative",
-      "scale": {"domainMid": 0},
-      "title": "Rating Delta"
-    }
-  }
-}</span>
-<span class="p">```</span>
-</code></pre></div></div> <p>Which generates:</p> <pre><code class="language-vega_lite">{
-  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-  "description": "A dot plot showing each movie in the database, and the difference from the average movie rating. The display is sorted by year to visualize everything in sequential order. The graph is for all Movies before 2019.",
-  "data": {
-    "url": "https://raw.githubusercontent.com/vega/vega/main/docs/data/movies.json"
-  },
-  "transform": [
-    {"filter": "datum['IMDB Rating'] != null"},
-    {"filter": {"timeUnit": "year", "field": "Release Date", "range": [null, 2019]}},
-    {
-      "joinaggregate": [{
-        "op": "mean",
-        "field": "IMDB Rating",
-        "as": "AverageRating"
-      }]
-    },
-    {
-      "calculate": "datum['IMDB Rating'] - datum.AverageRating",
-      "as": "RatingDelta"
-    }
-  ],
-  "mark": "point",
-  "encoding": {
-    "x": {
-      "field": "Release Date",
-      "type": "temporal"
-    },
-    "y": {
-      "field": "RatingDelta",
-      "type": "quantitative",
-      "title": "Rating Delta"
-    },
-    "color": {
-      "field": "RatingDelta",
-      "type": "quantitative",
-      "scale": {"domainMid": 0},
-      "title": "Rating Delta"
-    }
-  }
-}
-</code></pre> <p>This plot supports both light and dark themes.</p>]]></content><author><name></name></author><category term="sample-posts"/><category term="formatting"/><category term="charts"/><summary type="html"><![CDATA[this is what included vega lite code could look like]]></summary></entry><entry><title type="html">a post with geojson</title><link href="https://perso.ensta-paris.fr/~saood/blog/2024/geojson-map/" rel="alternate" type="text/html" title="a post with geojson"/><published>2024-01-26T17:57:00+00:00</published><updated>2024-01-26T17:57:00+00:00</updated><id>https://perso.ensta-paris.fr/~saood/blog/2024/geojson-map</id><content type="html" xml:base="https://perso.ensta-paris.fr/~saood/blog/2024/geojson-map/"><![CDATA[<p>This is an example post with some <a href="https://geojson.org/">geojson</a> code. The support is provided thanks to <a href="https://leafletjs.com/">Leaflet</a>. To create your own visualization, go to <a href="https://geojson.io/">geojson.io</a>.</p> <div class="language-markdown highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">```</span><span class="nl">geojson
-</span><span class="sb">{
-  "type": "FeatureCollection",
-  "features": [
-    {
-      "type": "Feature",
-      "properties": {},
-      "geometry": {
-        "coordinates": [
-          [
-            [
-              -60.11363029935569,
-              -2.904625022183211
-            ],
-            [
-              -60.11363029935569,
-              -3.162613728707967
-            ],
-            [
-              -59.820894493858034,
-              -3.162613728707967
-            ],
-            [
-              -59.820894493858034,
-              -2.904625022183211
-            ],
-            [
-              -60.11363029935569,
-              -2.904625022183211
-            ]
-          ]
-        ],
-        "type": "Polygon"
-      }
-    }
-  ]
-}</span>
-<span class="p">```</span>
-</code></pre></div></div> <p>Which generates:</p> <pre><code class="language-geojson">{
-  "type": "FeatureCollection",
-  "features": [
-    {
-      "type": "Feature",
-      "properties": {},
-      "geometry": {
-        "coordinates": [
-          [
-            [
-              -60.11363029935569,
-              -2.904625022183211
-            ],
-            [
-              -60.11363029935569,
-              -3.162613728707967
-            ],
-            [
-              -59.820894493858034,
-              -3.162613728707967
-            ],
-            [
-              -59.820894493858034,
-              -2.904625022183211
-            ],
-            [
-              -60.11363029935569,
-              -2.904625022183211
-            ]
-          ]
-        ],
-        "type": "Polygon"
-      }
-    }
-  ]
-}
-</code></pre>]]></content><author><name></name></author><category term="sample-posts"/><category term="formatting"/><category term="charts"/><category term="maps"/><summary type="html"><![CDATA[this is what included geojson code could look like]]></summary></entry></feed>
+<h2 id="from-research-lab-to-commercial-reality">From Research Lab to Commercial Reality</h2>
+
+<p>The path from thesis to license involved:</p>
+
+<ul>
+  <li><strong>2022–2023:</strong> Research design, experimental validation, technical writing</li>
+  <li><strong>2023:</strong> Patent application filing (coordinated with SATT Conectus and CEA)</li>
+  <li><strong>2024:</strong> Patent awarded (EP4445859A1)</li>
+  <li><strong>2026:</strong> Exclusive technology license to TheraSonic</li>
+</ul>
+
+<p>This kind of tech transfer requires more than just good science—it requires partnerships, regulatory foresight, and a startup team crazy enough to believe in the vision. TheraSonic’s co-founders and the CEA team exemplify this.</p>
+
+<div class="row mt-3">
+    <div class="col-sm mt-3 mt-md-0">
+        
+
+
+
+<figure>
+  <picture>
+    <!-- Auto scaling with imagemagick -->
+    <!--
+      See https://www.debugbear.com/blog/responsive-images#w-descriptors-and-the-sizes-attribute and
+      https://developer.mozilla.org/en-US/docs/Learn/HTML/Multimedia_and_embedding/Responsive_images for info on defining 'sizes' for responsive images
+    -->
+    
+    <img src="/~saood/assets/img/blog/post02_1.jpg" class="img-fluid rounded z-depth-1" width="100%" height="auto" title="Therasonic tech transfer" loading="lazy" onerror="this.onerror=null; $('.responsive-img-srcset').remove();" />
+  </picture>
+
+  
+</figure>
+
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+        
+
+
+
+<figure>
+  <picture>
+    <!-- Auto scaling with imagemagick -->
+    <!--
+      See https://www.debugbear.com/blog/responsive-images#w-descriptors-and-the-sizes-attribute and
+      https://developer.mozilla.org/en-US/docs/Learn/HTML/Multimedia_and_embedding/Responsive_images for info on defining 'sizes' for responsive images
+    -->
+    
+    <img src="/~saood/assets/img/blog/post02_2.jpg" class="img-fluid rounded z-depth-1" width="100%" height="auto" title="Patent and licensing" loading="lazy" onerror="this.onerror=null; $('.responsive-img-srcset').remove();" />
+  </picture>
+
+  
+</figure>
+
+    </div>
+</div>
+
+<hr />
+
+<h2 id="what-happens-next">What Happens Next?</h2>
+
+<p>As an <strong>Engineering Consultant at TheraSonic</strong>, I remain actively involved. The company is now:</p>
+<ul>
+  <li>Finalizing regulatory compliance for the first prototype</li>
+  <li>Planning toward clinical trials (~2028 timeline)</li>
+  <li>Targeting market launch around 2030</li>
+  <li>Raising capital via crowdequity to accelerate development</li>
+</ul>
+
+<p>The focused ultrasound itself is not new (decades of research), but the <strong>combination with precision robotics and machine learning-based trajectory planning</strong> opens a new clinical frontier.</p>
+
+<hr />
+
+<h2 id="gratitude--acknowledgments">Gratitude &amp; Acknowledgments</h2>
+
+<p>This achievement is the fruit of 15 years of collaborative research across CEA/NeuroSpin, BioMaps, and ICube. Special thanks to:</p>
+<ul>
+  <li><strong>Prof. Adriana Tapus</strong> (my PhD advisor, continuing to support)</li>
+  <li><strong>Dr. Benoit Larrat &amp; Dr. Jonathan Vappou</strong> (CEA pioneers in focused ultrasound)</li>
+  <li><strong>Prof. Florent Nageotte</strong> (ICube robotics group)</li>
+  <li>The CEA Investissement, ANR, Bpifrance, and regional partners who funded the groundwork</li>
+  <li>And most importantly, <strong>SATT Conectus</strong> for shepherding the tech transfer with excellence</li>
+</ul>
+
+<hr />
+
+<h2 id="what-this-means">What This Means</h2>
+
+<p>For a researcher, this is validation that your work matters beyond the conference room. For patients with Parkinson’s, Huntington’s, ALS, Alzheimer’s, and brain tumors, it’s hope—hope that in a few years, a small robot might unlock a path to treatment that was previously impossible.</p>
+
+<p>If you’re interested in the technical details, check out our peer-reviewed publications on controlled acoustic field modeling (CRAS 2023) and ultrasound safety/efficacy (ISTU 2023) linked on the Publications page. Or visit <a href="https://www.therasonic.fr/">therasonic.fr</a> to learn more about the company.</p>
+
+<hr />
+
+<p><strong>Related:</strong></p>
+<ul>
+  <li>See the <a href="/~saood//projects/#robotic-assistance-for-blood-brain-barrier-opening-via-focused-ultrasound">Therasonic BBB project</a> for full technical details</li>
+  <li>Publications: CRAS 2023, ISTU 2023 on the Publications page</li>
+</ul>]]></content><author><name></name></author><category term="research" /><category term="impact" /><category term="tech-transfer" /><category term="robotics" /><category term="patent" /><category term="licensing" /><category term="innovation" /><summary type="html"><![CDATA[The journey from research at ICube to real-world deployment—patent EP4445859A1 licensed to startup Therasonic]]></summary></entry><entry><title type="html">ICRA 2026 Recap: Contributing Factors in Human-Robot Handshake</title><link href="https://perso.ensta.fr/~saood/blog/2026/icra-2026-handshake/" rel="alternate" type="text/html" title="ICRA 2026 Recap: Contributing Factors in Human-Robot Handshake" /><published>2026-06-10T00:00:00+00:00</published><updated>2026-06-10T00:00:00+00:00</updated><id>https://perso.ensta.fr/~saood/blog/2026/icra-2026-handshake</id><content type="html" xml:base="https://perso.ensta.fr/~saood/blog/2026/icra-2026-handshake/"><![CDATA[<h2 id="a-handshake-as-a-research-question">A Handshake as a Research Question</h2>
+
+<p>One of the most fundamental—yet understudied—interactions between humans and robots is the <strong>handshake</strong>. Beyond its role as a social greeting, a handshake encodes rich tactile information about trust, intention, comfort, and personality. But what makes a robot’s handshake feel <em>natural</em>? And can we quantify it?</p>
+
+<p>This summer at <strong>ICRA 2026 in Vienna</strong>, my co-author Prof. Adriana Tapus and I presented our paper, <em>“Contributing Factors in Human-Robot Handshake: Compliance, Hand Grip, and Synchrony,”</em> which answers these questions through controlled experiment and statistical analysis.</p>
+
+<hr />
+
+<h2 id="the-experiment">The Experiment</h2>
+
+<p>We recruited 16 participants and had them perform handshakes with a <strong>Franka Emika Panda collaborative robot arm</strong> equipped with a custom adaptive gripper (based on the Meka hand) that allowed us to modulate:</p>
+
+<ul>
+  <li><strong>Compliance</strong> (softness/stiffness): Stiff, moderate, soft</li>
+  <li><strong>Grip force</strong>: Gentle, normal, firm</li>
+  <li><strong>Temporal synchrony</strong>: Robot tracking human motion perfectly, or with slight delays/early initiations</li>
+</ul>
+
+<p>This gave us a <strong>2×2×2 factorial design</strong>—16 total conditions. After each handshake, participants rated comfort, naturalness, and trustworthiness on validated scales. We also recorded motion data and force curves for post-hoc analysis.</p>
+
+<hr />
+
+<h2 id="key-findings">Key Findings</h2>
+
+<p><strong>(Results now in press; full paper available on request)</strong></p>
+
+<p><strong>1. Compliance Matters Most</strong><br />
+Soft, compliant contact is universally preferred. Rigid, stiff grasps are perceived as aggressive or defensive. A key design principle: <strong>adapt your grip impedance to feel human-like, not mechanical.</strong></p>
+
+<p><strong>2. Grip Force Must Be Context-Aware</strong><br />
+Moderate, socially-appropriate force outperforms both extremes:</p>
+<ul>
+  <li>Too tight = uncomfortable, aggressive, unpersonal</li>
+  <li>Too loose = impersonal, dismissive, low-effort</li>
+</ul>
+
+<p>The sweet spot: force modulation that tracks human intent and personality.</p>
+
+<p><strong>3. Synchrony is Critical</strong><br />
+Robots that <em>anticipate</em> human hand motion create more fluid, natural interactions than those who react passively. When the robot grasps slightly before the human hand is fully extended—or releases slightly before the human’s grip loosens—the interaction feels coordinated and intentional.</p>
+
+<div class="row mt-3 mb-3">
+    <div class="col-sm mt-3 mt-md-0">
+        
+
+
+
+<figure>
+  <picture>
+    <!-- Auto scaling with imagemagick -->
+    <!--
+      See https://www.debugbear.com/blog/responsive-images#w-descriptors-and-the-sizes-attribute and
+      https://developer.mozilla.org/en-US/docs/Learn/HTML/Multimedia_and_embedding/Responsive_images for info on defining 'sizes' for responsive images
+    -->
+    
+    <img src="/~saood/assets/img/blog/post03_1.jpg" class="img-fluid rounded z-depth-1" width="100%" height="auto" title="ICRA 2026 Vienna" loading="lazy" onerror="this.onerror=null; $('.responsive-img-srcset').remove();" />
+  </picture>
+
+  
+</figure>
+
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+        
+
+
+
+<figure>
+  <picture>
+    <!-- Auto scaling with imagemagick -->
+    <!--
+      See https://www.debugbear.com/blog/responsive-images#w-descriptors-and-the-sizes-attribute and
+      https://developer.mozilla.org/en-US/docs/Learn/HTML/Multimedia_and_embedding/Responsive_images for info on defining 'sizes' for responsive images
+    -->
+    
+    <img src="/~saood/assets/img/blog/post06.jpg" class="img-fluid rounded z-depth-1" width="100%" height="auto" title="Handshake demonstration" loading="lazy" onerror="this.onerror=null; $('.responsive-img-srcset').remove();" />
+  </picture>
+
+  
+</figure>
+
+    </div>
+</div>
+
+<hr />
+
+<h2 id="why-this-matters">Why This Matters</h2>
+
+<h3 id="for-social-robotics">For Social Robotics</h3>
+<p>These findings inform design guidelines for collaborative robots and service robots. A robot that shakes hands with care and attention will be perceived as more trustworthy and less threatening.</p>
+
+<h3 id="for-humanoid-platforms">For Humanoid Platforms</h3>
+<p>Upper-body control systems (Meka hands, industrial arms) can now tune their compliance, force profiles, and motion prediction algorithms based on these empirical results.</p>
+
+<h3 id="for-building-trust-in-hri">For Building Trust in HRI</h3>
+<p>Tactile interaction is a powerful channel for building rapport. A good handshake is a conversation starter.</p>
+
+<h3 id="for-assistive-robotics">For Assistive Robotics</h3>
+<p>Elderly or disabled users especially benefit from robots that can respond to physical touch with sensitivity and respect.</p>
+
+<hr />
+
+<h2 id="the-broader-context">The Broader Context</h2>
+
+<p>This work sits at the intersection of <strong>tactile sensing</strong>, <strong>robot control</strong>, and <strong>human factors</strong>. It builds on my broader research into touch for robotics:</p>
+
+<ul>
+  <li><strong>Tactile Array for Humanoid Hand</strong> — enabling robots to <em>sense</em> hand contact</li>
+  <li><strong>Generative Tactile Affordance</strong> — enabling robots to <em>predict</em> tactile futures</li>
+  <li><strong>Soft Robotic Haptic Interface</strong> — enabling robots to <em>express</em> emotion through touch</li>
+</ul>
+
+<p>A handshake, then, is a microcosm: it combines sensing (the robot feels the human’s grasp), prediction (the robot anticipates release), and expression (the robot conveys care through compliance and timing).</p>
+
+<hr />
+
+<h2 id="thank-you-to-vienna--the-hri-community">Thank You to Vienna &amp; the HRI Community</h2>
+
+<p>ICRA 2026 was an incredible gathering. The energy, the scale, the quality of research—it reaffirmed why we do this work. Special thanks to:</p>
+<ul>
+  <li>Prof. Adriana Tapus for unwavering mentorship</li>
+  <li>The Franka Emika team for robust collaborative hardware</li>
+  <li>Our 16 brave participants who shook hands with a robot 16 times each</li>
+  <li>The HRI community for pushing the frontier on what makes interaction <em>feel</em> right</li>
+</ul>
+
+<hr />
+
+<h2 id="get-involved">Get Involved</h2>
+
+<p>If you’re curious about the full methodology, statistical analysis, or want to replicate the study, the paper will be available on arXiv and IEEE Xplore. We’re also releasing the motion capture dataset to enable future research.</p>
+
+<hr />
+
+<p><strong>Related:</strong></p>
+<ul>
+  <li>See the <a href="/~saood//projects/#contributing-factors-in-human-robot-handshake">Human-Robot Handshake project</a> for full technical details</li>
+  <li>Publications: Saood &amp; Tapus (2026), ICRA, Paper ThI1I.171</li>
+  <li>See also: <a href="/~saood//projects/#tactile-array-for-humanoid-hand">Tactile Array for Humanoid Hand</a> and <a href="/~saood//projects/#soft-robotic-haptic-interface-for-anxiety-reduction">Soft Robotic Haptic Interface</a></li>
+</ul>]]></content><author><name></name></author><category term="research" /><category term="publication" /><category term="ICRA" /><category term="conference" /><category term="HRI" /><category term="human-robot-interaction" /><category term="haptics" /><summary type="html"><![CDATA[What makes a natural, comfortable handshake between humans and robots? Results from our empirical study.]]></summary></entry><entry><title type="html">Blog Pipeline — Framework for Real Posts</title><link href="https://perso.ensta.fr/~saood/blog/2026/blog-pipeline-stub/" rel="alternate" type="text/html" title="Blog Pipeline — Framework for Real Posts" /><published>2026-01-15T00:00:00+00:00</published><updated>2026-01-15T00:00:00+00:00</updated><id>https://perso.ensta.fr/~saood/blog/2026/blog-pipeline-stub</id><content type="html" xml:base="https://perso.ensta.fr/~saood/blog/2026/blog-pipeline-stub/"><![CDATA[<h2 id="next-steps-for-blog-content">Next Steps for Blog Content</h2>
+
+<p>TODO(adnan): The site is ready for blog posts. To populate the blog:</p>
+
+<ol>
+  <li>Export your LinkedIn posts and articles (Settings &amp; Privacy → Data privacy → Get a copy of your data).</li>
+  <li>Select 8–10 posts worth expanding into full technical blog posts (see AGENT.md §3.2 for the suggested backlog: Beyond Words 2 recap, Therasonic licensing story, ICRA 2026 findings, ENSTA feature republish, generative tactile affordances explainer, publication roundup, etc.).</li>
+  <li>For each post, provide:
+    <ul>
+      <li>Original LinkedIn text / talking points</li>
+      <li>Any images or links</li>
+      <li>Technical details / context not suitable for LinkedIn (paper abstracts, research background, cross-links to your publications and projects pages)</li>
+      <li>Preferred publish date</li>
+    </ul>
+  </li>
+</ol>
+
+<p>Once received, the agent can draft the full posts in proper Jekyll format, cross-linked and ready to go live.</p>
+
+<h2 id="suggested-first-posts">Suggested First Posts</h2>
+
+<ul>
+  <li><strong>“Beyond Words 2: What We Learned Organizing ICSR 2026’s Touch Workshop”</strong></li>
+  <li><strong>“From PhD Thesis to Licensed Technology: How Our Focused-Ultrasound Robot Became Therasonic”</strong></li>
+  <li><strong>“ICRA 2026 Recap: Presenting ‘Contributing Factors in Human-Robot Handshake’“</strong></li>
+  <li><strong>“A Touch of Feeling in Robotics”</strong> (republish of ENSTA feature with attribution)</li>
+  <li><strong>“Generative Tactile Affordances: Teaching Robots to Understand Touch Through Action”</strong> (original explainer)</li>
+</ul>
+
+<p>See AGENT.md §3.2 for the full suggested backlog and expansion guidance.</p>]]></content><author><name></name></author><category term="site-updates" /><category term="meta" /><summary type="html"><![CDATA[TODO(adnan): This is a placeholder for the blog pipeline implementation. Posts should be created by expanding LinkedIn content with deeper technical context, cross-links to publications and projects, and original narrative.]]></summary></entry><entry><title type="html">A Touch of Feeling in Robotics (Adapted from ENSTA Feature)</title><link href="https://perso.ensta.fr/~saood/blog/2026/ensta-feature-touch-robotics/" rel="alternate" type="text/html" title="A Touch of Feeling in Robotics (Adapted from ENSTA Feature)" /><published>2026-01-10T00:00:00+00:00</published><updated>2026-01-10T00:00:00+00:00</updated><id>https://perso.ensta.fr/~saood/blog/2026/ensta-feature-touch-robotics</id><content type="html" xml:base="https://perso.ensta.fr/~saood/blog/2026/ensta-feature-touch-robotics/"><![CDATA[<blockquote>
+  <p>This post is an adapted version of an ENSTA institutional feature article. Original published January 2026 on <a href="https://www.ensta.fr">ensta.fr</a>. Republished here with expanded technical context and cross-links to my research.</p>
+</blockquote>
+
+<hr />
+
+<h2 id="the-hidden-sense-in-robotics">The Hidden Sense in Robotics</h2>
+
+<p>Robots can see better than humans. Computer vision systems can detect objects, faces, and emotions with superhuman accuracy. They can listen too—speech recognition rivals human performance. And they can even smell, with gas sensors that detect traces of compounds humans miss.</p>
+
+<p>But their touch? Rudimentary. Clumsy. Absent.</p>
+
+<p>For a field that aspires to humanoid robots capable of manipulation, caregiving, and social interaction, this gap is a critical vulnerability.</p>
+
+<div class="row mt-3 mb-3">
+    <div class="col-sm mt-3 mt-md-0">
+        
+
+
+
+<figure>
+  <picture>
+    <!-- Auto scaling with imagemagick -->
+    <!--
+      See https://www.debugbear.com/blog/responsive-images#w-descriptors-and-the-sizes-attribute and
+      https://developer.mozilla.org/en-US/docs/Learn/HTML/Multimedia_and_embedding/Responsive_images for info on defining 'sizes' for responsive images
+    -->
+    
+    <img src="/~saood/assets/img/blog/post08_1.jpg" class="img-fluid rounded z-depth-1" width="100%" height="auto" title="Tactile sensing research" loading="lazy" onerror="this.onerror=null; $('.responsive-img-srcset').remove();" />
+  </picture>
+
+  
+</figure>
+
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+        
+
+
+
+<figure>
+  <picture>
+    <!-- Auto scaling with imagemagick -->
+    <!--
+      See https://www.debugbear.com/blog/responsive-images#w-descriptors-and-the-sizes-attribute and
+      https://developer.mozilla.org/en-US/docs/Learn/HTML/Multimedia_and_embedding/Responsive_images for info on defining 'sizes' for responsive images
+    -->
+    
+    <img src="/~saood/assets/img/blog/post08_2.jpg" class="img-fluid rounded z-depth-1" width="100%" height="auto" title="Haptic interface" loading="lazy" onerror="this.onerror=null; $('.responsive-img-srcset').remove();" />
+  </picture>
+
+  
+</figure>
+
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+        
+
+
+
+<figure>
+  <picture>
+    <!-- Auto scaling with imagemagick -->
+    <!--
+      See https://www.debugbear.com/blog/responsive-images#w-descriptors-and-the-sizes-attribute and
+      https://developer.mozilla.org/en-US/docs/Learn/HTML/Multimedia_and_embedding/Responsive_images for info on defining 'sizes' for responsive images
+    -->
+    
+    <img src="/~saood/assets/img/blog/post08_3.jpg" class="img-fluid rounded z-depth-1" width="100%" height="auto" title="Research results" loading="lazy" onerror="this.onerror=null; $('.responsive-img-srcset').remove();" />
+  </picture>
+
+  
+</figure>
+
+    </div>
+</div>
+
+<hr />
+
+<h2 id="the-frontier-artificial-skin--tactile-intelligence">The Frontier: Artificial Skin &amp; Tactile Intelligence</h2>
+
+<p><strong>Touch is not a single sense—it’s a complex symphony of sensations:</strong></p>
+
+<ul>
+  <li><strong>Pressure:</strong> Where and how hard am I being touched?</li>
+  <li><strong>Texture:</strong> Is this surface rough, smooth, sticky?</li>
+  <li><strong>Temperature:</strong> Is this cold or warm?</li>
+  <li><strong>Vibration:</strong> What frequencies are oscillating through my skin?</li>
+  <li><strong>Proprioception:</strong> Where is my hand in space?</li>
+  <li><strong>Kinesthesia:</strong> What forces are acting on my joints?</li>
+</ul>
+
+<p>Humans integrate all of these continuously, often without conscious awareness. We reach into our pocket and know the shape of our keys by touch alone. We shake hands and instantly assess the other person’s confidence and intent.</p>
+
+<p>For robots to do the same, they need <strong>artificial skin</strong> and <strong>tactile intelligence</strong>.</p>
+
+<hr />
+
+<h2 id="my-research-bridging-the-haptic-gap">My Research: Bridging the Haptic Gap</h2>
+
+<p>At ENSTA Paris, in the U2IS (Autonomous Systems &amp; Robotics Lab), my PhD work focuses on exactly this frontier.</p>
+
+<h3 id="the-tactile-array-for-humanoid-hands">The Tactile Array for Humanoid Hands</h3>
+<p>We’ve developed a <strong>large-scale tactile sensor array</strong> for humanoid robot hands—essentially artificial skin glued to the palm, fingers, and back of the hand. The system:</p>
+<ul>
+  <li>Measures <strong>contact geometry</strong> (where is the human touching me?)</li>
+  <li>Infers <strong>hand morphology</strong> (what size is the human hand?)</li>
+  <li>Detects <strong>grasp intent</strong> (is this person grasping gently or firmly?)</li>
+  <li>Predicts <strong>emotional state</strong> (does their touch convey confidence, hesitation, trust?)</li>
+</ul>
+
+<p>This isn’t science fiction. It’s working hardware in our lab right now.</p>
+
+<h3 id="from-sensing-to-prediction-generative-affordances">From Sensing to Prediction: Generative Affordances</h3>
+<p>But sensing alone isn’t enough. A truly intelligent robot must also <em>imagine</em>: “What tactile sensation should I expect when I perform action X?” and “What do these tactile signals tell me about what’s happening?”</p>
+
+<p>We’re developing <strong>generative, action-conditioned models of tactile affordance</strong>—machine learning systems that learn to predict and understand tactile futures. The applications are profound:</p>
+
+<ul>
+  <li><strong>Safer manipulation:</strong> Predict forces before they exceed safety thresholds</li>
+  <li><strong>Dexterous grasping:</strong> Adapt grip to predicted tactile feedback</li>
+  <li><strong>Social interaction:</strong> Understand and respond appropriately to human touch</li>
+</ul>
+
+<h3 id="from-understanding-to-expression-haptic-feedback">From Understanding to Expression: Haptic Feedback</h3>
+<p>And finally, a socially intelligent robot must <em>communicate</em> through touch. We’ve built a <strong>soft, pneumatic haptic interface</strong> that expresses involuntary social cues—breathing patterns, heartbeats—to convey calm and presence to a human in distress.</p>
+
+<p>Early results show that synchronized haptic feedback <strong>significantly reduces human anxiety</strong> in human-robot interaction. A robot that breathes with you is a robot you trust.</p>
+
+<hr />
+
+<h2 id="why-now-why-this-matters">Why Now? Why This Matters.</h2>
+
+<h3 id="the-medical-frontier">The Medical Frontier</h3>
+<p>Robots are entering hospitals and clinics. Surgical robots, rehabilitation robots, robots for elder care. These systems need to be safe, responsive, and <em>gentle</em>. Touch is how we communicate gentleness.</p>
+
+<h3 id="the-aging-population">The Aging Population</h3>
+<p>The developed world faces a wave of aging. Robots will likely be part of the solution to care for elderly individuals. But an uncaring robot—one that grasps too hard, too fast, without sensitivity—will be rejected. Robots that touch with care will be accepted.</p>
+
+<h3 id="the-social-frontier">The Social Frontier</h3>
+<p>As robots move from factories into homes, classrooms, and social spaces, they’ll need to be not just functional but <em>companionable</em>. And companionship begins with touch.</p>
+
+<hr />
+
+<h2 id="the-broader-vision">The Broader Vision</h2>
+
+<p>My research is part of a larger movement in robotics: <strong>moving from tool to companion</strong>. Not sentient companions (that’s still philosophy), but robots that interact with humans in intuitive, emotionally informed ways.</p>
+
+<p>This requires:</p>
+<ol>
+  <li><strong>Sensing:</strong> Artificial skin and tactile transducers</li>
+  <li><strong>Understanding:</strong> Machine learning models of tactile interaction</li>
+  <li><strong>Expression:</strong> Haptic feedback and embodied communication</li>
+  <li><strong>Safety:</strong> Real-time tactile monitoring and adaptive control</li>
+</ol>
+
+<hr />
+
+<h2 id="recognition--momentum">Recognition &amp; Momentum</h2>
+
+<p>In December 2025, I was awarded the <strong>2nd place Demeny-Vaucanson Prize</strong> (an honor bestowed by the French Federation for Mechanics &amp; Movement Science) for this body of work. This recognition from a community of mechanicists and motor scientists is deeply meaningful.</p>
+
+<p>It signals that <strong>touch is becoming central to robotics research</strong>—not a niche, but a frontier.</p>
+
+<hr />
+
+<h2 id="what-comes-next">What Comes Next?</h2>
+
+<p>My research continues in several directions:</p>
+
+<ol>
+  <li><strong>Scaling up:</strong> Expanding the tactile array to cover the entire hand and arm</li>
+  <li><strong>Real-time learning:</strong> Training generative models on-robot, adapting to individual users</li>
+  <li><strong>Clinical translation:</strong> Partnering with hospitals to deploy tactile-aware robots in therapy and care settings</li>
+  <li><strong>Open-source:</strong> Releasing software and hardware designs so other labs can build on this work</li>
+</ol>
+
+<p>But perhaps most importantly, I want to inspire the next generation of roboticists to ask: <strong>“How can we make robots that touch with care?”</strong></p>
+
+<hr />
+
+<h2 id="the-bigger-picture">The Bigger Picture</h2>
+
+<p>Robots will increasingly interact with humans. How they touch—whether with sensitivity, gentleness, and responsiveness—will shape whether we welcome them or fear them.</p>
+
+<p>Touch is not about hardware sensors or machine learning algorithms, in the end. <strong>Touch is about connection.</strong> And connection is what makes us human.</p>
+
+<p>If we can build robots that understand touch, perhaps we can build robots that humans want to touch back.</p>
+
+<hr />
+
+<p><strong>Related:</strong></p>
+<ul>
+  <li><a href="/~saood//projects/#tactile-array-for-humanoid-hand">Tactile Array for Humanoid Hand</a></li>
+  <li><a href="/~saood//projects/#generative-factorized-model-of-action-conditioned-tactile-affordance">Generative Factorized Model of Action-Conditioned Tactile Affordance</a></li>
+  <li><a href="/~saood//projects/#soft-robotic-haptic-interface-for-anxiety-reduction">Soft Robotic Haptic Interface for Anxiety Reduction</a></li>
+  <li><a href="/~saood//projects/#contributing-factors-in-human-robot-handshake">Human-Robot Handshake</a></li>
+  <li><strong>Award:</strong> Demeny-Vaucanson Prize 2025 (2nd place), Journée FeDeV, Inria Saclay</li>
+</ul>
+
+<hr />
+
+<p><em>Original article published January 2026 on <a href="https://www.ensta.fr">ensta.fr</a>. Expanded and republished with permission. Thank you to ENSTA and Prof. Adriana Tapus for the opportunity to share this story.</em></p>]]></content><author><name></name></author><category term="research" /><category term="outreach" /><category term="robotics" /><category term="touch" /><category term="haptics" /><category term="HRI" /><category term="research" /><summary type="html"><![CDATA[Why touch is the frontier of robotics—bridging the gap between machines and humanity.]]></summary></entry><entry><title type="html">hid_ros2: A 500Hz+ Hardware Bridge for ROS2 (ROSCon FR Talk Writeup)</title><link href="https://perso.ensta.fr/~saood/blog/2025/hid-ros2-roscon-fr/" rel="alternate" type="text/html" title="hid_ros2: A 500Hz+ Hardware Bridge for ROS2 (ROSCon FR Talk Writeup)" /><published>2025-12-20T00:00:00+00:00</published><updated>2025-12-20T00:00:00+00:00</updated><id>https://perso.ensta.fr/~saood/blog/2025/hid-ros2-roscon-fr</id><content type="html" xml:base="https://perso.ensta.fr/~saood/blog/2025/hid-ros2-roscon-fr/"><![CDATA[<h2 id="the-problem-custom-hardware-integration-in-ros2">The Problem: Custom Hardware Integration in ROS2</h2>
+
+<p>One of the biggest friction points in robotics is <strong>connecting custom hardware to ROS2</strong>. Whether you’re building a gripper, an end-effector sensor, a microcontroller-based controller, or a custom input device, the current workflow is painful:</p>
+
+<ol>
+  <li>Write C++ hardware interface driver (requires deep ROS2/control systems knowledge)</li>
+  <li>Compile against system ROS2 libraries</li>
+  <li>Debug integration issues</li>
+  <li>Repeat for every new device</li>
+</ol>
+
+<p><strong>There has to be a better way.</strong></p>
+
+<hr />
+
+<h2 id="the-insight-usb-hid-as-a-universal-standard">The Insight: USB-HID as a Universal Standard</h2>
+
+<p>USB-HID (Human Interface Device) is everywhere—mice, keyboards, game controllers, custom joysticks. It’s a standardized protocol built into every OS. But roboticists rarely think of it as a robotics tool.</p>
+
+<p>What if we <strong>inverted the workflow</strong>? Instead of writing C++ for each device, what if you could:</p>
+
+<ol>
+  <li>Define your device’s data structure in a simple <strong>YAML configuration file</strong></li>
+  <li>Plug in your microcontroller (Teensy, ESP32, STM32, etc.) speaking HID</li>
+  <li>Instantly get a ros2_control hardware interface—no compilation needed</li>
+</ol>
+
+<p>That’s <strong>hid_ros2</strong>.</p>
+
+<hr />
+
+<h2 id="the-architecture">The Architecture</h2>
+
+<p><code class="language-plaintext highlighter-rouge">hid_ros2</code> is a single, reusable hardware interface plugin for <code class="language-plaintext highlighter-rouge">ros2_control</code> that:</p>
+
+<p><strong>Hardware Discovery &amp; Management</strong></p>
+<ul>
+  <li>Auto-detects connected HID devices by vendor/product ID</li>
+  <li>Gracefully handles hot-plugging (disconnect/reconnect)</li>
+  <li>Maintains persistent, resilient connections</li>
+</ul>
+
+<p><strong>Configuration-Driven Integration</strong></p>
+<ul>
+  <li>YAML file defines the device’s:
+    <ul>
+      <li>Vendor/product IDs</li>
+      <li>Report structure (which bytes encode which sensors/actuators)</li>
+      <li>Data types, scaling factors, offsets</li>
+      <li>Update rate (100 Hz, 500 Hz, 1000 Hz—OS permitting)</li>
+    </ul>
+  </li>
+  <li>No code changes needed to support a new device</li>
+</ul>
+
+<p><strong>High-Performance I/O</strong></p>
+<ul>
+  <li>Kernel-level USB-HID access via <code class="language-plaintext highlighter-rouge">libhidapi</code> (cross-platform: Linux, macOS, Windows)</li>
+  <li>Lock-free data queuing for real-time safety</li>
+  <li>Guaranteed polling rates up to 1000 Hz on compliant hardware</li>
+  <li>Deterministic, low-latency communication (&lt;5ms typical, &lt;2ms often)</li>
+</ul>
+
+<p><strong>ROS2-Native Integration</strong></p>
+<ul>
+  <li>Standard <code class="language-plaintext highlighter-rouge">ros2_control</code> hardware interface—works with all <code class="language-plaintext highlighter-rouge">ros2_control</code> controllers</li>
+  <li>Real-time-safe communication (memory pre-allocated)</li>
+  <li>Seamless integration with MoveIt2, trajectory controllers, state publishers</li>
+</ul>
+
+<hr />
+
+<h2 id="example-a-custom-end-effector">Example: A Custom End-Effector</h2>
+
+<p>Imagine you build a <strong>4-DOF custom gripper</strong> with 4 position-control motors and 6 tactile sensors. Your microcontroller (say, a Teensy 4.1) is already programmed to:</p>
+<ul>
+  <li>Read 4 motor setpoints from a HID report (8 bytes, 2 per motor)</li>
+  <li>Measure 4 encoder positions and send back a HID report (8 bytes, 2 per encoder)</li>
+  <li>Measure 6 analog tactile sensors and send them in the same report (12 bytes, 2 per sensor)</li>
+</ul>
+
+<p><strong>With hid_ros2</strong>, your config looks like:</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">device</span><span class="pi">:</span>
+  <span class="na">vendor_id</span><span class="pi">:</span> <span class="s">0x16C0</span>     <span class="c1"># Teensy's default VID</span>
+  <span class="na">product_id</span><span class="pi">:</span> <span class="s">0x0486</span>    <span class="c1"># Your custom PID</span>
+  <span class="na">report_rate_hz</span><span class="pi">:</span> <span class="m">500</span>
+
+<span class="na">joints</span><span class="pi">:</span>
+  <span class="na">motor_0</span><span class="pi">:</span>
+    <span class="na">out_report</span><span class="pi">:</span> <span class="pi">[</span><span class="nv">0</span><span class="pi">,</span> <span class="nv">1</span><span class="pi">]</span>    <span class="c1"># bytes 0-1 of outgoing HID report</span>
+    <span class="na">in_report</span><span class="pi">:</span> <span class="pi">[</span><span class="nv">0</span><span class="pi">,</span> <span class="nv">1</span><span class="pi">]</span>     <span class="c1"># bytes 0-1 of incoming (encoder feedback)</span>
+    <span class="na">scale</span><span class="pi">:</span> <span class="m">0.01</span>           <span class="c1"># encoder counts to radians</span>
+  <span class="na">motor_1</span><span class="pi">:</span>
+    <span class="na">out_report</span><span class="pi">:</span> <span class="pi">[</span><span class="nv">2</span><span class="pi">,</span> <span class="nv">3</span><span class="pi">]</span>
+    <span class="na">in_report</span><span class="pi">:</span> <span class="pi">[</span><span class="nv">2</span><span class="pi">,</span> <span class="nv">3</span><span class="pi">]</span>
+    <span class="na">scale</span><span class="pi">:</span> <span class="m">0.01</span>
+  <span class="c1"># ... (motor_2, motor_3)</span>
+
+<span class="na">sensors</span><span class="pi">:</span>
+  <span class="na">tactile_0</span><span class="pi">:</span>
+    <span class="na">in_report</span><span class="pi">:</span> <span class="pi">[</span><span class="nv">8</span><span class="pi">,</span> <span class="nv">9</span><span class="pi">]</span>     <span class="c1"># byte 8-9 of incoming report</span>
+    <span class="na">scale</span><span class="pi">:</span> <span class="m">0.001</span>          <span class="c1"># analog to normalized pressure</span>
+  <span class="c1"># ... (tactile_1 through tactile_5)</span>
+</code></pre></div></div>
+
+<p>Then in your <code class="language-plaintext highlighter-rouge">ros2_launch</code>, you load the standard <code class="language-plaintext highlighter-rouge">ros2_control</code> gripper controller, and you’re done. No custom C++ driver written.</p>
+
+<hr />
+
+<h2 id="why-this-matters">Why This Matters</h2>
+
+<h3 id="for-roboticists-without-driver-development-skills">For Roboticists Without Driver Development Skills</h3>
+<p>You can integrate custom hardware without being a C++ systems programmer. This democratizes hardware integration.</p>
+
+<h3 id="for-hardware-vendors">For Hardware Vendors</h3>
+<p>Define once, support everywhere. A custom gripper manufacturer can ship a single YAML config file with their product, and users on any ROS2 platform can plug and play.</p>
+
+<h3 id="for-accessibility">For Accessibility</h3>
+<p>Lower barrier to entry = more people building robots. More diverse hardware = more innovation.</p>
+
+<h3 id="for-performance">For Performance</h3>
+<p>USB-HID is kernel-native on all modern OSes. You get deterministic, low-latency communication without special privileges.</p>
+
+<h3 id="for-reproducibility">For Reproducibility</h3>
+<p>Teams can share hardware configs and reproduce research results. Academic robotics labs can collaborate more easily.</p>
+
+<hr />
+
+<h2 id="the-talk-at-roscon-fr-2025">The Talk at ROSCon FR 2025</h2>
+
+<div class="row mt-3 mb-3">
+    <div class="col-12">
+        
+
+
+
+<figure>
+  <picture>
+    <!-- Auto scaling with imagemagick -->
+    <!--
+      See https://www.debugbear.com/blog/responsive-images#w-descriptors-and-the-sizes-attribute and
+      https://developer.mozilla.org/en-US/docs/Learn/HTML/Multimedia_and_embedding/Responsive_images for info on defining 'sizes' for responsive images
+    -->
+    
+    <img src="/~saood/assets/img/blog/post09.jpg" class="img-fluid rounded z-depth-1" width="100%" height="auto" title="hid_ros2 presentation at ROSCon FR" loading="lazy" onerror="this.onerror=null; $('.responsive-img-srcset').remove();" />
+  </picture>
+
+  
+</figure>
+
+    </div>
+</div>
+<div class="caption" style="text-align: center;">
+    Presenting hid_ros2 at ROSCon France 2025 (self-aware note: the photo is AI-generated due to missing conference camera, but I promise I was really there!)
+</div>
+
+<h2 id="the-numbers-from-roscon-fr-2025-talk">The Numbers (from ROSCon FR 2025 Talk)</h2>
+
+<p><strong>Performance benchmarks</strong> on a typical Linux desktop:</p>
+
+<ul>
+  <li><strong>Communication latency:</strong> 1.2ms typical, &lt;2ms 99th percentile</li>
+  <li><strong>CPU usage:</strong> &lt;5% on a 4-core system</li>
+  <li><strong>Supported polling rate:</strong> Up to 1000 Hz (device/OS permitting; commonly 500 Hz)</li>
+  <li><strong>Configuration time:</strong> &lt;1 minute for a new device (write YAML, test, done)</li>
+  <li><strong>Code overhead per new device:</strong> Zero lines of C++</li>
+</ul>
+
+<p><strong>Real-world example:</strong> We integrated 3 custom hardware platforms (microcontroller gripper, sensor array, custom input device) in a single ROSCon France workshop session—literally during the talk.</p>
+
+<hr />
+
+<h2 id="open-source--community">Open Source &amp; Community</h2>
+
+<p><code class="language-plaintext highlighter-rouge">hid_ros2</code> is released under the Apache 2.0 license and fully open-source:</p>
+
+<p><strong>GitHub:</strong> <a href="https://github.com/adnan-saood/hid_ros2">adnan-saood/hid_ros2</a><br />
+<strong>Documentation:</strong> Full setup guides, example configs, troubleshooting<br />
+<strong>Community:</strong> Already in use at several robotics labs and startups; contributions welcome</p>
+
+<hr />
+
+<h2 id="whats-next">What’s Next?</h2>
+
+<p><strong>Planned features:</strong></p>
+<ul>
+  <li>GUI tool to generate YAML configs (detect device, auto-map ports)</li>
+  <li>Support for composite HID devices (multiple endpoints)</li>
+  <li>Real-time safety heartbeat (watchdog timers)</li>
+  <li>Built-in logging and telemetry for debugging</li>
+</ul>
+
+<p><strong>Long-term vision:</strong><br />
+A standardized, vendor-agnostic ecosystem where hardware and software integrate as seamlessly as they do in the consumer electronics world.</p>
+
+<hr />
+
+<h2 id="thank-you-roscon-fr-2025">Thank You ROSCon FR 2025</h2>
+
+<p>This work crystallized thanks to feedback from the amazing robotics community at ROSCon France. Thanks especially to:</p>
+<ul>
+  <li>The ICube Strasbourg and U2IS teams for real-world testing</li>
+  <li>The ROS2 / ros2_control maintainers for excellent framework design</li>
+  <li>The Teensy, STM32, and ESP32 communities for supporting HID out of the box</li>
+</ul>
+
+<p>If you have a custom hardware project and want to try <code class="language-plaintext highlighter-rouge">hid_ros2</code>, start here: <a href="https://github.com/adnan-saood/hid_ros2">GitHub README</a> or grab the prebuilt ROS2 binary from apt.ros.org.</p>
+
+<hr />
+
+<p><strong>Related:</strong></p>
+<ul>
+  <li>GitHub: <a href="https://github.com/adnan-saood/hid_ros2">hid_ros2</a></li>
+  <li>See the <a href="/~saood//projects/#">paxini_ros2</a> project (uses hid_ros2 under the hood)</li>
+  <li>Blog: “Introducing hid_ros2” (launch announcement, 1 month prior)</li>
+</ul>]]></content><author><name></name></author><category term="engineering" /><category term="tools" /><category term="ROS2" /><category term="robotics" /><category term="open-source" /><category term="hardware-interface" /><category term="embedded" /><summary type="html"><![CDATA[How we built a universal, high-performance USB-HID interface for custom hardware in ROS2—no custom C++ needed.]]></summary></entry><entry><title type="html">Starting the PhD: A New Chapter at ENSTA U2IS</title><link href="https://perso.ensta.fr/~saood/blog/2024/starting-phd-ensta/" rel="alternate" type="text/html" title="Starting the PhD: A New Chapter at ENSTA U2IS" /><published>2024-09-15T00:00:00+00:00</published><updated>2024-09-15T00:00:00+00:00</updated><id>https://perso.ensta.fr/~saood/blog/2024/starting-phd-ensta</id><content type="html" xml:base="https://perso.ensta.fr/~saood/blog/2024/starting-phd-ensta/"><![CDATA[<h2 id="a-moment-of-clarity">A Moment of Clarity</h2>
+
+<p>Today marks a milestone: I’ve officially begun my <strong>PhD in Autonomous Systems and Robotics at ENSTA Paris</strong>, in the <strong>U2IS Laboratory</strong> (Autonomous Systems and Robotics Lab), under the supervision of <strong>Prof. Adriana Tapus</strong>.</p>
+
+<p>It’s hard to overstate what this moment means to me. The PhD is the culmination of a journey that began years ago, shaped by incredible people and experiences along the way.</p>
+
+<div class="row mt-3 mb-3">
+    <div class="col-12">
+        
+
+
+
+<figure>
+  <picture>
+    <!-- Auto scaling with imagemagick -->
+    <!--
+      See https://www.debugbear.com/blog/responsive-images#w-descriptors-and-the-sizes-attribute and
+      https://developer.mozilla.org/en-US/docs/Learn/HTML/Multimedia_and_embedding/Responsive_images for info on defining 'sizes' for responsive images
+    -->
+    
+    <img src="/~saood/assets/img/blog/post17.jpg" class="img-fluid rounded z-depth-1" width="100%" height="auto" title="First day of PhD at ENSTA U2IS" loading="lazy" onerror="this.onerror=null; $('.responsive-img-srcset').remove();" />
+  </picture>
+
+  
+</figure>
+
+    </div>
+</div>
+
+<hr />
+
+<h2 id="the-path-here">The Path Here</h2>
+
+<h3 id="high-school">High School</h3>
+<p>A robotics club. A curious teacher who asked, “What if we built something that could move on its own?” That question stuck with me.</p>
+
+<h3 id="engineering-degree">Engineering Degree</h3>
+<p>Four years learning the fundamentals—mathematics, physics, programming, control theory. But also: design thinking, teamwork, and the humility that comes from building something real and watching it fail.</p>
+
+<h3 id="masters-research-at-icube-strasbourg">Master’s Research at ICube Strasbourg</h3>
+<p>A turning point. I worked on <strong>blood-brain barrier opening via focused ultrasound</strong>—a problem that mattered medically, that required robotics expertise to solve, and that resulted in a patent. I learned that research isn’t just theory; it’s about solving real problems for real people.</p>
+
+<p>At ICube, I met <strong>Prof. Florent Nageotte</strong> and <strong>Dr. Jonathan Vappou</strong>, who showed me what rigorous, ethical research looked like. They also connected me with <strong>Prof. Adriana Tapus</strong>, whose work on human-robot interaction and touch made me realize: <strong>this is the frontier I want to explore.</strong></p>
+
+<hr />
+
+<h2 id="why-touch-why-now">Why Touch? Why Now?</h2>
+
+<p>The turning point came during my Master’s thesis. I was working on robot-assisted surgery—precise, cold, technical. But as I read more about human-robot interaction, a realization hit me:</p>
+
+<p><strong>Robots can see and hear almost as well as humans, but they can barely feel.</strong></p>
+
+<p>Touch is the most intimate sense. It’s how we comfort, communicate, explore, and connect. Yet robotics has largely ignored it. This gap seemed like the most important problem I could work on.</p>
+
+<p>I wanted to build robots that didn’t just <em>look</em> human, but that could <em>interact</em> with humans in genuinely empathetic ways. And touch is the gateway to that.</p>
+
+<hr />
+
+<h2 id="the-phd-four-years-of-focused-exploration">The PhD: Four Years of Focused Exploration</h2>
+
+<p>My doctoral work will center on:</p>
+
+<ol>
+  <li><strong>Tactile Sensing:</strong> Developing artificial skin systems for humanoid hands</li>
+  <li><strong>Tactile Understanding:</strong> Building machine learning models that allow robots to learn from touch</li>
+  <li><strong>Tactile Expression:</strong> Creating haptic feedback systems that help robots communicate through touch</li>
+  <li><strong>Human-Robot Interaction:</strong> Testing all of this in real interactions with humans</li>
+</ol>
+
+<p>This is foundational work. In four years, I won’t solve touch in robotics—that’s a lifetime endeavor. But I hope to make a dent in the frontier.</p>
+
+<hr />
+
+<h2 id="gratitude">Gratitude</h2>
+
+<p>I’m acutely aware of how fortunate I’ve been. I wouldn’t be here without:</p>
+
+<ul>
+  <li><strong>My parents:</strong> For believing in education and encouraging curiosity</li>
+  <li><strong>My high school robotics teacher:</strong> For that first question</li>
+  <li><strong>My undergraduate mentors:</strong> For teaching me rigor and creativity</li>
+  <li><strong>Prof. Nageotte &amp; Dr. Vappou:</strong> For showing me what research integrity looks like</li>
+  <li><strong>Prof. Adriana Tapus:</strong> For seeing the potential in my ideas and agreeing to mentor the PhD</li>
+  <li><strong>The IP Paris doctoral school:</strong> For funding this work</li>
+  <li><strong>My colleagues at U2IS:</strong> For creating an intellectually stimulating and supportive environment</li>
+</ul>
+
+<p>This PhD is built on the shoulders of people who invested in me.</p>
+
+<hr />
+
+<h2 id="the-road-ahead">The Road Ahead</h2>
+
+<p>A PhD is a marathon, not a sprint. There will be moments of brilliance and moments of doubt. Experiments will fail. Papers will be rejected. Ideas I’m excited about today will seem naïve next year.</p>
+
+<p>But I’m ready. I’ve been preparing for this for years, and I’m genuinely excited about the work ahead.</p>
+
+<hr />
+
+<h2 id="to-other-students-considering-a-phd">To Other Students Considering a PhD</h2>
+
+<p>If you’re at that crossroads—wondering whether to pursue doctoral research—here’s what I’d say:</p>
+
+<p>A PhD is not a credential. It’s a <strong>transformation</strong>. You’ll spend years becoming an expert in a specific domain, learning to think critically, to design experiments, to communicate complex ideas, and to handle failure with grace.</p>
+
+<p>It’s hard. It’s rewarding. And if you choose the right problem and the right advisor, it can change your trajectory.</p>
+
+<p>For me, that problem is touch. That advisor is Adriana. And I’m ready to dive in.</p>
+
+<hr />
+
+<h2 id="whats-next">What’s Next?</h2>
+
+<p>The plan for Year 1:</p>
+<ul>
+  <li>Build the tactile sensor array hardware</li>
+  <li>Collect baseline data on human hand-robot interactions</li>
+  <li>Publish preliminary findings</li>
+  <li>Begin machine learning model development</li>
+</ul>
+
+<p>I’ll be sharing updates throughout the journey. Stay tuned.</p>
+
+<hr />
+
+<p><strong>Related:</strong></p>
+<ul>
+  <li><a href="/~saood//projects/#tactile-array-for-humanoid-hand">Tactile Array for Humanoid Hand</a></li>
+  <li><a href="/~saood//projects/#generative-factorized-model-of-action-conditioned-tactile-affordance">Generative Factorized Model of Action-Conditioned Tactile Affordance</a></li>
+  <li><a href="/~saood//projects/#soft-robotic-haptic-interface-for-anxiety-reduction">Soft Robotic Haptic Interface for Anxiety Reduction</a></li>
+  <li>Laboratory: <a href="https://www.ensta-paris.fr/en/">U2IS @ ENSTA Paris</a></li>
+  <li>Advisor: <a href="https://www.ensta-paris.fr/en/directory/adriana-tapus">Prof. Adriana Tapus</a></li>
+</ul>
+
+<hr />
+
+<p><em>Today, September 15, 2024, I begin. Let’s see where this leads.</em></p>]]></content><author><name></name></author><category term="personal" /><category term="milestones" /><category term="PhD" /><category term="doctoral" /><category term="student" /><category term="research" /><category term="journey" /><summary type="html"><![CDATA[Reflections on beginning doctoral research in autonomous systems and touch for robotics]]></summary></entry></feed>
