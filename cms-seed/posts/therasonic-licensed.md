@@ -50,10 +50,10 @@ This kind of tech transfer requires more than just good science—it requires pa
 
 <div class="row mt-3">
     <div class="col-sm mt-3 mt-md-0">
-        <figure><img src="/~saood/assets/img/blog/post02_1.jpg" class="img-fluid rounded z-depth-1" alt="Therasonic tech transfer" title="Therasonic tech transfer" loading="lazy"></figure>
+        <figure><img src="assets/img/blog/post02_1.jpg" class="img-fluid rounded z-depth-1" alt="Therasonic tech transfer" title="Therasonic tech transfer" loading="lazy"></figure>
     </div>
     <div class="col-sm mt-3 mt-md-0">
-        <figure><img src="/~saood/assets/img/blog/post02_2.jpg" class="img-fluid rounded z-depth-1" alt="Patent and licensing" title="Patent and licensing" loading="lazy"></figure>
+        <figure><img src="assets/img/blog/post02_2.jpg" class="img-fluid rounded z-depth-1" alt="Patent and licensing" title="Patent and licensing" loading="lazy"></figure>
     </div>
 </div>
 
@@ -91,5 +91,5 @@ If you're interested in the technical details, check out our peer-reviewed publi
 ---
 
 **Related:**
-- See the [Therasonic BBB project](/~saood/projects/#robotic-assistance-for-blood-brain-barrier-opening-via-focused-ultrasound) for full technical details
+- See the [Therasonic BBB project](projects/) for full technical details
 - Publications: CRAS 2023, ISTU 2023 on the Publications page

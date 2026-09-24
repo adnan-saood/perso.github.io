@@ -34,7 +34,7 @@ def split_front_matter(text):
 
 def figure_html(match):
     args = dict(kv.split("=", 1) for kv in shlex.split(match.group(1)) if "=" in kv)
-    src = args.get("url") or BASE + args.get("path", "").lstrip("/")
+    src = args.get("url") or args.get("path", "").lstrip("/")  # base-free; the CMS adds the base
     title = args.get("title", "")
     cls = args.get("class", "img-fluid rounded z-depth-1")
     caption = args.get("caption", "")

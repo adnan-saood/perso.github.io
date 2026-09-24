@@ -23,13 +23,13 @@ For a field that aspires to humanoid robots capable of manipulation, caregiving,
 
 <div class="row mt-3 mb-3">
     <div class="col-sm mt-3 mt-md-0">
-        <figure><img src="/~saood/assets/img/blog/post08_1.jpg" class="img-fluid rounded z-depth-1" alt="Tactile sensing research" title="Tactile sensing research" loading="lazy"></figure>
+        <figure><img src="assets/img/blog/post08_1.jpg" class="img-fluid rounded z-depth-1" alt="Tactile sensing research" title="Tactile sensing research" loading="lazy"></figure>
     </div>
     <div class="col-sm mt-3 mt-md-0">
-        <figure><img src="/~saood/assets/img/blog/post08_2.jpg" class="img-fluid rounded z-depth-1" alt="Haptic interface" title="Haptic interface" loading="lazy"></figure>
+        <figure><img src="assets/img/blog/post08_2.jpg" class="img-fluid rounded z-depth-1" alt="Haptic interface" title="Haptic interface" loading="lazy"></figure>
     </div>
     <div class="col-sm mt-3 mt-md-0">
-        <figure><img src="/~saood/assets/img/blog/post08_3.jpg" class="img-fluid rounded z-depth-1" alt="Research results" title="Research results" loading="lazy"></figure>
+        <figure><img src="assets/img/blog/post08_3.jpg" class="img-fluid rounded z-depth-1" alt="Research results" title="Research results" loading="lazy"></figure>
     </div>
 </div>
 
@@ -138,10 +138,10 @@ If we can build robots that understand touch, perhaps we can build robots that h
 ---
 
 **Related:**
-- [Tactile Array for Humanoid Hand](/~saood/projects/#tactile-array-for-humanoid-hand)
-- [Generative Factorized Model of Action-Conditioned Tactile Affordance](/~saood/projects/#generative-factorized-model-of-action-conditioned-tactile-affordance)
-- [Soft Robotic Haptic Interface for Anxiety Reduction](/~saood/projects/#soft-robotic-haptic-interface-for-anxiety-reduction)
-- [Human-Robot Handshake](/~saood/projects/#contributing-factors-in-human-robot-handshake)
+- [Tactile Array for Humanoid Hand](projects/?p=tactile-array)
+- [Generative Factorized Model of Action-Conditioned Tactile Affordance](projects/?p=tactile-affordance)
+- [Soft Robotic Haptic Interface for Anxiety Reduction](projects/?p=haptic-interface)
+- [Human-Robot Handshake](projects/?p=handshake)
 - **Award:** Demeny-Vaucanson Prize 2025 (2nd place), Journée FeDeV, Inria Saclay
 
 ---

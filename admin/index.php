@@ -266,7 +266,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (!$dir || !$files) admin_json(array('error' => 'No file received.'), 400);
             list($rel, $err) = cms_files_store_upload($files[0], $dir);
             if ($err) admin_json(array('error' => $err), 400);
-            admin_json(array('url' => cms_files_public_url($rel)));
+            // Base-free path so the content works locally and on the server.
+            admin_json(array('url' => cms_config('files_url') . $rel));
 
         case 'files_upload':
             $dirRel = admin_post('dir');
@@ -398,7 +399,7 @@ case 'edit':
 
     admin_layout_start($it ? 'Edit ' . $types[$type]['singular'] : 'New ' . $types[$type]['singular'], 'edit');
     ?>
-    <form method="post" class="editor" id="editor-form" data-upload-url="<?php echo e(admin_url()); ?>" data-csrf="<?php echo e(cms_csrf_token()); ?>">
+    <form method="post" class="editor" id="editor-form" data-base="<?php echo e(cms_config('base_url')); ?>" data-upload-url="<?php echo e(admin_url()); ?>" data-csrf="<?php echo e(cms_csrf_token()); ?>">
       <?php echo cms_csrf_field(); ?>
       <input type="hidden" name="action" value="save_item">
       <input type="hidden" name="type" value="<?php echo e($type); ?>">

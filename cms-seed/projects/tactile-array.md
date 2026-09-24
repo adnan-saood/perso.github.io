@@ -64,10 +64,10 @@ This research represents a significant step forward in creating robots that can 
 
 <div class="row">
     <div class="col-sm mt-3 mt-md-0">
-        <figure><img src="/~saood/assets/img/tactile_array.jpg" class="img-fluid rounded z-depth-1" alt="Tactile array design" title="Tactile array design" loading="lazy"></figure>
+        <figure><img src="assets/img/tactile_array.jpg" class="img-fluid rounded z-depth-1" alt="Tactile array design" title="Tactile array design" loading="lazy"></figure>
     </div>
     <div class="col-sm mt-3 mt-md-0">
-        <figure><img src="/~saood/assets/img/tactile_affordance.jpg" class="img-fluid rounded z-depth-1" alt="Humanoid hand with tactile array" title="Humanoid hand with tactile array" loading="lazy"></figure>
+        <figure><img src="assets/img/tactile_affordance.jpg" class="img-fluid rounded z-depth-1" alt="Humanoid hand with tactile array" title="Humanoid hand with tactile array" loading="lazy"></figure>
     </div>
 </div>
 <div class="caption">

@@ -31,6 +31,8 @@ function cms_config($key = null)
             'site_name' => 'Adnan Saood',
             'posts_per_page' => 8,
             'timezone' => 'Europe/Paris',
+            // Bases that older content may have hard-coded; rewritten to base_url.
+            'content_base_aliases' => array('/~saood/'),
         );
         $local = CMS_DIR . '/config.local.php';
         if (is_file($local)) {
@@ -455,7 +457,24 @@ function cms_markdown($md)
     $html = $pd->text((string) $md);
     // Lazy-load images and give them the theme's styling.
     $html = preg_replace('/<img(?![^>]*\bloading=)/i', '<img loading="lazy"', $html);
-    return cms_add_heading_ids($html);
+    return cms_add_heading_ids(cms_fix_urls($html));
+}
+
+// Content stores site paths without the base ("assets/img/x.jpg", "files/uploads/y.png")
+// so the same text works locally ("/") and on the server ("/~saood/"). This adds the
+// current base, and also maps paths written with another known base (older content).
+function cms_fix_urls($html)
+{
+    $base = cms_config('base_url');
+    $aliases = (array) cms_config('content_base_aliases');
+    return preg_replace_callback('/\b(src|href|poster)="([^"]*)"/i', function ($m) use ($base, $aliases) {
+        $url = $m[2];
+        foreach ($aliases as $alias) {
+            if ($alias !== $base && cms_starts_with($url, $alias)) return $m[1] . '="' . $base . substr($url, strlen($alias)) . '"';
+        }
+        if (preg_match('#^(assets|files|projects|blog|news|publications|cv|contact|repositories)(/|$)#', $url)) $url = $base . $url;
+        return $m[1] . '="' . $url . '"';
+    }, $html);
 }
 
 function cms_add_heading_ids($html)
@@ -504,6 +523,10 @@ function cms_news_url($slug)
 // Resolve site-relative asset paths in content (e.g. "assets/img/x.jpg").
 function cms_asset_url($path)
 {
-    if ($path === '' || preg_match('#^(https?:)?//#', $path) || $path[0] === '/') return $path;
+    if ($path === '' || preg_match('#^(https?:)?//#', $path)) return $path;
+    foreach ((array) cms_config('content_base_aliases') as $alias) {
+        if ($alias !== cms_config('base_url') && cms_starts_with($path, $alias)) $path = substr($path, strlen($alias));
+    }
+    if ($path === '' || $path[0] === '/') return $path;
     return cms_url($path);
 }

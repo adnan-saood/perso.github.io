@@ -200,7 +200,9 @@
         bar.querySelectorAll("button").forEach(function (b) { b.classList.toggle("is-active", b === btn); });
         var f = btn.getAttribute("data-filter");
         grid.querySelectorAll(".project-card").forEach(function (card) {
-          var show = f === "*" || card.getAttribute("data-category") === f;
+          // data-category may hold several values separated by "|".
+          var cats = "|" + (card.getAttribute("data-category") || "") + "|";
+          var show = f === "*" || cats.indexOf("|" + f + "|") !== -1;
           card.classList.toggle("is-filtered", !show);
           if (show) card.classList.add("is-visible");
         });

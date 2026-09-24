@@ -1,0 +1,113 @@
+---
+layout: default
+permalink: /repositories/
+title: Open source
+description: ROS 2 drivers, robot descriptions, embedded firmware and research tools, live from GitHub.
+nav: true
+nav_order: 6
+---
+{%- assign user = site.data.repositories.github_users.first -%}
+{%- comment -%}
+  Everything below is rendered at build time from _data/repositories.yml, then
+  assets/js/repos.js fills in live GitHub data (profile, stars, languages,
+  last update, recent activity). Without JS or when GitHub rate-limits, the
+  static version still works.
+{%- endcomment -%}
+
+<div class="oss" data-github-user="{{ user }}">
+  <header class="oss-head">
+    <div>
+      <p class="kicker reveal">Open source</p>
+      <h1 class="post-title split">Code that makes robots feel.</h1>
+      <p class="post-description reveal">{{ page.description }}</p>
+    </div>
+
+    <a class="oss-profile tilt reveal" href="https://github.com/{{ user }}" rel="noopener">
+      <img class="oss-profile__avatar" src="https://github.com/{{ user }}.png?size=160" alt="" width="72" height="72" loading="lazy">
+      <span class="oss-profile__name" data-gh="name">{{ site.first_name }} {{ site.last_name }}</span>
+      <span class="oss-profile__handle"><i class="ti ti-brand-github"></i> @{{ user }}</span>
+      <span class="oss-profile__bio" data-gh="bio"></span>
+      <span class="oss-profile__meta">
+        <span><b data-gh="followers">–</b> followers</span>
+        <span><b data-gh="since">–</b> on GitHub</span>
+      </span>
+      <span class="oss-profile__cta">Follow on GitHub <i class="ti ti-arrow-up-right"></i></span>
+    </a>
+  </header>
+
+  <section class="oss-stats" aria-label="GitHub statistics">
+    <div class="oss-stat reveal"><b data-gh="repos">{{ site.data.repositories.github_repos | size }}</b><span>public repositories</span></div>
+    <div class="oss-stat reveal"><b data-gh="languages">–</b><span>languages in use</span></div>
+    <div class="oss-stat reveal"><b data-gh="stars">–</b><span>stars across projects</span></div>
+    <div class="oss-stat reveal"><b><span class="oss-pulse" aria-hidden="true"></span><span data-gh="lastpush">–</span></b><span>since the last push</span></div>
+  </section>
+
+  <section class="oss-langs reveal" aria-label="Languages" hidden>
+    <div class="oss-langs__bar" data-gh="langbar"></div>
+    <ul class="oss-langs__legend" data-gh="langlegend"></ul>
+  </section>
+
+  <section class="oss-featured">
+    <div class="section__head">
+      <div>
+        <p class="kicker">Featured</p>
+        <h2 class="section__title split">Selected repositories.</h2>
+      </div>
+      <label class="oss-sort">Sort
+        <select data-oss-sort>
+          <option value="curated">Curated</option>
+          <option value="updated">Recently updated</option>
+          <option value="stars">Most stars</option>
+          <option value="name">Name</option>
+        </select>
+      </label>
+    </div>
+
+    {%- assign all_tags = "" | split: "" -%}
+    {%- for r in site.data.repositories.github_repos -%}
+      {%- for t in r.tags -%}{%- assign all_tags = all_tags | push: t -%}{%- endfor -%}
+    {%- endfor -%}
+    <div class="filters reveal" data-filters="#repo-grid" role="group" aria-label="Filter repositories">
+      <button type="button" class="is-active" data-filter="*">All</button>
+      {%- assign uniq_tags = all_tags | uniq -%}
+      {%- for t in uniq_tags -%}
+        <button type="button" data-filter="{{ t }}">{{ t }}</button>
+      {%- endfor -%}
+    </div>
+
+    <div class="repo-grid" id="repo-grid">
+      {%- for r in site.data.repositories.github_repos -%}
+        {%- assign name = r.repo | split: '/' | last -%}
+        <a class="repo-card project-card" href="https://github.com/{{ r.repo }}" rel="noopener"
+           data-repo="{{ r.repo }}" data-order="{{ forloop.index }}" data-category="{{ r.tags | join: '|' }}">
+          <span class="repo-card__top">
+            <i class="ti ti-book-2" aria-hidden="true"></i>
+            <span class="repo-card__name">{{ name }}</span>
+            <span class="repo-card__live" hidden>active</span>
+          </span>
+          <span class="repo-card__desc" data-note="{{ r.note | escape }}">{{ r.note }}</span>
+          <span class="repo-card__tags">
+            {%- for t in r.tags -%}<span class="chip">{{ t }}</span>{%- endfor -%}
+          </span>
+          <span class="repo-card__foot">
+            <span class="repo-card__lang"><span class="dot"></span><span data-f="lang"></span></span>
+            <span data-f="stars" hidden><i class="ti ti-star"></i> <b></b></span>
+            <span data-f="forks" hidden><i class="ti ti-git-fork"></i> <b></b></span>
+            <span class="repo-card__updated" data-f="updated"></span>
+          </span>
+        </a>
+      {%- endfor -%}
+    </div>
+  </section>
+
+  <section class="oss-activity reveal" hidden>
+    <div class="section__head">
+      <div>
+        <p class="kicker">Live</p>
+        <h2 class="section__title">Recent activity.</h2>
+      </div>
+      <a class="section__more" href="https://github.com/{{ user }}?tab=repositories" rel="noopener">All repositories on GitHub <i class="ti ti-arrow-up-right"></i></a>
+    </div>
+    <ol class="oss-timeline" data-gh="activity"></ol>
+  </section>
+</div>

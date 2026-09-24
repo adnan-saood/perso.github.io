@@ -126,7 +126,7 @@ Teams can share hardware configs and reproduce research results. Academic roboti
 
 <div class="row mt-3 mb-3">
     <div class="col-12">
-        <figure><img src="/~saood/assets/img/blog/post09.jpg" class="img-fluid rounded z-depth-1" alt="hid_ros2 presentation at ROSCon FR" title="hid_ros2 presentation at ROSCon FR" loading="lazy"></figure>
+        <figure><img src="assets/img/blog/post09.jpg" class="img-fluid rounded z-depth-1" alt="hid_ros2 presentation at ROSCon FR" title="hid_ros2 presentation at ROSCon FR" loading="lazy"></figure>
     </div>
 </div>
 <div class="caption" style="text-align: center;">
@@ -183,5 +183,5 @@ If you have a custom hardware project and want to try `hid_ros2`, start here: [G
 
 **Related:**
 - GitHub: [hid_ros2](https://github.com/adnan-saood/hid_ros2)
-- See the [paxini_ros2](/~saood/projects/#) project (uses hid_ros2 under the hood)
+- See the [paxini_ros2](projects/) project (uses hid_ros2 under the hood)
 - Blog: "Introducing hid_ros2" (launch announcement, 1 month prior)

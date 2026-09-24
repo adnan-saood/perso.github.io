@@ -38,7 +38,7 @@ This year's workshop featured an incredible lineup:
 
 <div class="row mt-3 mb-3">
     <div class="col-12">
-        <figure><img src="/~saood/assets/img/blog/post01.jpg" class="img-fluid rounded z-depth-1" alt="Beyond Words 2 Workshop at ICSR 2026" title="Beyond Words 2 Workshop at ICSR 2026" loading="lazy"></figure>
+        <figure><img src="assets/img/blog/post01.jpg" class="img-fluid rounded z-depth-1" alt="Beyond Words 2 Workshop at ICSR 2026" title="Beyond Words 2 Workshop at ICSR 2026" loading="lazy"></figure>
     </div>
 </div>
 
@@ -113,5 +113,5 @@ If you're interested in touch and social robotics, mark your calendar for next y
 
 **Related:**
 - [Beyond Words workshop series](https://www.icsr-conference.org/workshops/) @ ICSR
-- See the [Soft Robotic Haptic Interface](/~saood/projects/#soft-robotic-haptic-interface-for-anxiety-reduction) and [Tactile Array](/~saood/projects/#tactile-array-for-humanoid-hand) projects
+- See the [Soft Robotic Haptic Interface](projects/?p=haptic-interface) and [Tactile Array](projects/?p=tactile-array) projects
 - Blog: "A Touch of Feeling in Robotics" (ENSTA feature article)

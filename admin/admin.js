@@ -141,6 +141,12 @@
     toolbar: ["bold", "italic", "heading-2", "heading-3", "|", "quote", "unordered-list", "ordered-list", "|",
       "link", "upload-image", "table", "code", "horizontal-rule", "|", "preview", "side-by-side", "fullscreen", "|", "guide"],
     sideBySideFullscreen: false,
+    // Content uses base-free paths ("files/…", "assets/…"); resolve them for the preview.
+    previewRender: function (text) {
+      return this.parent.markdown(text).replace(/(src|href)="((?:assets|files)\/[^"]*)"/g, function (m, attr, path) {
+        return attr + '="' + (form.dataset.base || "/") + path + '"';
+      });
+    },
   });
   mde.codemirror.on("change", function () { dirty = true; });
   form.addEventListener("input", function () { dirty = true; });
@@ -164,7 +170,7 @@
   slug.addEventListener("input", function () { slugTouched = true; });
   title.addEventListener("input", function () {
     if (slugTouched) return;
-    slug.placeholder = title.value.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "")
+    slug.placeholder = title.value.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")
       .replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 80) || "auto from title";
   });
 

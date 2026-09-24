@@ -48,10 +48,10 @@ Robots that *anticipate* human hand motion create more fluid, natural interactio
 
 <div class="row mt-3 mb-3">
     <div class="col-sm mt-3 mt-md-0">
-        <figure><img src="/~saood/assets/img/blog/post03_1.jpg" class="img-fluid rounded z-depth-1" alt="ICRA 2026 Vienna" title="ICRA 2026 Vienna" loading="lazy"></figure>
+        <figure><img src="assets/img/blog/post03_1.jpg" class="img-fluid rounded z-depth-1" alt="ICRA 2026 Vienna" title="ICRA 2026 Vienna" loading="lazy"></figure>
     </div>
     <div class="col-sm mt-3 mt-md-0">
-        <figure><img src="/~saood/assets/img/blog/post06.jpg" class="img-fluid rounded z-depth-1" alt="Handshake demonstration" title="Handshake demonstration" loading="lazy"></figure>
+        <figure><img src="assets/img/blog/post06.jpg" class="img-fluid rounded z-depth-1" alt="Handshake demonstration" title="Handshake demonstration" loading="lazy"></figure>
     </div>
 </div>
 
@@ -102,6 +102,6 @@ If you're curious about the full methodology, statistical analysis, or want to r
 ---
 
 **Related:**
-- See the [Human-Robot Handshake project](/~saood/projects/#contributing-factors-in-human-robot-handshake) for full technical details
+- See the [Human-Robot Handshake project](projects/?p=handshake) for full technical details
 - Publications: Saood & Tapus (2026), ICRA, Paper ThI1I.171
-- See also: [Tactile Array for Humanoid Hand](/~saood/projects/#tactile-array-for-humanoid-hand) and [Soft Robotic Haptic Interface](/~saood/projects/#soft-robotic-haptic-interface-for-anxiety-reduction)
+- See also: [Tactile Array for Humanoid Hand](projects/?p=tactile-array) and [Soft Robotic Haptic Interface](projects/?p=haptic-interface)

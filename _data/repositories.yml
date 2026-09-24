@@ -1,20 +1,37 @@
 github_users:
   - adnan-saood
 
-
 repo_description_lines_max: 2
 
+# Featured repositories on /repositories/, in this order.
+# `tags` become the filter buttons; `note` replaces a missing/short GitHub description.
 github_repos:
-  - adnan-saood/COVID19-DL
-  - adnan-saood/hid_ros2
-  - adnan-saood/paxini_ros2
-  - adnan-saood/foc_motor_firmware
-  - adnan-saood/mekahand_description
-  - adnan-saood/franka_handshake_ros2
-  - adnan-saood/mekaHandController
-  - adnan-saood/icsr2025_workshop_website
-  - adnan-saood/turtlebot4_odometer
-  - adnan-saood/3d_gradient_path_planner
-  - adnan-saood/Altium_Libraries
-  - adnan-saood/cnn_ocr_arabic-hindu_numerals
-  
+  - repo: adnan-saood/paxini_ros2
+    tags: [ROS 2, Tactile]
+    note: ROS 2 driver for the Paxini GEN3 tactile sensor.
+  - repo: adnan-saood/hid_ros2
+    tags: [ROS 2, Embedded]
+  - repo: adnan-saood/franka_handshake_ros2
+    tags: [ROS 2, HRI]
+  - repo: adnan-saood/mekaHandController
+    tags: [Embedded, Hardware]
+  - repo: adnan-saood/mekahand_description
+    tags: [ROS 2]
+  - repo: adnan-saood/foc_motor_firmware
+    tags: [Embedded]
+  - repo: adnan-saood/COVID19-DL
+    tags: [Machine learning, Medical]
+    note: U-Net vs SegNet for COVID-19 lung CT segmentation (published in BMC Medical Imaging).
+  - repo: adnan-saood/turtlebot4_odometer
+    tags: [Estimation]
+  - repo: adnan-saood/3d_gradient_path_planner
+    tags: [Planning]
+    note: 3D path planning with attractive/repulsive potential fields and gradient descent.
+  - repo: adnan-saood/icsr2025_workshop_website
+    tags: [Web]
+  - repo: adnan-saood/cnn_ocr_arabic-hindu_numerals
+    tags: [Machine learning]
+    note: CNN-based OCR for Arabic-Hindu numerals.
+  - repo: adnan-saood/Altium_Libraries
+    tags: [Hardware]
+    note: My Altium Designer component libraries.

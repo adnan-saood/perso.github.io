@@ -17,7 +17,7 @@ It's hard to overstate what this moment means to me. The PhD is the culmination 
 
 <div class="row mt-3 mb-3">
     <div class="col-12">
-        <figure><img src="/~saood/assets/img/blog/post17.jpg" class="img-fluid rounded z-depth-1" alt="First day of PhD at ENSTA U2IS" title="First day of PhD at ENSTA U2IS" loading="lazy"></figure>
+        <figure><img src="assets/img/blog/post17.jpg" class="img-fluid rounded z-depth-1" alt="First day of PhD at ENSTA U2IS" title="First day of PhD at ENSTA U2IS" loading="lazy"></figure>
     </div>
 </div>
 
@@ -112,9 +112,9 @@ I'll be sharing updates throughout the journey. Stay tuned.
 ---
 
 **Related:**
-- [Tactile Array for Humanoid Hand](/~saood/projects/#tactile-array-for-humanoid-hand)
-- [Generative Factorized Model of Action-Conditioned Tactile Affordance](/~saood/projects/#generative-factorized-model-of-action-conditioned-tactile-affordance)
-- [Soft Robotic Haptic Interface for Anxiety Reduction](/~saood/projects/#soft-robotic-haptic-interface-for-anxiety-reduction)
+- [Tactile Array for Humanoid Hand](projects/?p=tactile-array)
+- [Generative Factorized Model of Action-Conditioned Tactile Affordance](projects/?p=tactile-affordance)
+- [Soft Robotic Haptic Interface for Anxiety Reduction](projects/?p=haptic-interface)
 - Laboratory: [U2IS @ ENSTA Paris](https://www.ensta-paris.fr/en/)
 - Advisor: [Prof. Adriana Tapus](https://www.ensta-paris.fr/en/directory/adriana-tapus)
 
