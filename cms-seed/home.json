@@ -1,5 +1,47 @@
 {
     "en": {
+        "sections": [
+            {
+                "id": "about",
+                "show": true
+            },
+            {
+                "id": "now",
+                "show": true
+            },
+            {
+                "id": "keywords",
+                "show": true
+            },
+            {
+                "id": "research",
+                "show": true
+            },
+            {
+                "id": "robots",
+                "show": true
+            },
+            {
+                "id": "work",
+                "show": true
+            },
+            {
+                "id": "highlights",
+                "show": true
+            },
+            {
+                "id": "papers",
+                "show": true
+            },
+            {
+                "id": "talks",
+                "show": true
+            },
+            {
+                "id": "feeds",
+                "show": true
+            }
+        ],
         "hero": {
             "kicker": "PhD researcher · U2IS, ENSTA Paris — IP Paris",
             "title": "Teaching robots the language of *touch*.",

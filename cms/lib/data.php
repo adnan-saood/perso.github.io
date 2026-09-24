@@ -153,9 +153,37 @@ function cms_repos_sanitize(array $in)
 
 // Field kinds: text, textarea, paragraphs (blank-line separated), list (one per line),
 // image, rows (repeatable groups of text fields).
+// Homepage sections under the hero, in their default order.
+function cms_home_sections()
+{
+    return array(
+        'about' => 'About', 'now' => 'Now panel', 'keywords' => 'Keywords strip', 'research' => 'Research threads',
+        'robots' => 'Robots in 3D', 'work' => 'Selected work', 'highlights' => 'Highlights (numbers)',
+        'papers' => 'Selected papers', 'talks' => 'Talks & media', 'feeds' => 'News & blog',
+    );
+}
+
+// Saved order + visibility, with sections added in later versions appended (shown).
+function cms_home_section_order(array $home)
+{
+    $known = cms_home_sections();
+    $out = array();
+    foreach (isset($home['sections']) && is_array($home['sections']) ? $home['sections'] : array() as $s) {
+        if (!is_array($s) || !isset($s['id'], $known[$s['id']]) || isset($out[$s['id']])) continue;
+        $out[$s['id']] = array('id' => $s['id'], 'show' => !empty($s['show']));
+    }
+    foreach (array_keys($known) as $id) {
+        if (!isset($out[$id])) $out[$id] = array('id' => $id, 'show' => true);
+    }
+    return array_values($out);
+}
+
 function cms_home_schema()
 {
     return array(
+        'Page layout' => array(
+            'sections' => array('Sections under the hero: drag to reorder, untick to hide', 'sections'),
+        ),
         'Hero' => array(
             'hero.kicker' => array('Small line above the title', 'text'),
             'hero.title' => array('Big title (wrap a word in *stars* for the gradient)', 'text'),
@@ -230,7 +258,7 @@ function cms_home($lang = null)
     $out = $en;
     foreach (cms_home_schema() as $fields) {
         foreach ($fields as $path => $spec) {
-            if ($spec[1] === 'check') continue; // switches are set once, on the English tab
+            if ($spec[1] === 'check' || $spec[1] === 'sections') continue; // set once, on the English tab
             $v = cms_path_get($doc['fr'], $path);
             if ($v !== null && $v !== '' && $v !== array()) cms_path_set($out, $path, $v);
         }
@@ -255,6 +283,9 @@ function cms_home_sanitize(array $in)
                     break;
                 case 'check':
                     $v = $v === '1';
+                    break;
+                case 'sections':
+                    $v = cms_home_section_order(array('sections' => is_array($v) ? array_values($v) : array()));
                     break;
                 case 'rows':
                     $rows = array();

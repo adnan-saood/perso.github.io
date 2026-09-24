@@ -83,6 +83,7 @@
     });
     bindTilt(scope);
     bindMagnetic(scope);
+    bindFx(scope);
   }
   window.siteMotionObserve = observe; // used after live CMS content loads
 
@@ -126,6 +127,55 @@
       });
     });
   }
+
+  // --- Button touch effect ----------------------------------------------------------
+  // Every button reacts like the tactile skin: a fill spreads from where the pointer
+  // enters, a patch of "taxels" lights up under it, and a ring ripples out on entry and
+  // on press. CSS does the drawing (.fx in _redesign.scss); this only tracks the pointer.
+  var FX = {
+    solid: ".btn--primary",
+    fill: ".btn--ghost",
+    soft: ".hero__links a, .proof a, .filters button, .section__more, .pub__link, .now__more, .icon-btn, " +
+      ".contact-copy, .site-footer__social a, .robots__thumb, .model__ar, .page-link, .cms-back, .cms-prev-next a, " +
+      ".talk__links a, .oss-profile a, .repo-card a.btn",
+  };
+  function bindFx(scope) {
+    Object.keys(FX).forEach(function (kind) {
+      scope.querySelectorAll(FX[kind]).forEach(function (el) {
+        if (el.classList.contains("fx")) return;
+        el.classList.add("fx", "fx--" + kind);
+      });
+    });
+  }
+  function fxPoint(el, ev) {
+    var r = el.getBoundingClientRect();
+    var x = ev.clientX - r.left, y = ev.clientY - r.top;
+    el.style.setProperty("--bx", x + "px");
+    el.style.setProperty("--by", y + "px");
+    return [x, y];
+  }
+  function fxRing(el, xy, strong) {
+    if (reduce) return;
+    var ring = document.createElement("span");
+    ring.className = "fx-ring" + (strong ? " fx-ring--press" : "");
+    ring.style.left = xy[0] + "px";
+    ring.style.top = xy[1] + "px";
+    el.appendChild(ring);
+    ring.addEventListener("animationend", function () { ring.remove(); });
+  }
+  document.addEventListener("pointerover", function (ev) {
+    var el = ev.target.closest && ev.target.closest(".fx");
+    if (!el || (ev.relatedTarget && el.contains(ev.relatedTarget))) return;
+    fxRing(el, fxPoint(el, ev), false);
+  });
+  document.addEventListener("pointermove", function (ev) {
+    var el = ev.target.closest && ev.target.closest(".fx");
+    if (el) fxPoint(el, ev);
+  }, { passive: true });
+  document.addEventListener("pointerdown", function (ev) {
+    var el = ev.target.closest && ev.target.closest(".fx");
+    if (el) fxRing(el, fxPoint(el, ev), true);
+  });
 
   // --- Magnetic buttons ----------------------------------------------------------
   function bindMagnetic(scope) {

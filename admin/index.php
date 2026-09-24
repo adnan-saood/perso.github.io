@@ -83,7 +83,7 @@ function admin_head($title)
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
 <title><?php echo e($title); ?> · Site admin</title>
-<link rel="stylesheet" href="admin.css?v=7">
+<link rel="stylesheet" href="admin.css?v=8">
 <?php
 }
 
@@ -142,7 +142,7 @@ function admin_layout_end($scripts = array())
 {
     echo '</main></div>';
     foreach ($scripts as $s) echo '<script src="' . e($s) . '"></script>';
-    echo '<script src="admin.js?v=7"></script></body></html>';
+    echo '<script src="admin.js?v=8"></script></body></html>';
 }
 
 // ---------------------------------------------------------------------------
@@ -1143,6 +1143,19 @@ function admin_home_field($lang, $path, array $spec, $value)
             break;
         case 'textarea':
             echo '<label class="wide">' . $label . '<textarea name="' . e($name) . '" rows="3">' . e((string) $value) . '</textarea></label>';
+            break;
+        case 'sections':
+            if ($lang !== 'en') break;
+            echo '<div class="wide"><strong>' . $label . '</strong><ol class="sortable home-sections" id="home-sections">';
+            foreach (cms_home_section_order(array('sections' => $value)) as $i => $s) {
+                $n = $name . '[' . $i . ']';
+                echo '<li draggable="true"><span class="grip">' . admin_icon('grip') . '</span>'
+                    . '<input type="hidden" name="' . e($n) . '[id]" value="' . e($s['id']) . '">'
+                    . '<span class="grow">' . e(cms_home_sections()[$s['id']]) . '</span>'
+                    . '<label class="toggle"><input type="hidden" name="' . e($n) . '[show]" value="0">'
+                    . '<input type="checkbox" name="' . e($n) . '[show]" value="1"' . ($s['show'] ? ' checked' : '') . '> Shown</label></li>';
+            }
+            echo '</ol><p class="muted small">The hero always comes first. Hidden sections keep their content.</p></div>';
             break;
         case 'check':
             if ($lang !== 'en') break; // switches live on the English tab only

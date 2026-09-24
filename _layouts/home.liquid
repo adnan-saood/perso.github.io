@@ -10,6 +10,14 @@ layout: default
 $H = $cms['home'];
 $g = function ($path, $default = '') use ($H) { $v = cms_path_get($H, $path); return $v === null ? $default : $v; };
 $user = 'adnan-saood';
+// Each section below the hero is captured, then printed in the order set in Admin -> Homepage.
+$blocks = array();
+$current = null;
+$block = function ($id) use (&$blocks, &$current) {
+    if ($current !== null) $blocks[$current] = ob_get_clean();
+    $current = $id;
+    if ($id !== null) ob_start();
+};
 ?>
 <section class="hero" aria-labelledby="hero-title">
   <div class="hero__fallback" aria-hidden="true"></div>
@@ -51,6 +59,7 @@ $user = 'adnan-saood';
 </section>
 <div class="touch-cursor" aria-hidden="true"></div>
 
+<?php $block('about'); ?>
 <section class="section" aria-labelledby="about-title">
   <div class="about">
     <div class="portrait tilt reveal">
@@ -71,6 +80,7 @@ $user = 'adnan-saood';
   </div>
 </section>
 
+<?php $block('now'); ?>
 <?php if ($g('now.show')): list($nextTalk, $isUpcoming) = cms_home_next_talk(); ?>
 <section class="section section--now" aria-labelledby="now-title">
   <div class="section__head">
@@ -101,6 +111,7 @@ $user = 'adnan-saood';
 </section>
 <?php endif; ?>
 
+<?php $block('keywords'); ?>
 <?php $kw = (array) $g('keywords', array()); if ($kw): ?>
 <div class="marquee" aria-hidden="true">
   <div class="marquee__track">
@@ -109,6 +120,7 @@ $user = 'adnan-saood';
 </div>
 <?php endif; ?>
 
+<?php $block('research'); ?>
 <section class="section" aria-labelledby="research-title">
   <div class="section__head">
     <div>
@@ -128,6 +140,7 @@ $user = 'adnan-saood';
   </div>
 </section>
 
+<?php $block('robots'); ?>
 <?php $robots = cms_models_showcase(6, (bool) $g('robots_demo')); if ($robots !== ''): ?>
 <section class="section" aria-labelledby="robots-title">
   <div class="section__head">
@@ -140,6 +153,7 @@ $user = 'adnan-saood';
 </section>
 <?php endif; ?>
 
+<?php $block('work'); ?>
 <section class="section" aria-labelledby="work-title">
   <div class="section__head">
     <div>
@@ -158,6 +172,7 @@ $user = 'adnan-saood';
   </div>
 </section>
 
+<?php $block('highlights'); ?>
 <section class="section" aria-label="<?php echo e(cms_t('Highlights')); ?>">
   <div class="stats">
     <?php foreach ((array) $g('stats', array()) as $s): ?>
@@ -173,6 +188,7 @@ $user = 'adnan-saood';
   </div>
 </section>
 
+<?php $block('papers'); ?>
 <?php $pubs = cms_selected_publications(6); if ($pubs): ?>
 <section class="section" aria-labelledby="papers-title">
   <div class="section__head">
@@ -186,6 +202,7 @@ $user = 'adnan-saood';
 </section>
 <?php endif; ?>
 
+<?php $block('talks'); ?>
 <?php $talks = array_slice(array_values(array_filter(cms_list_items('talks'), function ($t) { return $t['featured']; })), 0, 3); if ($talks): ?>
 <section class="section" aria-labelledby="talks-title">
   <div class="section__head">
@@ -199,6 +216,7 @@ $user = 'adnan-saood';
 </section>
 <?php endif; ?>
 
+<?php $block('feeds'); ?>
 <section class="section" aria-label="News and blog">
   <div class="feeds">
     <div class="reveal">
@@ -217,3 +235,9 @@ $user = 'adnan-saood';
     </div>
   </div>
 </section>
+<?php
+$block(null);
+foreach (cms_home_section_order($H) as $s) {
+    if ($s['show'] && isset($blocks[$s['id']])) echo $blocks[$s['id']];
+}
+?>

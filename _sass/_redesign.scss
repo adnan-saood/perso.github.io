@@ -242,6 +242,7 @@ button.btn--ghost {
   box-shadow: none;
   transition:
     transform 350ms var(--ease-soft),
+    scale 180ms var(--ease-soft),
     box-shadow 300ms ease,
     background-position 600ms var(--ease-out),
     border-color 250ms ease,
@@ -3249,5 +3250,155 @@ a.now__tile:hover {
   }
   .marquee__track span {
     transform: none;
+  }
+}
+
+/* ============================ Buttons: haptic press ====================== */
+
+// Every button reacts like the tactile skin (motion.js adds .fx and tracks --bx/--by):
+//  - a fill spreads from the point where the pointer enters, and follows it;
+//  - a patch of taxel dots lights up under the pointer;
+//  - a ring ripples out on entry and a stronger one on press; the button squishes.
+// The pseudo-elements sit at z-index -1 inside an isolated button, i.e. above the
+// button's own background but below its text and icons.
+.fx {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    transform 350ms var(--ease-soft),
+    scale 180ms var(--ease-soft),
+    box-shadow 300ms ease,
+    background-position 600ms var(--ease-out),
+    border-color 250ms ease,
+    color 250ms ease;
+}
+.fx::before,
+.fx::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  pointer-events: none;
+}
+// the spreading fill
+.fx::before {
+  background: var(--fx-fill);
+  clip-path: circle(0 at var(--bx, 50%) var(--by, 50%));
+  transition: clip-path 600ms var(--ease-out);
+}
+.fx:hover::before,
+.fx:focus-visible::before {
+  clip-path: circle(160% at var(--bx, 50%) var(--by, 50%));
+}
+// taxels lighting up under the fingertip
+.fx::after {
+  background-image: radial-gradient(circle, var(--fx-dot) 0.9px, transparent 1.5px);
+  background-size: 6px 6px;
+  -webkit-mask-image: radial-gradient(46px circle at var(--bx, 50%) var(--by, 50%), #000 10%, transparent 75%);
+  mask-image: radial-gradient(46px circle at var(--bx, 50%) var(--by, 50%), #000 10%, transparent 75%);
+  opacity: 0;
+  transition: opacity 300ms ease;
+}
+.fx:hover::after {
+  opacity: 0.75;
+}
+.fx:active {
+  scale: 0.95;
+}
+.fx-ring {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  margin: -6px 0 0 -6px;
+  border-radius: 50%;
+  border: 1.5px solid var(--fx-ring);
+  pointer-events: none;
+  z-index: 1;
+  animation: fx-ring 700ms var(--ease-out) forwards;
+}
+.fx-ring--press {
+  border-width: 2px;
+  animation-duration: 850ms;
+  --fx-ring-scale: 22;
+}
+@keyframes fx-ring {
+  from {
+    transform: scale(0.2);
+    opacity: 0.8;
+  }
+  to {
+    transform: scale(var(--fx-ring-scale, 14));
+    opacity: 0;
+  }
+}
+
+// Gradient buttons: a soft light follows the pointer instead of a fill.
+.fx--solid {
+  --fx-fill: radial-gradient(140px circle at var(--bx, 50%) var(--by, 50%), rgba(255, 255, 255, 0.42), transparent 70%);
+  --fx-dot: rgba(255, 255, 255, 0.95);
+  --fx-ring: rgba(255, 255, 255, 0.9);
+}
+.fx--solid::before {
+  clip-path: none;
+  opacity: 0;
+  transition: opacity 300ms ease;
+}
+.fx--solid:hover::before {
+  clip-path: none;
+  opacity: 1;
+}
+.fx--solid:hover {
+  box-shadow: 0 18px 40px -12px var(--coral), 0 0 0 4px rgba(255, 111, 78, 0.16) !important;
+}
+
+// Outline buttons fill with the brand gradient and turn white.
+.fx--fill {
+  --fx-fill: var(--gradient);
+  --fx-dot: rgba(255, 255, 255, 0.9);
+  --fx-ring: var(--coral);
+}
+.btn--ghost.fx:hover,
+.btn--ghost.fx:focus-visible {
+  color: #fff !important;
+  border-color: transparent !important;
+  box-shadow: 0 14px 32px -14px var(--violet);
+}
+
+// Small pills and links: a light tint and violet taxels.
+.fx--soft {
+  --fx-fill: linear-gradient(115deg, rgba(106, 69, 255, 0.14), rgba(255, 111, 78, 0.16));
+  --fx-dot: var(--violet);
+  --fx-ring: var(--violet);
+}
+.fx--soft::after {
+  -webkit-mask-image: radial-gradient(32px circle at var(--bx, 50%) var(--by, 50%), #000 10%, transparent 75%);
+  mask-image: radial-gradient(32px circle at var(--bx, 50%) var(--by, 50%), #000 10%, transparent 75%);
+}
+.fx--soft:hover::after {
+  opacity: 0.45;
+}
+html[data-theme="dark"] .fx--soft {
+  --fx-fill: linear-gradient(115deg, rgba(139, 108, 255, 0.24), rgba(255, 128, 99, 0.22));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fx::before {
+    transition: opacity 200ms ease;
+    clip-path: none;
+    opacity: 0;
+  }
+  .fx:hover::before,
+  .fx:focus-visible::before {
+    clip-path: none;
+    opacity: 1;
+  }
+  .fx:active {
+    scale: none;
+  }
+  .fx-ring {
+    display: none;
   }
 }

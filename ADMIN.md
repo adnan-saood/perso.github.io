@@ -58,7 +58,8 @@ you wrote in the admin panel.
 - **Analytics**: visitors, page views, time on page, top pages, sources (incl.
   `?utm_source=` links), devices, browsers, time zones. No cookies, no IPs stored; your
   own visits are excluded in any browser where you've opened the admin.
-- **Homepage**: Admin → Homepage. Edit the hero title (wrap a word in `*stars*` to give it
+- **Homepage**: Admin → Homepage. *Page layout* (top of the page) lists the sections under
+  the hero: drag them to reorder, untick *Shown* to hide one. Edit the hero title (wrap a word in `*stars*` to give it
   the gradient), intro, about text, the scrolling keywords strip, the research pillars,
   highlight numbers and every section title. The *Français* tab holds the French
   versions; any field left empty there falls back to English.

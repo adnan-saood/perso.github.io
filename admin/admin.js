@@ -120,6 +120,10 @@
     });
   }
 
+  // Homepage editor: section order.
+  var homeSections = document.getElementById("home-sections");
+  if (homeSections) makeSortable(homeSections);
+
   // Publications: homepage order.
   var homeOrder = document.getElementById("home-order");
   if (homeOrder) {
