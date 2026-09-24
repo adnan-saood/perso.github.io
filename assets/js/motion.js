@@ -198,8 +198,9 @@
         var btn = ev.target.closest("button[data-filter]");
         if (!btn) return;
         bar.querySelectorAll("button").forEach(function (b) { b.classList.toggle("is-active", b === btn); });
+        grid.dispatchEvent(new CustomEvent("filtered"));
         var f = btn.getAttribute("data-filter");
-        grid.querySelectorAll(".project-card").forEach(function (card) {
+        grid.querySelectorAll("[data-category]").forEach(function (card) {
           // data-category may hold several values separated by "|".
           var cats = "|" + (card.getAttribute("data-category") || "") + "|";
           var show = f === "*" || cats.indexOf("|" + f + "|") !== -1;

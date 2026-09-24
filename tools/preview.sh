@@ -34,7 +34,7 @@ BASE="${BASE:-/}"
 DATA="$PWD/.preview-data"
 if [[ ! -d "$DATA" ]]; then
   mkdir -p "$DATA"
-  cp -r cms-seed/posts cms-seed/news cms-seed/projects "$DATA/"
+  cp -r cms-seed/posts cms-seed/news cms-seed/projects cms-seed/publications cms-seed/*.json "$DATA/"
   echo "preview-setup-token-local" > "$DATA/SETUP_TOKEN"
 fi
 

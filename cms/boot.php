@@ -8,3 +8,6 @@ ini_set('log_errors', '1');
 require_once __DIR__ . '/lib/core.php';
 require_once __DIR__ . '/lib/auth.php';
 require_once __DIR__ . '/lib/files.php';
+require_once __DIR__ . '/lib/data.php';
+require_once __DIR__ . '/lib/bibtex.php';
+require_once __DIR__ . '/lib/stats.php';

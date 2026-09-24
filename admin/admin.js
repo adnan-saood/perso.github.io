@@ -88,8 +88,137 @@
     });
   }
 
-  // Editor.
-  var form = document.getElementById("editor-form");
+  // Never count the site owner in the visitor analytics (read by assets/js/cms.js).
+  try { localStorage.setItem("cms-no-track", "1"); } catch (e) { /* ignore */ }
+
+  // --- Drag-and-drop reordering for lists marked .sortable ----------------------
+  function makeSortable(list, onChange) {
+    var dragging = null;
+    list.addEventListener("dragstart", function (ev) {
+      var item = ev.target.closest("[draggable=true]");
+      if (!item) return;
+      // Don't hijack text selection inside inputs.
+      if (ev.target.closest("input, textarea, select")) { ev.preventDefault(); return; }
+      dragging = item;
+      item.classList.add("is-dragging");
+      ev.dataTransfer.effectAllowed = "move";
+      ev.dataTransfer.setData("text/plain", "");
+    });
+    list.addEventListener("dragover", function (ev) {
+      if (!dragging) return;
+      ev.preventDefault();
+      var over = ev.target.closest("[draggable=true]");
+      if (!over || over === dragging || over.parentNode !== list) return;
+      var r = over.getBoundingClientRect();
+      list.insertBefore(dragging, ev.clientY > r.top + r.height / 2 ? over.nextSibling : over);
+    });
+    list.addEventListener("dragend", function () {
+      if (!dragging) return;
+      dragging.classList.remove("is-dragging");
+      dragging = null;
+      if (onChange) onChange();
+    });
+  }
+
+  // Publications: homepage order.
+  var homeOrder = document.getElementById("home-order");
+  if (homeOrder) {
+    var dirtyOrder = false;
+    makeSortable(homeOrder, function () { dirtyOrder = true; });
+    document.querySelector("[data-save-order]").addEventListener("click", function () {
+      var fd = new FormData();
+      fd.append("action", "pub_home_order");
+      fd.append("csrf", homeOrder.dataset.csrf);
+      homeOrder.querySelectorAll("[data-slug]").forEach(function (li) { fd.append("order[]", li.dataset.slug); });
+      fetch(homeOrder.dataset.saveUrl, { method: "POST", body: fd, credentials: "same-origin" })
+        .then(function (r) { return r.json(); })
+        .then(function (j) {
+          dirtyOrder = false;
+          toast("Homepage order saved (" + j.saved + ")");
+          homeOrder.querySelectorAll("[data-slug]").forEach(function (li, i) {
+            var pill = document.querySelector('#item-list a[href*="slug=' + li.dataset.slug + '"] .pill.gold');
+            if (pill) pill.textContent = "homepage #" + (i + 1);
+          });
+        })
+        .catch(function () { alert("Could not save the order."); });
+    });
+    window.addEventListener("beforeunload", function (ev) { if (dirtyOrder) { ev.preventDefault(); ev.returnValue = ""; } });
+  }
+
+  // --- Repeatable rows (CV entries, repositories) --------------------------------
+  var rowCounter = 1000;
+  document.addEventListener("click", function (ev) {
+    var add = ev.target.closest("[data-add-row]");
+    if (add) {
+      var key = add.dataset.addRow;
+      var tpl = document.querySelector('template[data-row-template="' + key + '"]');
+      var rows = document.querySelector('[data-rows="' + key + '"]');
+      var html = tpl.innerHTML.replace(/__i__/g, "n" + rowCounter++);
+      rows.insertAdjacentHTML("beforeend", html);
+      var added = rows.lastElementChild;
+      added.open = true;
+      var first = added.querySelector("input, textarea");
+      if (first) first.focus();
+      return;
+    }
+    var remove = ev.target.closest("[data-remove-row]");
+    if (remove) {
+      ev.preventDefault();
+      var row = remove.closest(".row-edit, .repo-row");
+      if (row && confirm("Remove this entry? (Nothing is saved until you press Save.)")) row.remove();
+      return;
+    }
+    var move = ev.target.closest("[data-move]");
+    if (move) {
+      ev.preventDefault();
+      var item = move.closest(".row-edit");
+      if (move.dataset.move === "-1" && item.previousElementSibling) item.parentNode.insertBefore(item, item.previousElementSibling);
+      if (move.dataset.move === "1" && item.nextElementSibling) item.parentNode.insertBefore(item.nextElementSibling, item);
+    }
+  });
+  // Row summaries follow the title field as you type.
+  document.addEventListener("input", function (ev) {
+    if (!ev.target.matches("[data-row-title]")) return;
+    var sum = ev.target.closest(".row-edit").querySelector("summary .grow");
+    if (sum) sum.textContent = ev.target.value || "New entry";
+  });
+
+  // Repositories editor.
+  var repoRows = document.getElementById("repo-rows");
+  if (repoRows) {
+    makeSortable(repoRows);
+    var addInput = document.getElementById("repo-add");
+    var userInput = document.querySelector("[data-gh-user]");
+    var addRepo = function () {
+      var name = addInput.value.trim().replace(/^https?:\/\/github\.com\//, "").replace(/\/$/, "");
+      if (name && name.indexOf("/") === -1 && userInput.value) name = userInput.value + "/" + name;
+      if (!/^[A-Za-z0-9-]+\/[A-Za-z0-9._-]+$/.test(name)) { toast("Use owner/name, e.g. adnan-saood/hid_ros2"); return; }
+      var exists = Array.prototype.some.call(repoRows.querySelectorAll(".repo-row__name"), function (i) { return i.value.toLowerCase() === name.toLowerCase(); });
+      if (exists) { toast("Already in the list"); return; }
+      var html = document.getElementById("repo-template").innerHTML.replace(/__i__/g, "n" + rowCounter++);
+      repoRows.insertAdjacentHTML("afterbegin", html);
+      repoRows.firstElementChild.querySelector(".repo-row__name").value = name;
+      addInput.value = "";
+      toast("Added " + name + " — press Save");
+    };
+    document.querySelector("[data-repo-add]").addEventListener("click", addRepo);
+    addInput.addEventListener("keydown", function (ev) { if (ev.key === "Enter") { ev.preventDefault(); addRepo(); } });
+    // Suggest the user's own repositories.
+    if (userInput.value) {
+      fetch("https://api.github.com/users/" + encodeURIComponent(userInput.value) + "/repos?per_page=100&sort=pushed")
+        .then(function (r) { return r.json(); })
+        .then(function (list) {
+          if (!Array.isArray(list)) return;
+          document.getElementById("gh-repos").innerHTML = list.map(function (r) {
+            return '<option value="' + r.full_name + '">' + (r.description || "").replace(/[<>"]/g, "") + "</option>";
+          }).join("");
+        })
+        .catch(function () { /* suggestions are optional */ });
+    }
+  }
+
+  // --- Uploads & media library (editor, CV) ---------------------------------------
+  var form = document.getElementById("editor-form") || document.querySelector("form[data-upload-url]");
   if (!form) return;
 
   // Big photos are scaled down in the browser (the server has no image library):
@@ -294,6 +423,7 @@
   })();
 
   function insertFile(path, name, isImage) {
+    if (!mde) return;
     var label = name.replace(/\.[^.]+$/, "").replace(/[-_]+/g, " ");
     mde.codemirror.replaceSelection((isImage ? "!" : "") + "[" + label + "](" + path + ")");
     mde.codemirror.focus();
@@ -301,7 +431,7 @@
   }
 
   var dirty = false;
-  var mde = new EasyMDE({
+  var mde = document.getElementById("body") && window.EasyMDE ? new EasyMDE({
     element: document.getElementById("body"),
     autoDownloadFontAwesome: false,
     spellChecker: false,
@@ -325,8 +455,8 @@
         return attr + '="' + (form.dataset.base || "/") + path + '"';
       });
     },
-  });
-  mde.codemirror.on("change", function () { dirty = true; });
+  }) : null;
+  if (mde) mde.codemirror.on("change", function () { dirty = true; });
   form.addEventListener("input", function () { dirty = true; });
   form.addEventListener("submit", function () { dirty = false; });
   window.addEventListener("beforeunload", function (ev) {
@@ -335,7 +465,7 @@
   document.addEventListener("keydown", function (ev) {
     if ((ev.ctrlKey || ev.metaKey) && ev.key.toLowerCase() === "s") {
       ev.preventDefault();
-      mde.codemirror.save();
+      if (mde) mde.codemirror.save();
       dirty = false;
       form.requestSubmit ? form.requestSubmit() : form.submit();
     }
@@ -344,9 +474,9 @@
   // Slug follows the title until you edit it yourself.
   var title = form.querySelector('[name="title"]');
   var slug = form.querySelector('[name="slug"]');
-  var slugTouched = slug.value !== "";
-  slug.addEventListener("input", function () { slugTouched = true; });
-  title.addEventListener("input", function () {
+  var slugTouched = !slug || slug.value !== "";
+  if (slug) slug.addEventListener("input", function () { slugTouched = true; });
+  if (title) title.addEventListener("input", function () {
     if (slugTouched) return;
     slug.placeholder = title.value.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")
       .replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 80) || "auto from title";
@@ -359,7 +489,7 @@
       picker.open(function (path) {
         document.querySelector(btn.dataset.libraryInto).value = path;
         dirty = true;
-        toast("Cover image set");
+        toast("Selected " + path.split("/").pop());
       });
     });
   });
@@ -369,14 +499,14 @@
     btn.addEventListener("click", function () {
       var picker = document.createElement("input");
       picker.type = "file";
-      picker.accept = "image/*";
+      picker.accept = btn.dataset.accept || "image/*";
       picker.onchange = function () {
         if (!picker.files.length) return;
         btn.disabled = true;
         upload(picker.files[0]).then(function (url) {
           document.querySelector(btn.dataset.uploadInto).value = url;
           dirty = true;
-          toast("Image uploaded");
+          toast("Uploaded " + url.split("/").pop());
         }, function (e) { alert(e.message); }).then(function () { btn.disabled = false; });
       };
       picker.click();

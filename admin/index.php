@@ -3,7 +3,7 @@
 require_once __DIR__ . '/../cms/boot.php';
 
 header('X-Frame-Options: DENY');
-header("Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; font-src 'self' data: https://cdnjs.cloudflare.com; img-src 'self' data: blob: https:; frame-ancestors 'none'; form-action 'self'; base-uri 'none'");
+header("Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; font-src 'self' data: https://cdnjs.cloudflare.com; img-src 'self' data: blob: https:; connect-src 'self' https://api.github.com; frame-ancestors 'none'; form-action 'self'; base-uri 'none'");
 header('Referrer-Policy: same-origin');
 header('X-Content-Type-Options: nosniff');
 header('Cache-Control: no-store');
@@ -59,6 +59,11 @@ function admin_icon($name)
         'ext' => 'M14 4h6v6M20 4l-9 9M18 14v6H4V6h6',
         'file' => 'M6 3h8l4 4v14H6zM14 3v4h4',
         'up' => 'M12 19V5M5 12l7-7 7 7',
+        'book' => 'M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2zM4 19V5M8 7h7',
+        'id' => 'M4 5h16v14H4zM8 10a2 2 0 1 0 4 0 2 2 0 0 0-4 0M7 16c.5-1.5 2-2 3-2s2.5.5 3 2M15 9h3M15 12h3',
+        'code' => 'M8 8l-4 4 4 4M16 8l4 4-4 4M13 5l-2 14',
+        'chart' => 'M4 20V10M10 20V4M16 20v-7M22 20H2',
+        'grip' => 'M9 6h.01M15 6h.01M9 12h.01M15 12h.01M9 18h.01M15 18h.01',
     );
     $d = isset($paths[$name]) ? $paths[$name] : '';
     return '<svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="' . $d . '"/></svg>';
@@ -73,7 +78,7 @@ function admin_head($title)
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
 <title><?php echo e($title); ?> · Site admin</title>
-<link rel="stylesheet" href="admin.css?v=4">
+<link rel="stylesheet" href="admin.css?v=5">
 <?php
 }
 
@@ -89,6 +94,10 @@ function admin_layout_start($title, $active)
         'posts' => array('Blog posts', 'posts', array('page' => 'items', 'type' => 'posts')),
         'news' => array('News', 'news', array('page' => 'items', 'type' => 'news')),
         'projects' => array('Projects', 'cube', array('page' => 'items', 'type' => 'projects')),
+        'publications' => array('Publications', 'book', array('page' => 'items', 'type' => 'publications')),
+        'cv' => array('CV', 'id', array('page' => 'cv')),
+        'repos' => array('Repositories', 'code', array('page' => 'repos')),
+        'analytics' => array('Analytics', 'chart', array('page' => 'analytics')),
         'files' => array('Files', 'folder', array('page' => 'files')),
         'trash' => array('Trash', 'trash', array('page' => 'trash')),
         'settings' => array('Settings', 'gear', array('page' => 'settings')),
@@ -126,7 +135,7 @@ function admin_layout_end($scripts = array())
 {
     echo '</main></div>';
     foreach ($scripts as $s) echo '<script src="' . e($s) . '"></script>';
-    echo '<script src="admin.js?v=4"></script></body></html>';
+    echo '<script src="admin.js?v=5"></script></body></html>';
 }
 
 // ---------------------------------------------------------------------------
@@ -216,11 +225,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (strtotime($date) === false) $date = date('Y-m-d');
 
             // Keep front-matter keys we don't edit here (layout, giscus_comments, ...).
-            $meta = $existing ? $existing['meta'] : ($type === 'projects' ? array() : array('layout' => 'post'));
+            $undated = array('projects', 'publications');
+            $meta = $existing ? $existing['meta'] : (in_array($type, $undated, true) ? array() : array('layout' => 'post'));
             $meta['title'] = $title;
-            if ($type !== 'projects') $meta['date'] = $date;
+            if (!in_array($type, $undated, true)) $meta['date'] = $date;
             $meta['draft'] = !empty($_POST['draft']);
-            if ($type === 'projects') {
+            if ($type === 'publications') {
+                $meta['authors'] = cms_people(admin_post('authors'));
+                foreach (array('venue', 'year', 'badge', 'award', 'note', 'doi', 'url', 'pdf', 'code', 'video', 'slides', 'image') as $k) {
+                    $meta[$k] = trim(admin_post($k));
+                }
+                $meta['doi'] = preg_replace('#^https?://(dx\.)?doi\.org/#', '', $meta['doi']);
+                $meta['pubtype'] = array_key_exists(admin_post('pubtype'), cms_pub_types_admin()) ? admin_post('pubtype') : 'other';
+                $meta['bibtex'] = trim(str_replace("\r\n", "\n", admin_post('bibtex')));
+                $meta['selected'] = !empty($_POST['selected']);
+                if ($meta['selected']) {
+                    $meta['home_order'] = max(1, (int) admin_post('home_order', '99'));
+                } else {
+                    unset($meta['selected'], $meta['home_order']);
+                }
+            } elseif ($type === 'projects') {
                 $meta['description'] = trim(admin_post('description'));
                 $meta['category'] = trim(admin_post('category'));
                 $meta['img'] = trim(admin_post('img'));
@@ -251,8 +275,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 admin_redirect(array('page' => 'edit', 'type' => $type, 'slug' => $orig));
             }
             if ($orig !== '' && $orig !== $slug) cms_delete_item($type, $orig);
+            if ($type === 'publications') admin_pub_renumber(array(), $slug);
             admin_flash('ok', 'Saved' . ($meta['draft'] ? ' as draft' : ' and published') . '.');
             admin_redirect(array('page' => 'edit', 'type' => $type, 'slug' => $slug));
+
+        case 'pub_import':
+            $pub = cms_bibtex_to_publication(admin_post('bibtex'));
+            if (!$pub || $pub['meta']['title'] === '') {
+                admin_flash('err', 'Could not read that BibTeX entry. Paste one complete @type{key, ...} entry.');
+                admin_redirect(array('page' => 'items', 'type' => 'publications'));
+            }
+            $slug = $pub['slug'] !== '' ? $pub['slug'] : cms_slugify($pub['meta']['title']);
+            $base = $slug;
+            $n = 2;
+            while (cms_load_item('publications', $slug)) $slug = $base . '-' . $n++;
+            cms_save_item('publications', $slug, array_filter($pub['meta'], function ($v) { return $v !== '' && $v !== array(); }), $pub['abstract']);
+            admin_flash('ok', 'Imported. Check the details, add a picture, then save.');
+            admin_redirect(array('page' => 'edit', 'type' => 'publications', 'slug' => $slug));
+
+        case 'pub_home_order': // AJAX: slugs of homepage publications, in order
+            $order = isset($_POST['order']) && is_array($_POST['order']) ? array_map('strval', $_POST['order']) : array();
+            admin_json(array('ok' => true, 'saved' => admin_pub_renumber($order)));
+
+        case 'cv_save':
+            $cv = cms_cv_sanitize(isset($_POST['cv']) && is_array($_POST['cv']) ? $_POST['cv'] : array());
+            $ok = cms_doc_save('cv', $cv);
+            admin_flash($ok ? 'ok' : 'err', $ok ? 'CV saved. It is live on /cv/.' : 'Could not save the CV.');
+            admin_redirect(array('page' => 'cv'));
+
+        case 'repos_save':
+            $doc = cms_repos_sanitize(array('user' => admin_post('user'), 'repos' => isset($_POST['repos']) && is_array($_POST['repos']) ? $_POST['repos'] : array()));
+            admin_flash(cms_doc_save('repositories', $doc) ? 'ok' : 'err', 'Saved ' . count($doc['repos']) . ' repositories.');
+            admin_redirect(array('page' => 'repos'));
 
         case 'delete_item':
             $type = admin_post('type');
@@ -391,6 +445,31 @@ case 'items':
     <?php if ($type === 'projects'): ?>
       <p class="muted small">Projects are shown in order of their number (1 first). Ticked “Show on homepage” projects appear on the homepage.</p>
     <?php endif; ?>
+    <?php if ($type === 'publications'):
+        $home = array_values(array_filter($items, function ($x) { return $x['selected']; }));
+        usort($home, function ($a, $b) { return $a['home_order'] - $b['home_order']; }); ?>
+      <div class="cards two">
+        <section class="card">
+          <h2>On the homepage</h2>
+          <p class="muted small">Drag to reorder, then save. Tick “Show on homepage” inside a publication to add it here.</p>
+          <ol class="sortable" id="home-order" data-save-url="<?php echo e(admin_url()); ?>" data-csrf="<?php echo e(cms_csrf_token()); ?>">
+            <?php foreach ($home as $h): ?>
+              <li draggable="true" data-slug="<?php echo e($h['slug']); ?>"><span class="grip"><?php echo admin_icon('grip'); ?></span>
+                <span class="grow"><?php echo e($h['title']); ?></span><span class="muted small"><?php echo e($h['badge'] . ' ' . $h['year']); ?></span></li>
+            <?php endforeach; ?>
+            <?php if (!$home): ?><li class="empty">No publication is on the homepage yet.</li><?php endif; ?>
+          </ol>
+          <div class="actions"><button type="button" class="btn primary small" data-save-order>Save order</button></div>
+        </section>
+        <form method="post" class="card">
+          <h2>Import from BibTeX</h2>
+          <p class="muted small">Paste one entry (from Google Scholar, IEEE, …). Title, authors, venue, year, DOI and abstract are filled in for you.</p>
+          <?php echo cms_csrf_field(); ?><input type="hidden" name="action" value="pub_import">
+          <textarea name="bibtex" rows="6" placeholder="@inproceedings{key,&#10;  title={...},&#10;  author={...},&#10;  ...&#10;}" required></textarea>
+          <div class="actions"><button class="btn primary small">Import</button></div>
+        </form>
+      </div>
+    <?php endif; ?>
     <input class="search" type="search" placeholder="Filter…" data-filter="#item-list">
     <div class="list" id="item-list">
       <?php if (!$items): ?><p class="empty">Nothing here yet.</p><?php endif; ?>
@@ -398,15 +477,18 @@ case 'items':
         <a class="row" href="<?php echo e(admin_url(array('page' => 'edit', 'type' => $type, 'slug' => $it['slug']))); ?>">
           <?php if ($type === 'projects'): ?>
             <span class="date">#<?php echo (int) $it['importance']; ?></span>
+          <?php elseif ($type === 'publications'): ?>
+            <span class="date"><?php echo e($it['year']); ?></span>
           <?php else: ?>
             <span class="date"><?php echo date('M j, Y', $it['date']); ?></span>
           <?php endif; ?>
           <span class="grow"><strong><?php echo e($it['title'] !== '' ? $it['title'] : cms_excerpt($it, 80)); ?></strong>
             <?php if ($it['draft']): ?><em class="pill">draft</em><?php endif; ?>
-            <?php if ($type !== 'projects' && $it['date'] > time()): ?><em class="pill blue">scheduled</em><?php endif; ?>
+            <?php if (!in_array($type, array('projects', 'publications'), true) && $it['date'] > time()): ?><em class="pill blue">scheduled</em><?php endif; ?>
+            <?php if (!empty($it['selected'])): ?><em class="pill gold">homepage #<?php echo (int) $it['home_order']; ?></em><?php endif; ?>
             <?php if (!empty($it['featured'])): ?><em class="pill gold"><?php echo $type === 'projects' ? 'on homepage' : 'featured'; ?></em><?php endif; ?>
           </span>
-          <span class="muted small"><?php echo e($type === 'projects' ? $it['category'] : implode(', ', $it['tags'])); ?></span>
+          <span class="muted small"><?php echo e($type === 'projects' ? $it['category'] : ($type === 'publications' ? $it['badge'] : implode(', ', $it['tags']))); ?></span>
         </a>
       <?php endforeach; ?>
     </div>
@@ -423,7 +505,7 @@ case 'edit':
     unset($_SESSION['draft_body']);
     $date = $it ? $it['date'] : time();
     $hasTime = $it && isset($it['meta']['date']) && preg_match('/\d{1,2}:\d{2}/', (string) $it['meta']['date']);
-    $urlFns = array('posts' => 'cms_post_url', 'news' => 'cms_news_url', 'projects' => 'cms_project_url');
+    $urlFns = array('posts' => 'cms_post_url', 'news' => 'cms_news_url', 'projects' => 'cms_project_url', 'publications' => 'cms_publication_url');
     $publicUrl = $it ? call_user_func($urlFns[$type], $it['slug']) : '';
     $categories = array();
     if ($type === 'projects') {
@@ -447,16 +529,38 @@ case 'edit':
         </div>
       </header>
 
-      <input class="title-input" name="title" placeholder="<?php echo $type === 'news' ? 'Headline (optional for short items)' : ($type === 'projects' ? 'Project name' : 'Post title'); ?>"
+      <input class="title-input" name="title" placeholder="<?php echo $type === 'news' ? 'Headline (optional for short items)' : ($type === 'projects' ? 'Project name' : ($type === 'publications' ? 'Paper title' : 'Post title')); ?>"
              value="<?php echo e($it ? $it['title'] : ''); ?>" <?php echo $type !== 'news' ? 'required' : ''; ?> autofocus>
 
       <div class="grid meta">
-        <?php if ($type !== 'projects'): ?>
+        <?php if (!in_array($type, array('projects', 'publications'), true)): ?>
           <label>Date<input type="date" name="date" value="<?php echo date('Y-m-d', $date); ?>" required></label>
           <label>Time <small>(optional)</small><input type="time" name="time" value="<?php echo $hasTime ? date('H:i', $date) : ''; ?>"></label>
         <?php endif; ?>
         <label>Slug <small>(address)</small><input name="slug" value="<?php echo e($slug); ?>" placeholder="auto from title" pattern="[a-z0-9][a-z0-9-]*"></label>
-        <?php if ($type === 'projects'): ?>
+        <?php if ($type === 'publications'): $v = function ($k) use ($it) { return e($it ? $it[$k] : ''); }; ?>
+          <label>Type<select name="pubtype"><?php foreach (cms_pub_types_admin() as $k => $label): ?><option value="<?php echo $k; ?>" <?php echo $it && $it['pubtype'] === $k ? 'selected' : ''; ?>><?php echo e($label); ?></option><?php endforeach; ?></select></label>
+          <label>Year<input name="year" value="<?php echo $v('year'); ?>" placeholder="2026"></label>
+          <label>Badge <small>(short venue, e.g. ICRA)</small><input name="badge" value="<?php echo $v('badge'); ?>"></label>
+          <label class="wide">Authors <small>(one per line; your name is highlighted automatically)</small><textarea name="authors" rows="3"><?php echo e($it ? implode("\n", $it['authors']) : cms_config('site_name')); ?></textarea></label>
+          <label class="wide">Venue <small>(journal / conference)</small><input name="venue" value="<?php echo $v('venue'); ?>"></label>
+          <label>Award <small>(optional)</small><input name="award" value="<?php echo $v('award'); ?>" placeholder="Best Paper Award"></label>
+          <label>Note <small>(optional)</small><input name="note" value="<?php echo $v('note'); ?>"></label>
+          <label class="wide">Picture shown next to it <small>(image or animated GIF)</small>
+            <span class="with-btn"><input name="image" id="pubimg" value="<?php echo $v('image'); ?>"><button type="button" class="btn small" data-library-into="#pubimg">Library</button><button type="button" class="btn small" data-upload-into="#pubimg" data-accept="image/*">Upload</button></span>
+          </label>
+          <label>DOI<input name="doi" value="<?php echo $v('doi'); ?>" placeholder="10.1109/..."></label>
+          <label>Paper page <small>(URL)</small><input name="url" value="<?php echo $v('url'); ?>"></label>
+          <label>PDF
+            <span class="with-btn"><input name="pdf" id="pubpdf" value="<?php echo $v('pdf'); ?>"><button type="button" class="btn small" data-library-into="#pubpdf">Library</button><button type="button" class="btn small" data-upload-into="#pubpdf" data-accept="application/pdf">Upload</button></span>
+          </label>
+          <label>Code <small>(URL)</small><input name="code" value="<?php echo $v('code'); ?>"></label>
+          <label>Video <small>(URL)</small><input name="video" value="<?php echo $v('video'); ?>"></label>
+          <label>Slides <small>(URL or file)</small><input name="slides" value="<?php echo $v('slides'); ?>"></label>
+          <label class="toggle"><input type="checkbox" name="selected" value="1" <?php echo $it && $it['selected'] ? 'checked' : ''; ?>> Show on homepage</label>
+          <label>Homepage position<input type="number" min="1" name="home_order" value="<?php echo e($it && $it['selected'] ? $it['home_order'] : 1); ?>"></label>
+          <label class="wide">BibTeX <small>(shown with a copy button)</small><textarea name="bibtex" rows="6" class="mono"><?php echo $v('bibtex'); ?></textarea></label>
+        <?php elseif ($type === 'projects'): ?>
           <label>Category <small>(used for the filter buttons)</small>
             <input name="category" list="project-categories" value="<?php echo e($it ? $it['category'] : ''); ?>">
             <datalist id="project-categories"><?php foreach (array_keys($categories) as $c): ?><option value="<?php echo e($c); ?>"><?php endforeach; ?></datalist>
@@ -483,6 +587,7 @@ case 'edit':
         <?php endif; ?>
       </div>
 
+      <?php if ($type === 'publications'): ?><h2 class="editor-label">Abstract</h2><?php endif; ?>
       <textarea name="body" id="body"><?php echo e($body); ?></textarea>
       <p class="muted small">Markdown. Drag &amp; drop or paste images straight into the editor. Ctrl+S saves.</p>
     </form>
@@ -514,6 +619,138 @@ case 'edit':
     </dialog>
     <?php
     admin_layout_end(array('lib/easymde.min.js'));
+    break;
+
+case 'cv':
+    $cv = cms_doc('cv');
+    $b = isset($cv['basics']) ? $cv['basics'] : array();
+    admin_layout_start('CV', 'cv');
+    ?>
+    <form method="post" class="editor cv-editor" id="cv-form" data-upload-url="<?php echo e(admin_url()); ?>" data-csrf="<?php echo e(cms_csrf_token()); ?>">
+      <?php echo cms_csrf_field(); ?><input type="hidden" name="action" value="cv_save">
+      <header class="top">
+        <h1>CV</h1>
+        <div class="actions">
+          <a class="btn" href="<?php echo e(cms_url('cv/')); ?>" target="_blank" rel="noopener"><?php echo admin_icon('ext'); ?> View</a>
+          <button class="btn primary">Save CV</button>
+        </div>
+      </header>
+      <section class="card">
+        <h2>Header</h2>
+        <div class="grid meta">
+          <?php foreach (cms_cv_basics_fields() as $k => $label): ?>
+            <?php if ($k === 'summary'): ?>
+              <label class="wide"><?php echo e($label); ?><textarea name="cv[basics][summary]" rows="3"><?php echo e(isset($b['summary']) ? $b['summary'] : ''); ?></textarea></label>
+            <?php else: ?>
+              <label><?php echo e($label); ?><input name="cv[basics][<?php echo $k; ?>]" value="<?php echo e(isset($b[$k]) ? $b[$k] : ''); ?>"></label>
+            <?php endif; ?>
+          <?php endforeach; ?>
+          <label class="wide">Downloadable PDF <small>(people get this file from the “Download CV” button)</small>
+            <span class="with-btn"><input name="cv[basics][pdf]" id="cvpdf" value="<?php echo e(isset($b['pdf']) ? $b['pdf'] : ''); ?>" placeholder="files/cv/your-cv.pdf">
+              <button type="button" class="btn small" data-library-into="#cvpdf">Library</button>
+              <button type="button" class="btn small" data-upload-into="#cvpdf" data-accept="application/pdf">Upload new PDF</button></span>
+          </label>
+        </div>
+      </section>
+      <?php foreach (cms_cv_schema() as $section => $def):
+          $rows = isset($cv[$section]) && is_array($cv[$section]) ? $cv[$section] : array(); ?>
+        <section class="card cv-section-edit">
+          <header class="top"><h2><?php echo e($def['label']); ?> <small class="muted">(<?php echo count($rows); ?>)</small></h2>
+            <button type="button" class="btn small" data-add-row="<?php echo $section; ?>"><?php echo admin_icon('plus'); ?> Add</button></header>
+          <div class="rows" data-rows="<?php echo $section; ?>">
+            <?php foreach ($rows as $i => $row) admin_cv_row($section, $def, $i, $row); ?>
+          </div>
+          <template data-row-template="<?php echo $section; ?>"><?php admin_cv_row($section, $def, '__i__', array(), true); ?></template>
+        </section>
+      <?php endforeach; ?>
+      <p class="muted small">Publications on the CV come from the Publications section automatically.</p>
+      <div class="actions"><button class="btn primary">Save CV</button></div>
+    </form>
+    <?php
+    admin_media_dialog();
+    admin_layout_end();
+    break;
+
+case 'repos':
+    $doc = cms_doc('repositories', array('user' => '', 'repos' => array()));
+    admin_layout_start('Repositories', 'repos');
+    ?>
+    <form method="post" class="editor" id="repos-form">
+      <?php echo cms_csrf_field(); ?><input type="hidden" name="action" value="repos_save">
+      <header class="top">
+        <h1>Repositories</h1>
+        <div class="actions">
+          <a class="btn" href="<?php echo e(cms_url('repositories/')); ?>" target="_blank" rel="noopener"><?php echo admin_icon('ext'); ?> View</a>
+          <button class="btn primary">Save</button>
+        </div>
+      </header>
+      <p class="muted small">Drag to reorder. <b>Large</b> cards span two columns, <b>Compact</b> shows just the name and stats. Tags become the filter buttons. Untick “Shown” to hide a repository without losing its settings.</p>
+      <div class="grid meta">
+        <label>GitHub user<input name="user" value="<?php echo e($doc['user']); ?>" data-gh-user></label>
+        <label class="wide">Add a repository
+          <span class="with-btn"><input id="repo-add" list="gh-repos" placeholder="owner/name — start typing, your repositories are suggested"><button type="button" class="btn small" data-repo-add>Add</button></span>
+          <datalist id="gh-repos"></datalist>
+        </label>
+      </div>
+      <ol class="sortable repo-rows" id="repo-rows">
+        <?php foreach ($doc['repos'] as $i => $r) admin_repo_row($i, $r); ?>
+      </ol>
+      <template id="repo-template"><?php admin_repo_row('__i__', array('repo' => '', 'tags' => array(), 'note' => '', 'size' => 'normal', 'visible' => true)); ?></template>
+      <div class="actions"><button class="btn primary">Save</button></div>
+    </form>
+    <?php
+    admin_layout_end();
+    break;
+
+case 'analytics':
+    $days = isset($_GET['days']) ? max(1, min(365, (int) $_GET['days'])) : 30;
+    $st = cms_stats_summary($days);
+    admin_layout_start('Analytics', 'analytics');
+    $max = 1;
+    foreach ($st['days'] as $d) $max = max($max, $d['views']);
+    $avgTime = $st['timeCount'] ? round($st['time'] / $st['timeCount']) : 0;
+    $bounce = $st['visitors'] ? round($st['bounces'] / $st['visitors'] * 100) : 0;
+    ?>
+    <header class="top"><h1>Analytics</h1>
+      <nav class="tabs"><?php foreach (array(7 => '7 days', 30 => '30 days', 90 => '90 days', 365 => '12 months') as $n => $label): ?>
+        <a class="<?php echo $days === $n ? 'on' : ''; ?>" href="<?php echo e(admin_url(array('page' => 'analytics', 'days' => $n))); ?>"><?php echo $label; ?></a><?php endforeach; ?></nav>
+    </header>
+    <div class="stats">
+      <div class="stat"><b><span class="live-dot"></span><?php echo $st['live']; ?></b><span>on the site right now</span></div>
+      <div class="stat"><b><?php echo number_format($st['visitors']); ?></b><span>visitors</span></div>
+      <div class="stat"><b><?php echo number_format($st['views']); ?></b><span>page views</span></div>
+      <div class="stat"><b><?php echo $avgTime >= 60 ? floor($avgTime / 60) . 'm ' . ($avgTime % 60) . 's' : $avgTime . 's'; ?></b><span>average time on a page</span></div>
+      <div class="stat"><b><?php echo $bounce; ?>%</b><span>left after one page</span></div>
+    </div>
+    <section class="card chart-card">
+      <h2>Visitors and page views per day</h2>
+      <?php $n = count($st['days']); $w = 1000; $h = 220; $bw = $w / $n; ?>
+      <svg class="chart" viewBox="0 0 <?php echo $w; ?> <?php echo $h + 24; ?>" role="img" aria-label="Daily visitors and page views">
+        <?php foreach (array(0.25, 0.5, 0.75, 1) as $g): ?><line x1="0" x2="<?php echo $w; ?>" y1="<?php echo $h - $h * $g; ?>" y2="<?php echo $h - $h * $g; ?>" class="grid"/><?php endforeach; ?>
+        <?php foreach ($st['days'] as $i => $d):
+            $vh = $d['views'] / $max * ($h - 10); $uh = $d['visitors'] / $max * ($h - 10); $x = $i * $bw; ?>
+          <g><title><?php echo e(date('D j M', strtotime($d['day']))) . ': ' . $d['visitors'] . ' visitors, ' . $d['views'] . ' views'; ?></title>
+            <rect class="views" x="<?php echo $x + $bw * 0.12; ?>" y="<?php echo $h - $vh; ?>" width="<?php echo $bw * 0.76; ?>" height="<?php echo max(0, $vh); ?>" rx="3"/>
+            <rect class="visitors" x="<?php echo $x + $bw * 0.3; ?>" y="<?php echo $h - $uh; ?>" width="<?php echo $bw * 0.4; ?>" height="<?php echo max(0, $uh); ?>" rx="2"/>
+            <rect x="<?php echo $x; ?>" y="0" width="<?php echo $bw; ?>" height="<?php echo $h; ?>" fill="transparent"/></g>
+        <?php endforeach; ?>
+        <text x="0" y="<?php echo $h + 18; ?>" class="axis"><?php echo e(date('j M', strtotime($st['days'][0]['day']))); ?></text>
+        <text x="<?php echo $w; ?>" y="<?php echo $h + 18; ?>" class="axis" text-anchor="end">Today</text>
+      </svg>
+      <p class="legend"><span class="sw views"></span> page views <span class="sw visitors"></span> visitors</p>
+    </section>
+    <div class="cards">
+      <section class="card"><h2>Top pages</h2><?php admin_stat_table($st['pages'], 'Page', true); ?></section>
+      <section class="card"><h2>Where visitors come from</h2><?php admin_stat_table($st['referrers'], 'Source'); ?></section>
+      <section class="card"><h2>Devices</h2><?php admin_stat_table($st['devices'], 'Device'); ?></section>
+      <section class="card"><h2>Browsers</h2><?php admin_stat_table($st['browsers'], 'Browser'); ?></section>
+      <section class="card"><h2>Operating systems</h2><?php admin_stat_table($st['os'], 'System'); ?></section>
+      <section class="card"><h2>Location <small class="muted">(time zone)</small></h2><?php admin_stat_table($st['zones'], 'Time zone'); ?></section>
+      <section class="card"><h2>Languages</h2><?php admin_stat_table($st['langs'], 'Language'); ?></section>
+    </div>
+    <p class="muted small">Privacy-friendly: no cookies, no IP addresses stored, visitors counted with a hash that changes every day. Your own visits are not counted once you have opened this admin panel in that browser. Visitors with “Do Not Track” are not counted.</p>
+    <?php
+    admin_layout_end();
     break;
 
 case 'files':
@@ -661,6 +898,7 @@ default: // dashboard
     $projects = cms_list_items('projects', true);
     $drafts = 0;
     foreach (array_merge($posts, $news, $projects) as $d) if ($d['draft']) $drafts++;
+    $week = cms_stats_summary(7);
     admin_layout_start('Dashboard', 'dashboard');
     ?>
     <header class="top"><h1>Hello, <?php echo e(strtok(cms_config('site_name'), ' ')); ?> 👋</h1>
@@ -668,6 +906,7 @@ default: // dashboard
         <a class="btn primary" href="<?php echo e(admin_url(array('page' => 'edit', 'type' => 'news'))); ?>"><?php echo admin_icon('plus'); ?> News</a>
         <a class="btn primary" href="<?php echo e(admin_url(array('page' => 'edit', 'type' => 'posts'))); ?>"><?php echo admin_icon('plus'); ?> Blog post</a>
         <a class="btn primary" href="<?php echo e(admin_url(array('page' => 'edit', 'type' => 'projects'))); ?>"><?php echo admin_icon('plus'); ?> Project</a>
+        <a class="btn primary" href="<?php echo e(admin_url(array('page' => 'items', 'type' => 'publications'))); ?>"><?php echo admin_icon('plus'); ?> Publication</a>
       </div>
     </header>
     <div class="stats">
@@ -675,6 +914,10 @@ default: // dashboard
       <a class="stat" href="<?php echo e(admin_url(array('page' => 'items', 'type' => 'news'))); ?>"><b><?php echo count($news); ?></b><span>news items</span></a>
       <a class="stat" href="<?php echo e(admin_url(array('page' => 'items', 'type' => 'projects'))); ?>"><b><?php echo count($projects); ?></b><span>projects</span></a>
       <div class="stat"><b><?php echo $drafts; ?></b><span>drafts</span></div>
+      <a class="stat" href="<?php echo e(admin_url(array('page' => 'analytics', 'days' => 7))); ?>"><b><?php echo number_format($week['visitors']); ?></b><span>visitors this week
+        <svg class="spark" viewBox="0 0 70 20" aria-hidden="true"><?php $mx = 1; foreach ($week['days'] as $d) $mx = max($mx, $d['visitors']);
+          $pts = array(); foreach ($week['days'] as $i => $d) $pts[] = ($i * 70 / 6) . ',' . (19 - $d['visitors'] / $mx * 17); ?>
+          <polyline points="<?php echo implode(' ', $pts); ?>"/></svg></span></a>
     </div>
     <div class="cards">
       <section class="card">
@@ -694,6 +937,122 @@ default: // dashboard
     </div>
     <?php
     admin_layout_end();
+}
+
+// Renumbers homepage publications 1..n. $first: slugs in the order the user dragged them;
+// $winner: the publication just saved, which wins ties for its chosen position.
+function admin_pub_renumber(array $first = array(), $winner = null)
+{
+    $sel = array_values(array_filter(cms_list_items('publications', true), function ($p) { return $p['selected']; }));
+    usort($sel, function ($a, $b) use ($winner) {
+        if ($a['home_order'] !== $b['home_order']) return $a['home_order'] - $b['home_order'];
+        if ($a['slug'] === $winner) return -1;
+        if ($b['slug'] === $winner) return 1;
+        return strcmp($a['slug'], $b['slug']);
+    });
+    $bySlug = array();
+    foreach ($sel as $pub) $bySlug[$pub['slug']] = $pub;
+    $ordered = array();
+    foreach ($first as $slug) {
+        if (isset($bySlug[$slug])) { $ordered[] = $bySlug[$slug]; unset($bySlug[$slug]); }
+    }
+    foreach ($sel as $pub) if (isset($bySlug[$pub['slug']])) $ordered[] = $pub;
+    foreach ($ordered as $i => $pub) {
+        if ($pub['home_order'] === $i + 1) continue;
+        $meta = $pub['meta'];
+        $meta['home_order'] = $i + 1;
+        cms_save_item('publications', $pub['slug'], $meta, $pub['body']);
+    }
+    return count($ordered);
+}
+
+function cms_pub_types_admin()
+{
+    return array('journal' => 'Journal article', 'conference' => 'Conference paper', 'workshop' => 'Workshop paper', 'patent' => 'Patent',
+                 'thesis' => 'Thesis', 'preprint' => 'Preprint', 'talk' => 'Talk / poster', 'other' => 'Other');
+}
+
+function admin_media_dialog()
+{
+    ?>
+    <dialog class="media" id="media" data-list-url="<?php echo e(admin_url(array('page' => 'media'))); ?>" data-csrf="<?php echo e(cms_csrf_token()); ?>" data-upload-url="<?php echo e(admin_url()); ?>">
+      <div class="media__head">
+        <strong class="media__title">Media library</strong>
+        <span class="media__tabs" role="tablist"><button type="button" class="on" data-media-src="files">Uploads</button><button type="button" data-media-src="site">Site images</button></span>
+        <nav class="media__crumbs" aria-label="Folder"></nav>
+        <label class="btn small media__upload"><?php echo admin_icon('up'); ?> Upload<input type="file" multiple hidden></label>
+        <button type="button" class="btn small" data-media-close aria-label="Close">&times;</button>
+      </div>
+      <p class="media__hint muted small">Click a file to use it. Drop files anywhere here to upload them into this folder.</p>
+      <div class="media__grid"></div>
+      <p class="media__status small" role="status"></p>
+    </dialog>
+    <?php
+}
+
+function admin_cv_row($section, $def, $i, array $row, $open = false)
+{
+    $name = function ($f) use ($section, $i) { return 'cv[' . $section . '][' . $i . '][' . $f . ']'; };
+    $titleField = $def['title'];
+    $title = isset($row[$titleField]) && $row[$titleField] !== '' ? $row[$titleField] : 'New entry';
+    ?>
+    <details class="row-edit" <?php echo $open ? 'open' : ''; ?>>
+      <summary><span class="grow"><?php echo e($title); ?></span>
+        <span class="row-tools"><button type="button" class="btn tiny" data-move="-1" title="Move up">↑</button><button type="button" class="btn tiny" data-move="1" title="Move down">↓</button><button type="button" class="btn tiny danger" data-remove-row title="Remove">Remove</button></span></summary>
+      <div class="grid meta">
+        <?php foreach ($def['fields'] as $f => $spec):
+            $val = isset($row[$f]) ? $row[$f] : '';
+            if (is_array($val)) $val = implode("\n", $val); ?>
+          <?php if ($spec[1] === 'text'): ?>
+            <label><?php echo e($spec[0]); ?><input name="<?php echo e($name($f)); ?>" value="<?php echo e($val); ?>" <?php echo $f === $titleField ? 'data-row-title' : ''; ?>></label>
+          <?php else: ?>
+            <label class="wide"><?php echo e($spec[0]); ?><textarea name="<?php echo e($name($f)); ?>" rows="<?php echo $spec[1] === 'list' ? 4 : 3; ?>"><?php echo e($val); ?></textarea></label>
+          <?php endif; ?>
+        <?php endforeach; ?>
+      </div>
+    </details>
+    <?php
+}
+
+function admin_repo_row($i, array $r)
+{
+    $n = function ($f) use ($i) { return 'repos[' . $i . '][' . $f . ']'; };
+    ?>
+    <li class="repo-row" draggable="true">
+      <span class="grip" title="Drag to reorder"><?php echo admin_icon('grip'); ?></span>
+      <input class="repo-row__name" name="<?php echo e($n('repo')); ?>" value="<?php echo e($r['repo']); ?>" readonly>
+      <select name="<?php echo e($n('size')); ?>" title="Card size">
+        <?php foreach (array('large' => 'Large', 'normal' => 'Normal', 'compact' => 'Compact') as $k => $label): ?>
+          <option value="<?php echo $k; ?>" <?php echo $r['size'] === $k ? 'selected' : ''; ?>><?php echo $label; ?></option>
+        <?php endforeach; ?>
+      </select>
+      <input name="<?php echo e($n('tags')); ?>" value="<?php echo e(implode(', ', $r['tags'])); ?>" placeholder="Tags, comma separated">
+      <input name="<?php echo e($n('note')); ?>" value="<?php echo e($r['note']); ?>" placeholder="Description (optional; GitHub's is used otherwise)">
+      <label class="toggle"><input type="checkbox" name="<?php echo e($n('visible')); ?>" value="1" <?php echo !empty($r['visible']) ? 'checked' : ''; ?>> Shown</label>
+      <button type="button" class="btn tiny danger" data-remove-row>Remove</button>
+    </li>
+    <?php
+}
+
+function admin_stat_table(array $rows, $label, $isPage = false)
+{
+    if (!$rows) {
+        echo '<p class="empty">No data yet.</p>';
+        return;
+    }
+    $top = array_slice($rows, 0, 10, true);
+    $max = 1;
+    foreach ($top as $v) $max = max($max, is_array($v) ? $v['views'] : $v);
+    echo '<table class="stat-table"><thead><tr><th>' . e($label) . '</th>' . ($isPage ? '<th>Views</th><th>Visitors</th><th>Avg. time</th>' : '<th>Visitors</th>') . '</tr></thead><tbody>';
+    foreach ($top as $k => $v) {
+        $count = is_array($v) ? $v['views'] : $v;
+        $shown = $isPage ? '<a href="' . e(rtrim(cms_config('base_url'), '/') . $k) . '" target="_blank" rel="noopener">' . e($k) . '</a>' : e($k);
+        echo '<tr><td><span class="bar" style="width:' . round($count / $max * 100) . '%"></span><span class="label">' . $shown . '</span></td>';
+        if ($isPage) echo '<td>' . $v['views'] . '</td><td>' . $v['visitors'] . '</td><td>' . ($v['time'] ? $v['time'] . 's' : '–') . '</td>';
+        else echo '<td>' . $v . '</td>';
+        echo '</tr>';
+    }
+    echo '</tbody></table>';
 }
 
 function admin_file_menu($f, $dirRel, $url, $src = 'files')

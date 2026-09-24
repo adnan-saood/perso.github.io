@@ -10,6 +10,10 @@ Changes there are online immediately. No rebuild, no upload.
 | What | Where it lives on the server | Edited from |
 |---|---|---|
 | Projects, blog posts, news | `~/cms-data/projects/`, `posts/`, `news/` (Markdown) | Admin → Projects / Blog posts / News |
+| Publications | `~/cms-data/publications/*.md` | Admin → Publications |
+| CV (and the downloadable PDF) | `~/cms-data/cv.json` | Admin → CV |
+| Repositories page | `~/cms-data/repositories.json` | Admin → Repositories |
+| Visitor statistics | `~/cms-data/stats/` (one file per day, kept 400 days) | Admin → Analytics |
 | Uploaded files & images | `~/public_html/files/` | Admin → Files, or drag images into the editor |
 | Admin password | `~/cms-data/settings.json` (readable by PHP only) | Admin → Settings |
 | Previous versions / deleted items | `~/cms-data/history/`, `~/cms-data/trash/` | Admin → Trash (restore) |
@@ -42,6 +46,18 @@ you wrote in the admin panel.
 - **Projects**: Dashboard → *+ Project*. Give it a category (becomes a filter button on
   the Projects page), a cover image (upload button), an order number (1 = first) and
   optional GitHub / other links. Tick *Show on homepage* to feature it in "Selected work".
+- **Publications**: *Import from BibTeX* (paste one entry) or *+ New publication*. Pick a
+  picture or animated GIF with *Library* / *Upload*, tick *Show on homepage*, and drag the
+  list under *On the homepage* to set the order (press *Save order*). Your name is
+  highlighted automatically; abstract and BibTeX get toggles on the public page.
+- **CV**: Admin → CV. Edit the header and each section (add, remove, ↑↓ to reorder).
+  *Upload new PDF* sets the file behind the “Download CV” button. The CV's publication
+  list is built from Publications automatically.
+- **Repositories**: add `owner/name` (your GitHub repos are suggested), drag to reorder,
+  choose *Large / Normal / Compact*, set tags (filter buttons) and untick *Shown* to hide.
+- **Analytics**: visitors, page views, time on page, top pages, sources (incl.
+  `?utm_source=` links), devices, browsers, time zones. No cookies, no IPs stored; your
+  own visits are excluded in any browser where you've opened the admin.
 - **New news item**: Dashboard → *+ News*. Tick *Short item* for one-liners shown
   directly in the list; untick it to give the item its own page with a headline.
 - **New blog post**: Dashboard → *+ Blog post*. Drag and drop or paste images into the

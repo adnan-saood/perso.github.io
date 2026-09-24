@@ -29,16 +29,19 @@ if [[ "${1:-}" == "init" ]]; then
   cat > "$script" <<EOF
 set -e
 DATA="$DATA"; WEB="$WEB"; PHP_USER="$PHP_USER"
-mkdir -p "\$DATA"/posts "\$DATA"/news "\$DATA"/projects "\$DATA"/history "\$DATA"/trash "\$DATA"/sessions "\$DATA"/state "\$WEB/files/uploads"
+mkdir -p "\$DATA"/posts "\$DATA"/news "\$DATA"/projects "\$DATA"/publications "\$DATA"/history "\$DATA"/trash "\$DATA"/sessions "\$DATA"/state "\$WEB/files/uploads"
 
 # Import existing posts, news and projects without overwriting anything already there.
 tmp=\$(mktemp -d)
 tar -xzf - -C "\$tmp"
-for kind in posts news projects; do
+for kind in posts news projects publications; do
   for f in "\$tmp/\$kind"/*.md; do
     [ -e "\$f" ] || continue
     [ -e "\$DATA/\$kind/\$(basename "\$f")" ] || cp "\$f" "\$DATA/\$kind/"
   done
+done
+for doc in cv.json repositories.json; do
+  [ -e "\$tmp/\$doc" ] && [ ! -e "\$DATA/\$doc" ] && cp "\$tmp/\$doc" "\$DATA/"
 done
 rm -rf "\$tmp"
 
@@ -79,4 +82,4 @@ fi
 
 echo "==> Uploading _site/ to $HOST:$WEB"
 # Also removes files from older versions that would shadow the new PHP pages or are unsafe.
-tar -C _site -czf - . | remote "tar -xzf - -C $WEB && rm -f $WEB/simple-admin.php $WEB/server-check.php $WEB/blog/index.html $WEB/news/index.html $WEB/projects/index.html $WEB/admin/index.html $WEB/admin/config.yml && mkdir -p $WEB/files && echo Done."
+tar -C _site -czf - . | remote "tar -xzf - -C $WEB && rm -f $WEB/simple-admin.php $WEB/server-check.php $WEB/blog/index.html $WEB/news/index.html $WEB/projects/index.html $WEB/publications/index.html $WEB/cv/index.html $WEB/repositories/index.html $WEB/admin/index.html $WEB/admin/config.yml && mkdir -p $WEB/files && echo Done."

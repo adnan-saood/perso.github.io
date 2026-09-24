@@ -1,0 +1,118 @@
+{
+  "user": "adnan-saood",
+  "repos": [
+    {
+      "repo": "adnan-saood/paxini_ros2",
+      "tags": [
+        "ROS 2",
+        "Tactile"
+      ],
+      "note": "ROS 2 driver for the Paxini GEN3 tactile sensor.",
+      "size": "large",
+      "visible": true
+    },
+    {
+      "repo": "adnan-saood/hid_ros2",
+      "tags": [
+        "ROS 2",
+        "Embedded"
+      ],
+      "note": "",
+      "size": "large",
+      "visible": true
+    },
+    {
+      "repo": "adnan-saood/franka_handshake_ros2",
+      "tags": [
+        "ROS 2",
+        "HRI"
+      ],
+      "note": "",
+      "size": "normal",
+      "visible": true
+    },
+    {
+      "repo": "adnan-saood/mekaHandController",
+      "tags": [
+        "Embedded",
+        "Hardware"
+      ],
+      "note": "",
+      "size": "normal",
+      "visible": true
+    },
+    {
+      "repo": "adnan-saood/mekahand_description",
+      "tags": [
+        "ROS 2"
+      ],
+      "note": "",
+      "size": "normal",
+      "visible": true
+    },
+    {
+      "repo": "adnan-saood/foc_motor_firmware",
+      "tags": [
+        "Embedded"
+      ],
+      "note": "",
+      "size": "normal",
+      "visible": true
+    },
+    {
+      "repo": "adnan-saood/COVID19-DL",
+      "tags": [
+        "Machine learning",
+        "Medical"
+      ],
+      "note": "U-Net vs SegNet for COVID-19 lung CT segmentation (published in BMC Medical Imaging).",
+      "size": "normal",
+      "visible": true
+    },
+    {
+      "repo": "adnan-saood/turtlebot4_odometer",
+      "tags": [
+        "Estimation"
+      ],
+      "note": "",
+      "size": "normal",
+      "visible": true
+    },
+    {
+      "repo": "adnan-saood/3d_gradient_path_planner",
+      "tags": [
+        "Planning"
+      ],
+      "note": "3D path planning with attractive/repulsive potential fields and gradient descent.",
+      "size": "normal",
+      "visible": true
+    },
+    {
+      "repo": "adnan-saood/icsr2025_workshop_website",
+      "tags": [
+        "Web"
+      ],
+      "note": "",
+      "size": "normal",
+      "visible": true
+    },
+    {
+      "repo": "adnan-saood/cnn_ocr_arabic-hindu_numerals",
+      "tags": [
+        "Machine learning"
+      ],
+      "note": "CNN-based OCR for Arabic-Hindu numerals.",
+      "size": "normal",
+      "visible": true
+    },
+    {
+      "repo": "adnan-saood/Altium_Libraries",
+      "tags": [
+        "Hardware"
+      ],
+      "note": "My Altium Designer component libraries.",
+      "size": "normal",
+      "visible": true
+    }
+  ]
+}

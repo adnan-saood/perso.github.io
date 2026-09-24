@@ -3,6 +3,7 @@
 //   GET  api.php?fragment=news&limit=5      -> HTML rows for the homepage news table
 //   GET  api.php?fragment=posts&limit=3     -> HTML rows for "latest posts"
 //   GET  api.php?fragment=projects&limit=4  -> project cards (featured first)
+//   GET  api.php?fragment=publications&limit=6 -> homepage publications, in the chosen order
 // Every fragment starts with <!--cms--> so cms.js can tell it apart from raw PHP
 // source (which is what a server without PHP would send back).
 
@@ -32,6 +33,9 @@ if ($fragment === 'news') {
     $featured = array_values(array_filter($items, function ($p) { return $p['featured']; }));
     $others = array_values(array_filter($items, function ($p) { return !$p['featured']; }));
     echo '<!--cms-->', cms_project_cards(array_slice(array_merge($featured, $others), 0, $limit), true);
+} elseif ($fragment === 'publications') {
+    echo '<!--cms-->';
+    foreach (cms_selected_publications($limit) as $p) echo cms_publication_row($p);
 } else {
     http_response_code(404);
 }

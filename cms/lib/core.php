@@ -265,6 +265,7 @@ function cms_types()
         'posts' => array('label' => 'Blog posts', 'singular' => 'post'),
         'news' => array('label' => 'News', 'singular' => 'news item'),
         'projects' => array('label' => 'Projects', 'singular' => 'project'),
+        'publications' => array('label' => 'Publications', 'singular' => 'publication'),
     );
 }
 
@@ -303,6 +304,23 @@ function cms_normalise_item($type, $slug, array $meta, $body, $mtime)
         'importance' => isset($meta['importance']) && is_numeric($meta['importance']) ? (int) $meta['importance'] : 50,
         'github' => isset($meta['github']) ? (string) $meta['github'] : '',
         'url' => isset($meta['url']) ? (string) $meta['url'] : '',
+        // Publications
+        'authors' => cms_people(isset($meta['authors']) ? $meta['authors'] : array()),
+        'venue' => isset($meta['venue']) ? (string) $meta['venue'] : '',
+        'year' => isset($meta['year']) ? (string) $meta['year'] : '',
+        'pubtype' => isset($meta['pubtype']) ? (string) $meta['pubtype'] : 'other',
+        'badge' => isset($meta['badge']) ? (string) $meta['badge'] : '',
+        'award' => isset($meta['award']) ? (string) $meta['award'] : '',
+        'note' => isset($meta['note']) ? (string) $meta['note'] : '',
+        'doi' => isset($meta['doi']) ? (string) $meta['doi'] : '',
+        'pdf' => isset($meta['pdf']) ? (string) $meta['pdf'] : '',
+        'code' => isset($meta['code']) ? (string) $meta['code'] : '',
+        'video' => isset($meta['video']) ? (string) $meta['video'] : '',
+        'slides' => isset($meta['slides']) ? (string) $meta['slides'] : '',
+        'image' => isset($meta['image']) ? (string) $meta['image'] : '',
+        'bibtex' => isset($meta['bibtex']) ? (string) $meta['bibtex'] : '',
+        'selected' => !empty($meta['selected']),
+        'home_order' => isset($meta['home_order']) && is_numeric($meta['home_order']) ? (int) $meta['home_order'] : 99,
         'body' => $body,
         'updated' => $mtime,
         'meta' => $meta,
@@ -324,11 +342,31 @@ function cms_list_items($type, $withDrafts = false)
         $it = cms_normalise_item($type, $slug, $meta, $body, filemtime($file));
         if ($it['draft'] && !$withDrafts) continue;
         // Scheduled posts: future dates stay hidden until their day.
-        if (!$withDrafts && $it['date'] > time()) continue;
+        if (!$withDrafts && $type !== 'publications' && $type !== 'projects' && $it['date'] > time()) continue;
         $items[] = $it;
     }
-    usort($items, $type === 'projects' ? 'cms_cmp_importance' : 'cms_cmp_date_desc');
+    $sorters = array('projects' => 'cms_cmp_importance', 'publications' => 'cms_cmp_year_desc');
+    usort($items, isset($sorters[$type]) ? $sorters[$type] : 'cms_cmp_date_desc');
     return $items;
+}
+
+// Newest year first, then alphabetical.
+function cms_cmp_year_desc($a, $b)
+{
+    if ($a['year'] !== $b['year']) return strcmp($b['year'], $a['year']);
+    return strcasecmp($a['title'], $b['title']);
+}
+
+// Author lists: arrays, or strings separated by " and ", ";" or new lines.
+function cms_people($v)
+{
+    if (!is_array($v)) $v = preg_split('/\s+and\s+|;|\n/', (string) $v);
+    $out = array();
+    foreach ($v as $p) {
+        $p = trim((string) $p);
+        if ($p !== '') $out[] = $p;
+    }
+    return $out;
 }
 
 // Lower importance first (1 = most important), then alphabetical.
@@ -514,6 +552,11 @@ function cms_post_url($slug)
 function cms_project_url($slug)
 {
     return cms_url('projects/?p=' . rawurlencode($slug));
+}
+
+function cms_publication_url($slug)
+{
+    return cms_url('publications/#' . rawurlencode($slug));
 }
 
 function cms_news_url($slug)

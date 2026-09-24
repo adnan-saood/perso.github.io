@@ -282,3 +282,294 @@ function cms_view_project($slug)
     }
     return array('title' => $p['title'], 'description' => cms_excerpt($p, 160), 'html' => $html);
 }
+
+// ---------------------------------------------------------------------------
+// Publications
+// ---------------------------------------------------------------------------
+
+function cms_pub_types()
+{
+    return array('journal' => 'Journal', 'conference' => 'Conference', 'workshop' => 'Workshop', 'patent' => 'Patent',
+                 'thesis' => 'Thesis', 'preprint' => 'Preprint', 'talk' => 'Talk', 'other' => 'Other');
+}
+
+// Authors with the site owner highlighted.
+function cms_pub_authors(array $authors)
+{
+    $parts = explode(' ', cms_config('site_name'));
+    $me = strtolower(end($parts));
+    $out = array();
+    foreach ($authors as $a) {
+        $out[] = stripos($a, $me) !== false ? '<b class="me">' . e($a) . '</b>' : e($a);
+    }
+    return implode(', ', $out);
+}
+
+function cms_publication_row(array $p, $compact = false)
+{
+    $types = cms_pub_types();
+    $link = $p['url'] !== '' ? $p['url'] : ($p['doi'] !== '' ? 'https://doi.org/' . $p['doi'] : '');
+    $search = strtolower($p['title'] . ' ' . implode(' ', $p['authors']) . ' ' . $p['venue'] . ' ' . $p['badge'] . ' ' . $p['year']);
+    $h = '<li class="pub reveal" id="' . e($p['slug']) . '" data-category="' . e($p['pubtype']) . '" data-search="' . e($search) . '">';
+    $h .= '<div class="pub__media">';
+    if ($p['image'] !== '') {
+        $h .= '<img src="' . e(cms_asset_url($p['image'])) . '" alt="" loading="lazy">';
+    } else {
+        $label = $p['badge'] !== '' ? $p['badge'] : (isset($types[$p['pubtype']]) ? $types[$p['pubtype']] : '');
+        $h .= '<span class="pub__tile"><span>' . e($label) . '</span><small>' . e($p['year']) . '</small></span>';
+    }
+    $h .= '</div><div class="pub__body"><div class="pub__meta">';
+    if ($p['badge'] !== '') $h .= '<span class="chip chip--badge">' . e($p['badge']) . '</span>';
+    $h .= '<span class="chip">' . e(isset($types[$p['pubtype']]) ? $types[$p['pubtype']] : 'Other') . '</span>';
+    if ($p['award'] !== '') $h .= '<span class="chip chip--award"><i class="ti ti-trophy"></i> ' . e($p['award']) . '</span>';
+    $h .= '</div>';
+    $title = e($p['title']);
+    $h .= '<h3 class="pub__title">' . ($link !== '' ? '<a href="' . e($link) . '" rel="noopener">' . $title . '</a>' : $title) . '</h3>';
+    $h .= '<p class="pub__authors">' . cms_pub_authors($p['authors']) . '</p>';
+    $venue = array();
+    if ($p['venue'] !== '') $venue[] = '<em>' . e($p['venue']) . '</em>';
+    if ($p['year'] !== '') $venue[] = e($p['year']);
+    if ($p['note'] !== '' && !$compact) $venue[] = e($p['note']);
+    if ($venue) $h .= '<p class="pub__venue">' . implode(' · ', $venue) . '</p>';
+    if (!$compact) {
+        $links = array();
+        $kinds = array('pdf' => array('PDF', 'ti-file-type-pdf'), 'code' => array('Code', 'ti-brand-github'),
+                       'video' => array('Video', 'ti-player-play'), 'slides' => array('Slides', 'ti-presentation'));
+        foreach ($kinds as $k => $l) {
+            if ($p[$k] !== '') $links[] = '<a class="pub__link" href="' . e(cms_asset_url($p[$k])) . '" rel="noopener"><i class="ti ' . $l[1] . '"></i> ' . $l[0] . '</a>';
+        }
+        if ($p['doi'] !== '') $links[] = '<a class="pub__link" href="https://doi.org/' . e($p['doi']) . '" rel="noopener"><i class="ti ti-link"></i> DOI</a>';
+        $extra = '';
+        if (trim($p['body']) !== '') {
+            $extra .= '<details class="pub__more"><summary><i class="ti ti-align-left"></i> Abstract</summary><div class="pub__abstract">' . cms_markdown($p['body']) . '</div></details>';
+        }
+        if ($p['bibtex'] !== '') {
+            $extra .= '<details class="pub__more"><summary><i class="ti ti-quote"></i> BibTeX</summary><div class="pub__bib"><pre>' . e($p['bibtex']) . '</pre>'
+                . '<button type="button" class="pub__copy" data-copy-bib>Copy</button></div></details>';
+        }
+        if ($links || $extra) $h .= '<div class="pub__links">' . implode('', $links) . $extra . '</div>';
+    }
+    return $h . '</div></li>';
+}
+
+function cms_view_publications()
+{
+    $items = cms_list_items('publications');
+    $types = cms_pub_types();
+    $present = array();
+    foreach ($items as $p) $present[$p['pubtype']] = true;
+
+    $html = '<header class="cms-page-header"><p class="kicker reveal">Research output</p>'
+        . '<h1 class="post-title split">Publications.</h1>'
+        . '<p class="post-description reveal">Papers, patents and workshop contributions on tactile sensing, human–robot touch and medical robotics.</p></header>';
+    $html .= '<div class="pub-tools reveal"><label class="pub-search"><i class="ti ti-search"></i>'
+        . '<input type="search" placeholder="Search title, author, venue…" data-pub-search aria-label="Search publications"></label>';
+    if (count($present) > 1) {
+        $html .= '<div class="filters" data-filters="#pub-list" role="group" aria-label="Filter by type">'
+            . '<button type="button" class="is-active" data-filter="*">All <span>' . count($items) . '</span></button>';
+        foreach ($types as $k => $label) {
+            if (!isset($present[$k])) continue;
+            $n = 0;
+            foreach ($items as $p) if ($p['pubtype'] === $k) $n++;
+            $html .= '<button type="button" data-filter="' . e($k) . '">' . e($label) . ' <span>' . $n . '</span></button>';
+        }
+        $html .= '</div>';
+    }
+    $html .= '</div><div id="pub-list">';
+    $year = null;
+    foreach ($items as $p) {
+        if ($p['year'] !== $year) {
+            if ($year !== null) $html .= '</ol></section>';
+            $year = $p['year'];
+            $html .= '<section class="pub-year"><h2 class="pub-year__label">' . e($year !== '' ? $year : 'Undated') . '</h2><ol class="pubs">';
+        }
+        $html .= cms_publication_row($p);
+    }
+    if ($year !== null) $html .= '</ol></section>';
+    $html .= '<p class="pub-empty" hidden>No publication matches your search.</p></div>';
+    return array('title' => 'Publications', 'description' => 'Publications by ' . cms_config('site_name') . '.', 'html' => $html);
+}
+
+// Selected publications for the homepage, in the chosen order.
+function cms_selected_publications($limit)
+{
+    $items = array_values(array_filter(cms_list_items('publications'), function ($p) { return $p['selected']; }));
+    usort($items, function ($a, $b) { return $a['home_order'] - $b['home_order']; });
+    return array_slice($items, 0, $limit);
+}
+
+// ---------------------------------------------------------------------------
+// CV
+// ---------------------------------------------------------------------------
+
+function cms_cv_get($a, $k)
+{
+    if (!isset($a[$k])) return '';
+    return is_array($a[$k]) ? $a[$k] : trim((string) $a[$k]);
+}
+
+function cms_cv_range($e)
+{
+    $s = cms_cv_date(cms_cv_get($e, 'startDate'));
+    $t = cms_cv_date(cms_cv_get($e, 'endDate'));
+    return ($s !== '' && $t !== '') ? $s . ' — ' . $t : $s . $t;
+}
+
+function cms_cv_entry($title, $sub, $dates, $url, $summary, array $bullets)
+{
+    $h = '<li class="cv-entry reveal"><div class="cv-entry__when">' . e($dates) . '</div><div class="cv-entry__what">';
+    $h .= '<h3>' . e($title) . '</h3>';
+    if ($sub !== '') {
+        $href = preg_match('#^https?://#', $url) ? $url : 'https://' . $url;
+        $h .= '<p class="cv-entry__org">' . ($url !== '' ? '<a href="' . e($href) . '" rel="noopener">' . e($sub) . '</a>' : e($sub)) . '</p>';
+    }
+    if ($summary !== '') $h .= '<p>' . e($summary) . '</p>';
+    if ($bullets) {
+        $h .= '<ul>';
+        foreach ($bullets as $b) $h .= '<li>' . e($b) . '</li>';
+        $h .= '</ul>';
+    }
+    return $h . '</div></li>';
+}
+
+function cms_view_cv()
+{
+    $cv = cms_doc('cv');
+    $b = isset($cv['basics']) ? $cv['basics'] : array();
+    $name = cms_cv_get($b, 'name');
+    if ($name === '' || $name === strtoupper($name)) $name = ucwords(strtolower($name !== '' ? $name : cms_config('site_name')));
+
+    $html = '<header class="cv-head"><p class="kicker reveal">Curriculum vitae</p>';
+    $html .= '<h1 class="post-title split">' . e($name) . '</h1>';
+    if (cms_cv_get($b, 'label') !== '') $html .= '<p class="cv-head__label reveal">' . e(cms_cv_get($b, 'label')) . '</p>';
+    if (cms_cv_get($b, 'summary') !== '') $html .= '<p class="post-description reveal">' . e(cms_cv_get($b, 'summary')) . '</p>';
+    $html .= '<div class="cv-head__actions reveal">';
+    if (cms_cv_get($b, 'pdf') !== '') {
+        $html .= '<a class="btn btn--primary magnetic" href="' . e(cms_asset_url(cms_cv_get($b, 'pdf'))) . '" download><i class="ti ti-download"></i> Download CV (PDF)</a>';
+    }
+    if (cms_cv_get($b, 'email') !== '') {
+        $html .= '<a class="btn btn--ghost magnetic" href="mailto:' . e(cms_cv_get($b, 'email')) . '"><i class="ti ti-mail"></i> ' . e(cms_cv_get($b, 'email')) . '</a>';
+    }
+    $html .= '</div></header>';
+
+    $sections = array();
+    foreach (cms_cv_schema() as $key => $def) {
+        if (!empty($cv[$key])) $sections[$key] = $def['label'];
+    }
+    $pubs = cms_list_items('publications');
+    if ($pubs) $sections['publications'] = 'Publications';
+    $html .= '<nav class="cv-index reveal" aria-label="CV sections">';
+    foreach ($sections as $k => $label) $html .= '<a href="#cv-' . $k . '">' . e($label) . '</a>';
+    $html .= '</nav>';
+
+    foreach ($sections as $key => $label) {
+        $html .= '<section class="cv-section" id="cv-' . $key . '"><h2 class="cv-section__title reveal">' . e($label) . '</h2>';
+        if ($key === 'work') {
+            $html .= '<ol class="cv-timeline">';
+            foreach ($cv['work'] as $e) {
+                $sub = cms_cv_get($e, 'name') . (cms_cv_get($e, 'location') !== '' ? ' · ' . cms_cv_get($e, 'location') : '');
+                $html .= cms_cv_entry(cms_cv_get($e, 'position'), $sub, cms_cv_range($e), cms_cv_get($e, 'url'), cms_cv_get($e, 'summary'), (array) cms_cv_get($e, 'highlights'));
+            }
+            $html .= '</ol>';
+        } elseif ($key === 'education') {
+            $html .= '<ol class="cv-timeline">';
+            foreach ($cv['education'] as $e) {
+                $title = trim(cms_cv_get($e, 'studyType') . (cms_cv_get($e, 'area') !== '' ? ', ' . cms_cv_get($e, 'area') : ''), ', ');
+                $bul = (array) cms_cv_get($e, 'highlights');
+                if (cms_cv_get($e, 'score') !== '') array_unshift($bul, 'Grade: ' . cms_cv_get($e, 'score'));
+                $sub = cms_cv_get($e, 'institution') . (cms_cv_get($e, 'location') !== '' ? ' · ' . cms_cv_get($e, 'location') : '');
+                $html .= cms_cv_entry($title, $sub, cms_cv_range($e), cms_cv_get($e, 'url'), '', $bul);
+            }
+            $html .= '</ol>';
+        } elseif ($key === 'awards') {
+            $html .= '<ol class="cv-timeline cv-timeline--tight">';
+            foreach ($cv['awards'] as $e) {
+                $html .= cms_cv_entry(cms_cv_get($e, 'title'), cms_cv_get($e, 'awarder'), cms_cv_date(cms_cv_get($e, 'date')), cms_cv_get($e, 'url'), cms_cv_get($e, 'summary'), array());
+            }
+            $html .= '</ol>';
+        } elseif ($key === 'projects') {
+            $html .= '<ol class="cv-timeline">';
+            foreach ($cv['projects'] as $e) {
+                $html .= cms_cv_entry(cms_cv_get($e, 'name'), '', cms_cv_range($e), cms_cv_get($e, 'url'), cms_cv_get($e, 'summary'), (array) cms_cv_get($e, 'highlights'));
+            }
+            $html .= '</ol>';
+        } elseif ($key === 'skills' || $key === 'interests') {
+            $html .= '<div class="cv-skills">';
+            foreach ($cv[$key] as $e) {
+                $level = cms_cv_get($e, 'level');
+                $html .= '<div class="cv-skill reveal"><h3>' . e(cms_cv_get($e, 'name')) . ($level !== '' ? ' <small>' . e($level) . '</small>' : '') . '</h3><div>';
+                foreach ((array) cms_cv_get($e, 'keywords') as $k) $html .= '<span class="chip">' . e($k) . '</span>';
+                $html .= '</div></div>';
+            }
+            $html .= '</div>';
+        } elseif ($key === 'languages') {
+            $html .= '<div class="cv-skills">';
+            foreach ($cv['languages'] as $e) {
+                $html .= '<div class="cv-skill reveal"><h3>' . e(cms_cv_get($e, 'language')) . ' <small>' . e(cms_cv_get($e, 'fluency')) . '</small></h3></div>';
+            }
+            $html .= '</div>';
+        } elseif ($key === 'publications') {
+            $html .= '<ol class="pubs pubs--compact">';
+            foreach ($pubs as $p) $html .= cms_publication_row($p, true);
+            $html .= '</ol><p class="reveal"><a class="section__more" href="' . e(cms_url('publications/')) . '">All publications with abstracts and BibTeX <i class="ti ti-arrow-right"></i></a></p>';
+        }
+        $html .= '</section>';
+    }
+    return array('title' => 'CV', 'description' => 'Curriculum vitae of ' . cms_config('site_name') . '.', 'html' => $html);
+}
+
+// ---------------------------------------------------------------------------
+// Repositories (live GitHub data is added by assets/js/repos.js)
+// ---------------------------------------------------------------------------
+
+function cms_view_repositories()
+{
+    $doc = cms_doc('repositories', array('user' => '', 'repos' => array()));
+    $user = !empty($doc['user']) ? $doc['user'] : 'adnan-saood';
+    $repos = array_values(array_filter(isset($doc['repos']) ? $doc['repos'] : array(), function ($r) { return !empty($r['visible']); }));
+    $tags = array();
+    foreach ($repos as $r) foreach ($r['tags'] as $t) $tags[$t] = true;
+    $u = e($user);
+
+    $h = '<div class="oss" data-github-user="' . $u . '"><header class="oss-head"><div>'
+        . '<p class="kicker reveal">Open source</p><h1 class="post-title split">Code that makes robots feel.</h1>'
+        . '<p class="post-description reveal">ROS 2 drivers, robot descriptions, embedded firmware and research tools, live from GitHub.</p></div>'
+        . '<a class="oss-profile tilt reveal" href="https://github.com/' . $u . '" rel="noopener">'
+        . '<img class="oss-profile__avatar" src="https://github.com/' . $u . '.png?size=160" alt="" width="72" height="72" loading="lazy">'
+        . '<span class="oss-profile__name" data-gh="name">' . e(cms_config('site_name')) . '</span>'
+        . '<span class="oss-profile__handle"><i class="ti ti-brand-github"></i> @' . $u . '</span>'
+        . '<span class="oss-profile__bio" data-gh="bio"></span>'
+        . '<span class="oss-profile__meta"><span><b data-gh="followers">–</b> followers</span><span><b data-gh="since">–</b> on GitHub</span></span>'
+        . '<span class="oss-profile__cta">Follow on GitHub <i class="ti ti-arrow-up-right"></i></span></a></header>';
+    $h .= '<section class="oss-stats" aria-label="GitHub statistics">'
+        . '<div class="oss-stat reveal"><b data-gh="repos">' . count($repos) . '</b><span>public repositories</span></div>'
+        . '<div class="oss-stat reveal"><b data-gh="languages">–</b><span>languages in use</span></div>'
+        . '<div class="oss-stat reveal"><b data-gh="stars">–</b><span>stars across projects</span></div>'
+        . '<div class="oss-stat reveal"><b><span class="oss-pulse" aria-hidden="true"></span><span data-gh="lastpush">–</span></b><span>since the last push</span></div></section>';
+    $h .= '<section class="oss-langs reveal" aria-label="Languages" hidden><div class="oss-langs__bar" data-gh="langbar"></div><ul class="oss-langs__legend" data-gh="langlegend"></ul></section>';
+    $h .= '<section class="oss-featured"><div class="section__head"><div><p class="kicker">Featured</p><h2 class="section__title split">Selected repositories.</h2></div>'
+        . '<label class="oss-sort">Sort <select data-oss-sort><option value="curated">Curated</option><option value="updated">Recently updated</option>'
+        . '<option value="stars">Most stars</option><option value="name">Name</option></select></label></div>';
+    if (count($tags) > 1) {
+        $h .= '<div class="filters reveal" data-filters="#repo-grid" role="group" aria-label="Filter repositories"><button type="button" class="is-active" data-filter="*">All</button>';
+        foreach (array_keys($tags) as $t) $h .= '<button type="button" data-filter="' . e($t) . '">' . e($t) . '</button>';
+        $h .= '</div>';
+    }
+    $h .= '<div class="repo-grid" id="repo-grid">';
+    foreach ($repos as $i => $r) {
+        $name = substr(strrchr('/' . $r['repo'], '/'), 1);
+        $h .= '<a class="repo-card project-card repo-card--' . e($r['size']) . '" href="https://github.com/' . e($r['repo']) . '" rel="noopener"'
+            . ' data-repo="' . e($r['repo']) . '" data-order="' . ($i + 1) . '" data-category="' . e(implode('|', $r['tags'])) . '">'
+            . '<span class="repo-card__top"><i class="ti ti-book-2" aria-hidden="true"></i><span class="repo-card__name">' . e($name) . '</span><span class="repo-card__live" hidden>active</span></span>'
+            . '<span class="repo-card__desc" data-note="' . e($r['note']) . '">' . e($r['note']) . '</span><span class="repo-card__tags">';
+        foreach ($r['tags'] as $t) $h .= '<span class="chip">' . e($t) . '</span>';
+        $h .= '</span><span class="repo-card__foot"><span class="repo-card__lang"><span class="dot"></span><span data-f="lang"></span></span>'
+            . '<span data-f="stars" hidden><i class="ti ti-star"></i> <b></b></span><span data-f="forks" hidden><i class="ti ti-git-fork"></i> <b></b></span>'
+            . '<span class="repo-card__updated" data-f="updated"></span></span></a>';
+    }
+    $h .= '</div></section>';
+    $h .= '<section class="oss-activity reveal" hidden><div class="section__head"><div><p class="kicker">Live</p><h2 class="section__title">Recent activity.</h2></div>'
+        . '<a class="section__more" href="https://github.com/' . $u . '?tab=repositories" rel="noopener">All repositories on GitHub <i class="ti ti-arrow-up-right"></i></a></div>'
+        . '<ol class="oss-timeline" data-gh="activity"></ol></section></div>';
+    return array('title' => 'Open source', 'description' => 'Open-source repositories by ' . cms_config('site_name') . '.', 'html' => $h);
+}

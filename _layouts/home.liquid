@@ -90,9 +90,12 @@ layout: default
   <div class="stats">
     {% for s in page.stats %}
       {%- assign value = s.value -%}
-      {%- if s.value == 'repos' -%}{%- assign value = site.data.repositories.github_repos | size -%}{%- endif -%}
       <div class="stat reveal">
+        {%- if s.value == 'repos' -%}
+        <b data-gh-repos="{{ site.data.repositories.github_users.first | default: 'adnan-saood' }}">–</b>
+        {%- else -%}
         <b data-count="{{ value }}">{{ value }}</b>
+        {%- endif -%}
         <span>{{ s.label }}</span>
       </div>
     {% endfor %}
@@ -108,9 +111,9 @@ layout: default
       </div>
       <a class="section__more" href="{{ '/publications/' | relative_url }}">All publications <i class="ti ti-arrow-right" aria-hidden="true"></i></a>
     </div>
-    <div class="publications reveal">
-      {% include selected_papers.liquid %}
-    </div>
+    <ol class="pubs pubs--home" data-cms-fragment="publications" data-limit="6">
+      <li class="pub"><span class="cms-skeleton"></span><span class="cms-skeleton short"></span></li>
+    </ol>
   </section>
 {% endif %}
 
