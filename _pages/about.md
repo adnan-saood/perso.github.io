@@ -1,6 +1,6 @@
 ---
 layout: about
-title: about
+title: About me
 permalink: /
 subtitle: Doctoral Candidate in Robotics at <a href='https://www.ip-paris.fr/'>Institut Polytechnique de Paris</a>
 
@@ -28,14 +28,28 @@ latest_posts:
   limit: 3 # leave blank to include all the blog posts
 ---
 
-I am a doctoral candidate specializing in socio-affective touch in robotics at Institut Polytechnique de Paris - ENSTA. My research focuses on haptics, tactility, signal processing, and real-time estimation, with the goal of enabling more natural and empathetic human-robot interactions.
-
-My academic journey has taken me from Syria to France, where I earned my M2 Masters in Engineering with a specialization in Medical Robotics from the University of Strasbourg. During this time, I was awarded the prestigious ITI HealthTech fellowship for academic excellence. Prior to that, I completed my Engineer Diploma in Mechatronics at Tishreen University with distinction, where I also received the Distinction and Creativity Agency Scholarship.
-
-My research experience spans medical robotics, optimization-based path planning, and embedded systems development. At ICube Laboratory, I led a team focused on robotic assistance for Blood-Brain Barrier opening using focused ultrasound, developing optimization algorithms and control pipelines for industrial manipulators in medical procedures. This work resulted in a patent application and a journal article currently under review.
-
-Beyond academia, I serve as an Engineering Consultant at Therasonic, a spin-off from CEA Neurospin, where I contribute to medical robotics development and assisted drug delivery systems. I am passionate about bridging the gap between cutting-edge research and practical applications that can improve lives.
-
-My technical expertise encompasses robot design, deep learning, computer vision, signal processing, and proficiency in tools such as MATLAB/SIMULINK, ROS/ROS2, C++, and Python. I have contributed to open-source projects, including ROS2 drivers for NDI medical-grade localization systems, and have published research on humanoid robot interaction, haptic interfaces, and medical image segmentation.
-
-I am driven by the challenge of creating robots that can understand and respond to human emotions and needs, particularly through the medium of touch. My current work on designing and validating tactile arrays for humanoid hands represents a step toward this vision of more intuitive and compassionate robotic systems.
+<section class="home-intro" aria-labelledby="home-intro-title">
+  <div class="home-field-wrap">
+    <canvas id="tactile-field" class="home-field" aria-label="Interactive tactile sensing field"></canvas>
+    <span class="home-field-label">Move through the field</span>
+    <span class="home-field-meta">touch / signal / response</span>
+  </div>
+  <div class="home-identity">
+    <p class="home-kicker">Mechatronics engineer / medical robotics / PhD researcher</p>
+    <h1 id="home-intro-title">Touch for Humanoid Robots</h1>
+    <p class="home-role">Doctoral researcher in robotics at Institut Polytechnique de Paris - ENSTA.</p>
+    <div class="home-profile">
+      <img src="{{ '/assets/img/prof_pic.png' | relative_url }}" alt="Portrait of Adnan Saood">
+      <span>Adnan Saood<br>ENSTA Paris<br><br>R.2.19<br>828 Bd. des Marechaux<br>91762 Palaiseau Cedex</span>
+    </div>
+  </div>
+  <div class="home-intro-copy">
+    <p class="home-lede">I am a mechatronics engineer with a master's degree in medical robotics, now pursuing a PhD on socio-affective touch, tactile sensing, and real-time estimation for more natural human-robot interaction.</p>
+    <div class="home-signals" aria-label="Research focus">
+      <span><strong>01</strong> Tactile perception</span>
+      <span><strong>02</strong> Medical robotics</span>
+      <span><strong>03</strong> Real-time systems</span>
+    </div>
+  </div>
+  <a class="home-project-link" href="{{ '/projects/' | relative_url }}">Explore the work <span aria-hidden="true">&#8594;</span></a>
+</section>

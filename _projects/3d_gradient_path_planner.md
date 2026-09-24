@@ -2,7 +2,7 @@
 layout: page
 title: 3D Gradient Path Planner
 description: Advanced three-dimensional path planning algorithm using gradient descent with attractive and repulsive potential fields for robotics navigation
-img: assets/img/projects/3d_path_planner.jpg
+img: assets/img/3d_path_planner.png
 importance: 3
 category: Motion Planning
 related_publications: false
@@ -10,6 +10,8 @@ github: https://github.com/adnan-saood/3d_gradient_path_planner
 ---
 
 ## Overview
+
+{% include figure.liquid loading="eager" path="assets/img/3d_path_planner.png" title="3D gradient path planner" class="img-fluid rounded z-depth-1" %}
 
 The 3D Gradient Path Planner is an advanced implementation of potential field-based path planning for three-dimensional environments. This MATLAB-based system extends traditional 2D gradient descent methods to handle complex 3D obstacle configurations, providing smooth, collision-free trajectories for aerial vehicles, underwater robots, and other systems operating in volumetric spaces. The planner combines attractive forces toward the goal with repulsive forces from obstacles, creating a navigation field that guides robots through complex 3D environments.
 

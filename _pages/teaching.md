@@ -3,7 +3,7 @@ layout: page
 title: Teaching
 permalink: /teaching/
 description: Courses I have taught or am currently teaching.
-nav: true
+nav: false
 nav_order: 6
 display_categories: [work, fun]
 horizontal: false

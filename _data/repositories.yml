@@ -5,11 +5,16 @@ github_users:
 repo_description_lines_max: 2
 
 github_repos:
-  - adnan-saood/3d_gradient_path_planner
-  - ICube-Robotics/ndisys_ros2
   - adnan-saood/COVID19-DL
-  - adnan-saood/mekabot
+  - adnan-saood/hid_ros2
+  - adnan-saood/paxini_ros2
+  - adnan-saood/foc_motor_firmware
+  - adnan-saood/mekahand_description
+  - adnan-saood/franka_handshake_ros2
+  - adnan-saood/mekaHandController
+  - adnan-saood/icsr2025_workshop_website
   - adnan-saood/turtlebot4_odometer
-  - adnan-saood/swarm-robot-firmware
-  - adnan-saood/simple_adc_library_AVR
+  - adnan-saood/3d_gradient_path_planner
+  - adnan-saood/Altium_Libraries
+  - adnan-saood/cnn_ocr_arabic-hindu_numerals
   

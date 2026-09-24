@@ -2,14 +2,17 @@
 layout: page
 title: NDI Systems ROS2 Driver
 description: Professional-grade medical tracking system integration for ROS2, enabling precision motion capture in surgical and rehabilitation applications
-img: assets/img/projects/ndi_tracking.jpg
-importance: 1
+img: assets/img/ndi_tracking.jpg
+importance: 7
 category: Medical Robotics
 related_publications: false
 github: https://github.com/adnan-saood/ndisys_ros2
 ---
 
 ## Overview
+
+{% include figure.liquid loading="eager" path="assets/img/ndi_tracking.jpg" title="NDI tracking system integration" class="img-fluid rounded z-depth-1" %}
+
 
 The NDI Systems ROS2 Driver is a comprehensive software stack that bridges Northern Digital Inc. (NDI) optical and electromagnetic tracking systems with the Robot Operating System 2 (ROS2). This professional-grade integration enables medical robotics applications requiring sub-millimeter precision tracking for surgical navigation, rehabilitation robotics, and biomechanical analysis.
 

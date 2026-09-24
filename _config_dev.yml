@@ -1,0 +1,4 @@
+# Development overrides - used by docker-compose for local development
+# This overrides _config.yml settings when running locally.
+baseurl: ""
+url: "http://localhost:8080"

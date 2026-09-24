@@ -3,7 +3,7 @@ layout: page
 title: Tactile Array for Humanoid Hand to Enable Socio-Affective Touch
 description: Design, manufacturing, and validation of a tactile array embedded in a silicon-based substrate for humanoid hands.
 img: assets/img/tactile_array.jpg
-importance: 1
+importance: 2
 category: work
 related_publications: true
 ---
@@ -65,10 +65,10 @@ This research represents a significant step forward in creating robots that can 
 
 <div class="row">
     <div class="col-sm mt-3 mt-md-0">
-        {% include figure.liquid loading="eager" path="assets/img/tactile_array_design.jpg" title="Tactile array design" class="img-fluid rounded z-depth-1" %}
+        {% include figure.liquid loading="eager" path="assets/img/tactile_array.jpg" title="Tactile array design" class="img-fluid rounded z-depth-1" %}
     </div>
     <div class="col-sm mt-3 mt-md-0">
-        {% include figure.liquid loading="eager" path="assets/img/humanoid_hand.jpg" title="Humanoid hand with tactile array" class="img-fluid rounded z-depth-1" %}
+        {% include figure.liquid loading="eager" path="assets/img/tactile_affordance.jpg" title="Humanoid hand with tactile array" class="img-fluid rounded z-depth-1" %}
     </div>
 </div>
 <div class="caption">

@@ -1,97 +1,72 @@
-- title: General Information
-  type: map
-  contents:
-    - name: Full Name
-      value: Adnan Saood
-    - name: Date of Birth
-      value: 20 Hune 1998
-    - name: Languages
-      value: English, French, Arabic
-
 - title: Education
   type: time_table
   contents:
     - title: PhD (Ongoing)
-      institution: ENSTA - Institute Polytechnique de Paris
+      institution: ENSTA Paris, Institut Polytechnique de Paris
       year: 2027
       description:
         - Socio-Affective Touch in Robotics
-        - Description 2.
-        - title: Description 3.
-          contents:
-            - Sub-description 1.
-            - Sub-description 2.
-    - title: Federal teaching diploma
-      institution: Eidgenössische Technische Hochschule, Zurich, Switzerland
-      year: 1900
+        - Research on tactile sensing, signal processing, and human-robot interaction.
+    - title: M2 in Engineering, Medical Robotics
+      institution: University of Strasbourg
+      year: 2022
       description:
-        - Description 1.
-        - Description 2.
+        - Master's research on robotic assistance for focused-ultrasound blood-brain barrier opening.
 
 - title: Experience
   type: time_table
   contents:
-    - title: Professor of Theoretical Physics
-      institution: Institute for Advanced Study, Princeton University
-      year: 1933 - 1955
+    - title: PhD Candidate
+      institution: U2IS, ENSTA Paris
+      year: 2024 - present
       description:
-        - Description 1.
-        - Description 2.
-        - title: Description 3.
-          contents:
-            - Sub-description 1.
-            - Sub-description 2.
-    - title: Visiting Professor
-      institution: California Institute of Technology, Pasadena, California, US
-      year: 1933
+        - Developing tactile sensing and real-time models for socio-affective human-robot interaction.
+        - Current direction: generative, action-conditioned tactile affordance models.
+        - Co-organizer of the Beyond Words workshop series on touch in social robotics.
+    - title: Engineering Consultant
+      institution: Therasonic, CEA Neurospin spin-off
+      year: 2024 - present
       description:
-        - Description 1.
-        - Description 2.
-
-    - title: Director
-      institution: Kaiser Wilhelm Institute for Physics, Berlin, Germany.
-      year: 1917-1933
-
-    - title: Professor of Theoretical Physics
-      institution: Karl-Ferdinand University, Prague, Czechoslovakia
-      year: 1911 - 1917
+        - Contributing to medical robotics and assisted drug delivery systems.
+        - Focused-ultrasound patent from Master's thesis work licensed by Therasonic in 2026.
+    - title: Research Engineer
+      institution: ICube Laboratory, University of Strasbourg
+      year: 2022 - 2023
       description:
-
-    - title: Associate Professor of Theoretical Physics
-      institution: University of Zurich, Zurich, Switzerland
-      year: 1909 - 1911
+        - Developed robotic trajectories and control pipelines for focused-ultrasound procedures.
 
 - title: Open Source Projects
   type: time_table
   contents:
-    - title: <a href="https://github.com/alshedivat/al-folio">al-folio</a>
-      year: 2015-now
-      description: A beautiful, simple, clean, and responsive Jekyll theme for academics.
+    - title: <a href="https://github.com/adnan-saood/paxini_ros2">paxini_ros2</a>
+      year: ongoing
+      description: ROS2 integration for tactile sensing hardware.
+    - title: <a href="https://github.com/adnan-saood/ndisys_ros2">ndisys_ros2</a>
+      year: ongoing
+      description: ROS2 driver for NDI medical-grade localization systems.
 
 - title: Honors and Awards
   type: time_table
   contents:
-    - year: 1921
+    - year: 2026
       items:
-        - Nobel Prize in Physics
-        - Matteucci Medal
-    - year: 2029
+        - Fédération Demeny Vaucanson research prize
+        - Best Poster Award, ENSTA U2IS Annual Lab Day
+        - Best Presentation Award, ENSTA U2IS Annual Lab Day
+    - year: 2023
       items:
-        - Max Planck Medal
+        - Doctoral Fellowship Grant
 
-- title: Academic Interests
+- title: Skills
   type: nested_list
   contents:
-    - title: Topic 1.
+    - title: Robotics and software
       items:
-        - Description 1.
-        - Description 2.
-    - title: Topic 2.
+        - ROS, ROS2, C++, Python, MATLAB, Simulink
+        - Robot control, path planning, embedded systems
+    - title: Machine learning
       items:
-        - Description 1.
-        - Description 2.
-
-- title: Other Interests
-  type: list
-  contents:
-    - <u>Hobbies:</u> Hobby 1, Hobby 2, etc.
+        - PyTorch, TensorFlow, JAX, computer vision, signal processing
+    - title: Languages
+      items:
+        - English, French, Arabic

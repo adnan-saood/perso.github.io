@@ -1,11 +1,10 @@
 ---
 layout: page
-title: projects
+title: Projects
 permalink: /projects/
-description: A growing collection of your cool projects.
+description: Research and engineering projects in tactile sensing, medical robotics, and open-source robotics software.
 nav: true
 nav_order: 3
-display_categories: [work, fun]
 horizontal: false
 ---
 
