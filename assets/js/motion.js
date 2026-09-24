@@ -156,10 +156,17 @@
   }
   function fxRing(el, xy, strong) {
     if (reduce) return;
+    // One entry ring at a time: magnetic buttons move under the pointer, which would
+    // otherwise re-trigger the ring on every edge crossing.
+    var now = Date.now();
+    if (!strong && now - (el._fxRingAt || 0) < 900) return;
+    el._fxRingAt = now;
     var ring = document.createElement("span");
     ring.className = "fx-ring" + (strong ? " fx-ring--press" : "");
     ring.style.left = xy[0] + "px";
     ring.style.top = xy[1] + "px";
+    // Big enough to sweep across the whole button from wherever it starts.
+    ring.style.setProperty("--fx-ring-size", Math.round(Math.max(el.offsetWidth, el.offsetHeight) * 2.2) + "px");
     el.appendChild(ring);
     ring.addEventListener("animationend", function () { ring.remove(); });
   }

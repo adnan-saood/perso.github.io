@@ -3309,28 +3309,31 @@ a.now__tile:hover {
   scale: 0.95;
 }
 .fx-ring {
+  // Behind the label (between the fill and the taxel dots), and it grows by size, not
+  // by scale, so its line stays hairline-thin.
   position: absolute;
-  width: 12px;
-  height: 12px;
-  margin: -6px 0 0 -6px;
+  z-index: -1;
+  width: 0;
+  height: 0;
   border-radius: 50%;
   border: 1.5px solid var(--fx-ring);
+  transform: translate(-50%, -50%);
   pointer-events: none;
-  z-index: 1;
-  animation: fx-ring 700ms var(--ease-out) forwards;
+  animation: fx-ring 800ms var(--ease-out) forwards;
 }
 .fx-ring--press {
   border-width: 2px;
-  animation-duration: 850ms;
-  --fx-ring-scale: 22;
+  animation-duration: 650ms;
 }
 @keyframes fx-ring {
   from {
-    transform: scale(0.2);
-    opacity: 0.8;
+    width: 0;
+    height: 0;
+    opacity: 0.7;
   }
   to {
-    transform: scale(var(--fx-ring-scale, 14));
+    width: var(--fx-ring-size, 160px);
+    height: var(--fx-ring-size, 160px);
     opacity: 0;
   }
 }
@@ -3358,7 +3361,7 @@ a.now__tile:hover {
 .fx--fill {
   --fx-fill: var(--gradient);
   --fx-dot: rgba(255, 255, 255, 0.9);
-  --fx-ring: var(--coral);
+  --fx-ring: rgba(255, 255, 255, 0.85);
 }
 .btn--ghost.fx:hover,
 .btn--ghost.fx:focus-visible {
