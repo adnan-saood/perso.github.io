@@ -73,7 +73,7 @@ function admin_head($title)
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
 <title><?php echo e($title); ?> · Site admin</title>
-<link rel="stylesheet" href="admin.css?v=3">
+<link rel="stylesheet" href="admin.css?v=4">
 <?php
 }
 
@@ -126,7 +126,7 @@ function admin_layout_end($scripts = array())
 {
     echo '</main></div>';
     foreach ($scripts as $s) echo '<script src="' . e($s) . '"></script>';
-    echo '<script src="admin.js?v=3"></script></body></html>';
+    echo '<script src="admin.js?v=4"></script></body></html>';
 }
 
 // ---------------------------------------------------------------------------
@@ -359,18 +359,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 switch ($page) {
 
 case 'media': // JSON listing used by the media picker in the editor
-    $abs = cms_files_resolve(isset($_GET['dir']) ? (string) $_GET['dir'] : '');
+    $src = isset($_GET['src']) && $_GET['src'] === 'site' ? 'site' : 'files';
+    $abs = cms_files_resolve(isset($_GET['dir']) ? (string) $_GET['dir'] : '', true, $src);
     if (!$abs || !is_dir($abs)) admin_json(array('error' => 'Folder not found.'), 404);
-    list($dirs, $files) = cms_files_list($abs);
-    $rel = cms_files_rel($abs);
+    list($dirs, $files) = cms_files_list($abs, $src);
+    $rel = cms_files_rel($abs, $src);
     $images = array('jpg', 'jpeg', 'png', 'gif', 'webp', 'avif', 'ico');
-    $out = array('dir' => $rel, 'parent' => $rel === '' ? null : (dirname($rel) === '.' ? '' : dirname($rel)), 'dirs' => array(), 'files' => array());
+    $out = array('src' => $src, 'writable' => cms_media_source($src)['writable'], 'dir' => $rel,
+                 'parent' => $rel === '' ? null : (dirname($rel) === '.' ? '' : dirname($rel)), 'dirs' => array(), 'files' => array());
     foreach ($dirs as $d) $out['dirs'][] = array('name' => $d['name'], 'rel' => $d['rel']);
     foreach ($files as $f) {
         $out['files'][] = array(
             'name' => $f['name'],
-            'path' => cms_config('files_url') . $f['rel'], // base-free, for content
-            'url' => cms_files_public_url($f['rel']),       // for thumbnails
+            'path' => cms_files_content_path($f['rel'], $src), // base-free, for content
+            'url' => cms_files_public_url($f['rel'], $src),     // for thumbnails
             'image' => in_array($f['ext'], $images, true),
             'size' => cms_human_size($f['size']),
         );
@@ -498,6 +500,10 @@ case 'edit':
     <dialog class="media" id="media" data-list-url="<?php echo e(admin_url(array('page' => 'media'))); ?>" data-csrf="<?php echo e(cms_csrf_token()); ?>" data-upload-url="<?php echo e(admin_url()); ?>">
       <div class="media__head">
         <strong class="media__title">Media library</strong>
+        <span class="media__tabs" role="tablist">
+          <button type="button" class="on" data-media-src="files">Uploads</button>
+          <button type="button" data-media-src="site">Site images</button>
+        </span>
         <nav class="media__crumbs" aria-label="Folder"></nav>
         <label class="btn small media__upload"><?php echo admin_icon('up'); ?> Upload<input type="file" multiple hidden></label>
         <button type="button" class="btn small" data-media-close aria-label="Close">&times;</button>
@@ -511,12 +517,15 @@ case 'edit':
     break;
 
 case 'files':
+    $src = isset($_GET['src']) && $_GET['src'] === 'site' ? 'site' : 'files';
+    $source = cms_media_source($src);
+    $ro = !$source['writable'];
     $dirRel = isset($_GET['dir']) ? (string) $_GET['dir'] : '';
-    $abs = cms_files_resolve($dirRel);
+    $abs = cms_files_resolve($dirRel, true, $src);
     if (!$abs || !is_dir($abs)) { admin_flash('err', 'Folder not found.'); admin_redirect(array('page' => 'files')); }
-    $dirRel = cms_files_rel($abs);
-    list($dirs, $files) = cms_files_list($abs);
-    $crumbs = array(array('files', ''));
+    $dirRel = cms_files_rel($abs, $src);
+    list($dirs, $files) = cms_files_list($abs, $src);
+    $crumbs = array(array($ro ? 'assets/img' : 'files', ''));
     $acc = '';
     foreach ($dirRel === '' ? array() : explode('/', $dirRel) as $part) {
         $acc = ltrim($acc . '/' . $part, '/');
@@ -524,14 +533,23 @@ case 'files':
     }
     admin_layout_start('Files', 'files');
     ?>
+    <nav class="tabs" aria-label="Library">
+      <a class="<?php echo $ro ? '' : 'on'; ?>" href="<?php echo e(admin_url(array('page' => 'files'))); ?>">Uploads</a>
+      <a class="<?php echo $ro ? 'on' : ''; ?>" href="<?php echo e(admin_url(array('page' => 'files', 'src' => 'site'))); ?>">Site images <small>(read-only)</small></a>
+    </nav>
     <header class="top">
-      <h1 class="crumbs"><?php foreach ($crumbs as $i => $c): ?><?php if ($i): ?><span>/</span><?php endif; ?><a href="<?php echo e(admin_url(array('page' => 'files', 'dir' => $c[1]))); ?>"><?php echo e($c[0]); ?></a><?php endforeach; ?></h1>
+      <h1 class="crumbs"><?php foreach ($crumbs as $i => $c): ?><?php if ($i): ?><span>/</span><?php endif; ?><a href="<?php echo e(admin_url(array('page' => 'files', 'src' => $src, 'dir' => $c[1]))); ?>"><?php echo e($c[0]); ?></a><?php endforeach; ?></h1>
+      <?php if (!$ro): ?>
       <form method="post" class="inline" data-prompt="New folder name" data-prompt-field="name">
         <?php echo cms_csrf_field(); ?><input type="hidden" name="action" value="files_mkdir"><input type="hidden" name="dir" value="<?php echo e($dirRel); ?>"><input type="hidden" name="name">
         <button class="btn"><?php echo admin_icon('plus'); ?> New folder</button>
       </form>
+      <?php endif; ?>
     </header>
 
+    <?php if ($ro): ?>
+      <p class="notice">These pictures ship with the site from the Git repository (<code>assets/img/</code>). You can reuse them in posts and projects with <em>Copy Markdown</em> or the editor's media library. To add, rename or delete them, change the repository and redeploy; uploads belong in <a href="<?php echo e(admin_url(array('page' => 'files'))); ?>">Uploads</a>.</p>
+    <?php else: ?>
     <form method="post" enctype="multipart/form-data" class="dropzone" id="dropzone">
       <?php echo cms_csrf_field(); ?><input type="hidden" name="action" value="files_upload"><input type="hidden" name="dir" value="<?php echo e($dirRel); ?>">
       <input type="file" name="files[]" id="file-input" multiple>
@@ -542,22 +560,23 @@ case 'files':
       <?php echo cms_csrf_field(); ?><input type="hidden" name="action" value="files_delete"><input type="hidden" name="dir" value="<?php echo e($dirRel); ?>">
       <div class="bulkbar" hidden><span data-count></span> selected <button class="btn danger small"><?php echo admin_icon('trash'); ?> Delete</button></div>
     </form>
+    <?php endif; ?>
 
     <div class="files">
       <?php if ($dirRel !== ''): ?>
-        <a class="file dir" href="<?php echo e(admin_url(array('page' => 'files', 'dir' => dirname($dirRel) === '.' ? '' : dirname($dirRel)))); ?>"><span class="thumb"><?php echo admin_icon('folder'); ?></span><span class="name">..</span></a>
+        <a class="file dir" href="<?php echo e(admin_url(array('page' => 'files', 'src' => $src, 'dir' => dirname($dirRel) === '.' ? '' : dirname($dirRel)))); ?>"><span class="thumb"><?php echo admin_icon('folder'); ?></span><span class="name">..</span></a>
       <?php endif; ?>
       <?php foreach ($dirs as $d): ?>
         <div class="file dir">
-          <input type="checkbox" form="bulk" name="paths[]" value="<?php echo e($d['rel']); ?>" aria-label="Select">
-          <a class="thumb" href="<?php echo e(admin_url(array('page' => 'files', 'dir' => $d['rel']))); ?>"><?php echo admin_icon('folder'); ?></a>
-          <a class="name" href="<?php echo e(admin_url(array('page' => 'files', 'dir' => $d['rel']))); ?>"><?php echo e($d['name']); ?></a>
-          <?php admin_file_menu($d, $dirRel, false); ?>
+          <?php if (!$ro): ?><input type="checkbox" form="bulk" name="paths[]" value="<?php echo e($d['rel']); ?>" aria-label="Select"><?php endif; ?>
+          <a class="thumb" href="<?php echo e(admin_url(array('page' => 'files', 'src' => $src, 'dir' => $d['rel']))); ?>"><?php echo admin_icon('folder'); ?></a>
+          <a class="name" href="<?php echo e(admin_url(array('page' => 'files', 'src' => $src, 'dir' => $d['rel']))); ?>"><?php echo e($d['name']); ?></a>
+          <?php if (!$ro) admin_file_menu($d, $dirRel, false); ?>
         </div>
       <?php endforeach; ?>
-      <?php foreach ($files as $f): $url = cms_files_public_url($f['rel']); ?>
+      <?php foreach ($files as $f): $url = cms_files_public_url($f['rel'], $src); ?>
         <div class="file">
-          <input type="checkbox" form="bulk" name="paths[]" value="<?php echo e($f['rel']); ?>" aria-label="Select">
+          <?php if (!$ro): ?><input type="checkbox" form="bulk" name="paths[]" value="<?php echo e($f['rel']); ?>" aria-label="Select"><?php endif; ?>
           <a class="thumb" href="<?php echo e($url); ?>" target="_blank" rel="noopener">
             <?php if (in_array($f['ext'], array('jpg', 'jpeg', 'png', 'gif', 'webp', 'avif', 'ico'), true)): ?>
               <img src="<?php echo e($url); ?>" alt="" loading="lazy">
@@ -565,7 +584,7 @@ case 'files':
           </a>
           <span class="name" title="<?php echo e($f['name']); ?>"><?php echo e($f['name']); ?></span>
           <span class="muted small"><?php echo cms_human_size($f['size']); ?></span>
-          <?php admin_file_menu($f, $dirRel, $url); ?>
+          <?php admin_file_menu($f, $dirRel, $url, $src); ?>
         </div>
       <?php endforeach; ?>
     </div>
@@ -677,15 +696,17 @@ default: // dashboard
     admin_layout_end();
 }
 
-function admin_file_menu($f, $dirRel, $url)
+function admin_file_menu($f, $dirRel, $url, $src = 'files')
 {
+    $ro = !cms_media_source($src)['writable'];
     ?>
     <div class="file-actions">
       <?php if ($url): ?>
         <?php $isImg = isset($f['ext']) && in_array($f['ext'], array('jpg', 'jpeg', 'png', 'gif', 'webp', 'avif'), true); ?>
-        <button type="button" class="btn tiny" data-copy-text="<?php echo e(($isImg ? '!' : '') . '[' . pathinfo($f['name'], PATHINFO_FILENAME) . '](' . cms_config('files_url') . $f['rel'] . ')'); ?>" title="Copy Markdown to paste into a post or project">Copy Markdown</button>
+        <button type="button" class="btn tiny" data-copy-text="<?php echo e(($isImg ? '!' : '') . '[' . pathinfo($f['name'], PATHINFO_FILENAME) . '](' . cms_files_content_path($f['rel'], $src) . ')'); ?>" title="Copy Markdown to paste into a post or project">Copy Markdown</button>
         <button type="button" class="btn tiny" data-copy="<?php echo e($url); ?>" title="Copy full link">Copy link</button>
       <?php endif; ?>
+      <?php if ($ro): ?></div><?php return; endif; ?>
       <form method="post" data-prompt="Rename to" data-prompt-field="name" data-prompt-default="<?php echo e($f['name']); ?>">
         <?php echo cms_csrf_field(); ?><input type="hidden" name="action" value="files_rename"><input type="hidden" name="dir" value="<?php echo e($dirRel); ?>">
         <input type="hidden" name="path" value="<?php echo e($f['rel']); ?>"><input type="hidden" name="name"><button class="btn tiny">Rename</button>

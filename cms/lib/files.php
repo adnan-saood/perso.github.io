@@ -16,17 +16,33 @@ function cms_allowed_extensions()
     );
 }
 
-function cms_files_root()
+// Two libraries: your uploads (writable) and the images that ship with the Jekyll
+// site in assets/img (read-only: the Git repo owns them and deploys overwrite them).
+function cms_media_sources()
 {
-    $root = cms_config('files_dir');
-    if (!is_dir($root)) @mkdir($root, 0775, true);
-    return realpath($root);
+    return array(
+        'files' => array('label' => 'Uploads', 'dir' => cms_config('files_dir'), 'prefix' => cms_config('files_url'), 'writable' => true),
+        'site' => array('label' => 'Site images', 'dir' => CMS_WEB_ROOT . '/assets/img', 'prefix' => 'assets/img/', 'writable' => false),
+    );
+}
+
+function cms_media_source($src)
+{
+    $all = cms_media_sources();
+    return isset($all[$src]) ? $all[$src] : $all['files'];
+}
+
+function cms_files_root($src = 'files')
+{
+    $s = cms_media_source($src);
+    if ($s['writable'] && !is_dir($s['dir'])) @mkdir($s['dir'], 0775, true);
+    return realpath($s['dir']);
 }
 
 // Turn a user-supplied relative path into an absolute one inside the root, or null.
-function cms_files_resolve($rel, $mustExist = true)
+function cms_files_resolve($rel, $mustExist = true, $src = 'files')
 {
-    $root = cms_files_root();
+    $root = cms_files_root($src);
     if (!$root) return null;
     $rel = trim(str_replace('\\', '/', (string) $rel), '/');
     if ($rel === '') return $root;
@@ -57,9 +73,9 @@ function cms_files_ensure_dir($rel)
     return cms_files_resolve($rel);
 }
 
-function cms_files_rel($abs)
+function cms_files_rel($abs, $src = 'files')
 {
-    $root = cms_files_root();
+    $root = cms_files_root($src);
     return $abs === $root ? '' : substr($abs, strlen($root) + 1);
 }
 
@@ -78,14 +94,14 @@ function cms_safe_filename($name, $isDir = false)
     return $name . '.' . $ext;
 }
 
-function cms_files_list($absDir)
+function cms_files_list($absDir, $src = 'files')
 {
     $dirs = array();
     $files = array();
     foreach (scandir($absDir) as $n) {
         if ($n === '' || $n[0] === '.') continue;
         $p = $absDir . '/' . $n;
-        $entry = array('name' => $n, 'rel' => cms_files_rel($p), 'mtime' => filemtime($p));
+        $entry = array('name' => $n, 'rel' => cms_files_rel($p, $src), 'mtime' => filemtime($p));
         if (is_dir($p)) {
             $dirs[] = $entry;
         } else {
@@ -100,10 +116,16 @@ function cms_files_list($absDir)
     return array($dirs, $files);
 }
 
-function cms_files_public_url($rel)
+function cms_files_public_url($rel, $src = 'files')
 {
     $parts = array_map('rawurlencode', explode('/', $rel));
-    return cms_url(cms_config('files_url') . implode('/', $parts));
+    return cms_url(cms_media_source($src)['prefix'] . implode('/', $parts));
+}
+
+// Base-free path to put in content (the renderer adds the base URL).
+function cms_files_content_path($rel, $src = 'files')
+{
+    return cms_media_source($src)['prefix'] . $rel;
 }
 
 // Saves one entry of $_FILES into $absDir. Returns array(relPath|null, error|null).

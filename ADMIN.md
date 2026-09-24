@@ -53,6 +53,9 @@ you wrote in the admin panel.
   (*Insert from media library*) to browse your Files folders, drop new pictures in, and
   click one to insert it. Cover-image fields have a *Library* button that does the same.
   On the Files page, *Copy Markdown* gives a snippet you can paste into any post.
+  Both have two libraries: **Uploads** (what you add through the admin, in `files/`) and
+  **Site images** (the pictures that ship with the site in `assets/img/`, read-only —
+  change those in the repository and redeploy).
 - **Files**: upload by dropping files on the page; create folders, rename, delete
   (goes to Trash). Links are `https://perso.ensta.fr/~saood/files/...`.
   HTML/SVG/JS/PHP uploads are refused on purpose, because they would run on your site.

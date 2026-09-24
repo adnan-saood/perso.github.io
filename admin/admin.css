@@ -220,3 +220,14 @@ dialog.media.is-over { outline: 3px dashed var(--accent); outline-offset: -10px;
 .media__empty { grid-column: 1 / -1; text-align: center; color: var(--muted); padding: 2rem; }
 .media__status { margin: 0; padding: 0 1.25rem 1rem; color: var(--muted); min-height: 1.2em; }
 .with-btn .btn + .btn { margin-left: 0; }
+
+/* Library tabs (Files page + picker) */
+.tabs { display: inline-flex; gap: .25rem; padding: .25rem; margin-bottom: 1.25rem; border: 1px solid var(--line); border-radius: 12px; background: var(--panel); }
+.tabs a { padding: .45rem .9rem; border-radius: 9px; color: var(--muted); font-weight: 600; font-size: .9rem; }
+.tabs a small { font-weight: 400; }
+.tabs a.on { background: var(--accent-soft); color: var(--accent); }
+.notice { background: var(--accent-soft); border-radius: 12px; padding: .8rem 1rem; margin: 0 0 1.25rem; font-size: .92rem; }
+.media__tabs { display: inline-flex; gap: .2rem; padding: .2rem; border: 1px solid var(--line); border-radius: 10px; }
+.media__tabs button { background: none; border: 0; padding: .3rem .7rem; border-radius: 7px; font: inherit; font-size: .82rem; font-weight: 600; color: var(--muted); cursor: pointer; }
+.media__tabs button.on { background: var(--accent-soft); color: var(--accent); }
+.media__upload[hidden] { display: none; }

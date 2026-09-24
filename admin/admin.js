@@ -141,8 +141,13 @@
     var crumbs = dlg.querySelector(".media__crumbs");
     var status = dlg.querySelector(".media__status");
     var fileInput = dlg.querySelector(".media__upload input");
+    var src = "files";          // "files" (uploads) or "site" (assets/img, read-only)
+    var dirs = { files: "", site: "" }; // last folder per library
     var current = "";
+    var writable = true;
     var onPick = null;
+    var uploadBtn = dlg.querySelector(".media__upload");
+    var hint = dlg.querySelector(".media__hint");
 
     function el(tag, cls, text) {
       var n = document.createElement(tag);
@@ -153,8 +158,9 @@
 
     function load(dir) {
       current = dir;
+      dirs[src] = dir;
       status.textContent = "Loading…";
-      fetch(dlg.dataset.listUrl + "&dir=" + encodeURIComponent(dir), { credentials: "same-origin" })
+      fetch(dlg.dataset.listUrl + "&src=" + src + "&dir=" + encodeURIComponent(dir), { credentials: "same-origin" })
         .then(function (r) { return r.json(); })
         .then(render)
         .catch(function () { status.textContent = "Could not load the files."; });
@@ -163,10 +169,16 @@
     function render(d) {
       if (d.error) { status.textContent = d.error; return; }
       status.textContent = "";
+      writable = !!d.writable;
+      uploadBtn.hidden = !writable;
+      hint.textContent = writable
+        ? "Click a picture to insert it. Drop files anywhere here to upload them into this folder."
+        : "Pictures that ship with the site (assets/img, read-only). Click one to insert it.";
+      dlg.querySelectorAll("[data-media-src]").forEach(function (b) { b.classList.toggle("on", b.dataset.mediaSrc === src); });
       crumbs.innerHTML = "";
       var parts = d.dir ? d.dir.split("/") : [];
       var acc = "";
-      var rootBtn = el("button", "", "files");
+      var rootBtn = el("button", "", src === "site" ? "assets/img" : "files");
       rootBtn.type = "button";
       rootBtn.dataset.dir = "";
       crumbs.appendChild(rootBtn);
@@ -218,12 +230,16 @@
         grid.appendChild(b);
       });
       if (!d.dirs.length && !d.files.length) {
-        grid.appendChild(el("p", "media__empty", "This folder is empty. Drop pictures here to upload them."));
+        grid.appendChild(el("p", "media__empty", writable ? "This folder is empty. Drop pictures here to upload them." : "This folder is empty."));
       }
     }
 
     function uploadFiles(list) {
       if (!list.length) return;
+      if (!writable) {
+        status.textContent = "Site images are read-only. Switch to Uploads to add pictures.";
+        return;
+      }
       status.textContent = "Uploading " + list.length + " file" + (list.length > 1 ? "s" : "") + "…";
       Promise.all(Array.prototype.map.call(list, shrink)).then(function (files) {
         var fd = new FormData();
@@ -242,6 +258,8 @@
 
     dlg.addEventListener("click", function (ev) {
       if (ev.target === dlg || ev.target.closest("[data-media-close]")) { dlg.close(); return; }
+      var tab = ev.target.closest("[data-media-src]");
+      if (tab) { src = tab.dataset.mediaSrc; load(dirs[src]); return; }
       var dirBtn = ev.target.closest("[data-dir]");
       if (dirBtn) { load(dirBtn.dataset.dir); return; }
       var fileBtn = ev.target.closest("[data-path]");
@@ -255,7 +273,7 @@
       fileInput.value = "";
     });
     ["dragenter", "dragover"].forEach(function (e) {
-      dlg.addEventListener(e, function (ev) { ev.preventDefault(); dlg.classList.add("is-over"); });
+      dlg.addEventListener(e, function (ev) { ev.preventDefault(); if (writable) dlg.classList.add("is-over"); });
     });
     dlg.addEventListener("dragleave", function (ev) {
       if (!ev.relatedTarget || !dlg.contains(ev.relatedTarget)) dlg.classList.remove("is-over");
@@ -270,7 +288,7 @@
       open: function (cb) {
         onPick = cb;
         dlg.showModal();
-        load(current);
+        load(dirs[src]);
       },
     };
   })();
