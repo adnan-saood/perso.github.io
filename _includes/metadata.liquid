@@ -22,7 +22,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 {% if page.cms_view %}
   {% if site.title == 'blank' %}{% capture title %}{{ author_name }}{% endcapture %}{% else %}{% capture title %}{{ site.title }}{% endcapture %}{% endif %}
-  <title><?php echo e($cms['title']); ?> | {{ title }}</title>
+  <title><?php echo $cms['title'] !== '' ? e($cms['title']) . ' | ' : ''; ?>{{ title }}</title>
   <meta name="description" content="<?php if ($cms['description'] !== '') { echo e($cms['description']); } else { ?>{{ site.description | escape }}<?php } ?>">
 {% else %}
 <title>
@@ -57,7 +57,27 @@
   {% endunless %}
 {% endif %}
 
-{% if site.serve_og_meta %}
+{% if site.serve_og_meta and page.cms_view %}
+  <!-- OpenGraph (PHP page: title, description and share image come from the CMS) -->
+  <?php
+    $ogHost = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'];
+    $ogImg = !empty($cms['image']) ? cms_asset_url($cms['image']) : '{{ site.og_image | relative_url }}';
+    if ($ogImg !== '' && $ogImg[0] === '/') $ogImg = $ogHost . $ogImg;
+    $ogTitle = $cms['title'] !== '' ? $cms['title'] : '{{ title | escape }}';
+  ?>
+  <meta property="og:site_name" content="{{ title }}">
+  <meta property="og:type" content="<?php echo !empty($cms['article']) ? 'article' : 'website'; ?>">
+  <meta property="og:title" content="<?php echo e($ogTitle); ?>">
+  <meta property="og:url" content="<?php echo e($ogHost . $_SERVER['REQUEST_URI']); ?>">
+  <meta property="og:description" content="<?php if ($cms['description'] !== '') { echo e($cms['description']); } else { ?>{{ site.description | escape }}<?php } ?>">
+  <meta property="og:image" content="<?php echo e($ogImg); ?>">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:locale" content="<?php echo cms_lang() === 'fr' ? 'fr_FR' : 'en_US'; ?>">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="<?php echo e($ogTitle); ?>">
+  <meta name="twitter:image" content="<?php echo e($ogImg); ?>">
+{% elsif site.serve_og_meta %}
   <!-- OpenGraph -->
   <meta property="og:site_name" content="{{ title }}">
   <meta property="og:type" content="{% if is_blog_post %}article{% else %}website{% endif %}">
@@ -65,16 +85,16 @@
   <meta property="og:url" content="{{ page.url | prepend: site.baseurl | prepend: site.url | remove_first: 'index.html' }}">
   <meta property="og:description" content="{% if page.description %}{{ page.description }}{% else %}{{ site.description }}{% endif %}">
   {% if page.og_image or site.og_image %}
-    <meta property="og:image" content="{% if page.og_image %}{{ page.og_image }}{% else %}{{ site.og_image }}{% endif %}">
+    <meta property="og:image" content="{% if page.og_image %}{{ page.og_image }}{% else %}{{ site.og_image | absolute_url }}{% endif %}">
   {% endif %}
   <meta property="og:locale" content="{{ site.lang }}">
 
   <!-- Twitter card -->
-  <meta name="twitter:card" content="summary">
+  <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="{% if page.title %}{{ page.title }}{% else %}{{ title }}{% endif %}">
   <meta name="twitter:description" content="{% if page.description %}{{ page.description }}{% else %}{{ site.description }}{% endif %}">
   {% if page.og_image or site.og_image %}
-    <meta name="twitter:image" content="{% if page.og_image %}{{ page.og_image }}{% else %}{{ site.og_image }}{% endif %}">
+    <meta name="twitter:image" content="{% if page.og_image %}{{ page.og_image }}{% else %}{{ site.og_image | absolute_url }}{% endif %}">
   {% endif %}
   {% if site.x_username %}
     <meta name="twitter:site" content="@{{ site.x_username }}">

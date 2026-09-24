@@ -217,6 +217,19 @@
     }
   }
 
+  // --- Homepage editor: English / Français tabs -------------------------------------
+  var langTabs = document.querySelector("[data-lang-tabs]");
+  if (langTabs) {
+    langTabs.addEventListener("click", function (ev) {
+      var a = ev.target.closest("[data-tab]");
+      if (!a) return;
+      ev.preventDefault();
+      langTabs.querySelectorAll("[data-tab]").forEach(function (t) { t.classList.toggle("on", t === a); });
+      document.querySelectorAll("[data-pane]").forEach(function (pane) { pane.hidden = pane.dataset.pane !== a.dataset.tab; });
+      document.querySelector("[data-lang-field]").value = a.dataset.tab;
+    });
+  }
+
   // --- Uploads & media library (editor, CV) ---------------------------------------
   var form = document.getElementById("editor-form") || document.querySelector("form[data-upload-url]");
   if (!form) return;
@@ -470,6 +483,111 @@
       form.requestSubmit ? form.requestSubmit() : form.submit();
     }
   });
+
+  // --- Share image: a branded 1200x630 card generated in the browser on save ---------
+  // (the server has no image library). Used when the page is shared on LinkedIn etc.
+  function slugify(t) {
+    return t.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 80);
+  }
+  function loadImage(src) {
+    return new Promise(function (resolve) {
+      if (!src) return resolve(null);
+      var img = new Image();
+      var done = false;
+      img.onload = function () { done = true; resolve(img); };
+      img.onerror = function () { done = true; resolve(null); };
+      img.src = /^https?:|^\//.test(src) ? src : (form.dataset.base || "/") + src;
+      setTimeout(function () { if (!done) resolve(null); }, 4000);
+    });
+  }
+  function wrapText(ctx, text, maxWidth, maxLines) {
+    var words = text.split(/\s+/), lines = [], line = "";
+    words.forEach(function (w) {
+      var test = line ? line + " " + w : w;
+      if (ctx.measureText(test).width > maxWidth && line) { lines.push(line); line = w; } else { line = test; }
+    });
+    if (line) lines.push(line);
+    if (lines.length > maxLines) {
+      lines = lines.slice(0, maxLines);
+      lines[maxLines - 1] = lines[maxLines - 1].replace(/\s+\S*$/, "") + "…";
+    }
+    return lines;
+  }
+  function shareImage(title, kicker, coverSrc) {
+    return loadImage(coverSrc).then(function (cover) {
+      var W = 1200, H = 630, c = document.createElement("canvas");
+      c.width = W; c.height = H;
+      var g = c.getContext("2d");
+      var grad = g.createLinearGradient(0, 0, W, H);
+      grad.addColorStop(0, "#6a45ff"); grad.addColorStop(1, "#ff6f4e");
+      g.fillStyle = grad; g.fillRect(0, 0, W, H);
+      var textW = 1060;
+      if (cover) {
+        // Cover picture on the right, fading into the gradient.
+        var cw = 470, ch = H, sx = 0, sy = 0, sw = cover.width, sh = cover.height;
+        if (sw / sh > cw / ch) { sw = sh * cw / ch; sx = (cover.width - sw) / 2; } else { sh = sw * ch / cw; sy = (cover.height - sh) / 2; }
+        g.drawImage(cover, sx, sy, sw, sh, W - cw, 0, cw, ch);
+        var fade = g.createLinearGradient(W - cw, 0, W - cw + 220, 0);
+        fade.addColorStop(0, "rgba(140,85,220,1)"); fade.addColorStop(1, "rgba(140,85,220,0)");
+        g.fillStyle = fade; g.fillRect(W - cw, 0, 220, H);
+        textW = 640;
+      } else {
+        // Taxel grid with a pressure bloom, like the homepage skin.
+        for (var x = 660; x < W; x += 26) for (var y = 26; y < H; y += 26) {
+          var p = Math.max(0, 1 - Math.hypot(x - 930, y - 310) / 240);
+          g.fillStyle = "rgba(255,255,255," + (0.18 + p * 0.7) + ")";
+          g.beginPath(); g.arc(x, y, 2.2 + p * 4.5, 0, Math.PI * 2); g.fill();
+        }
+        textW = 600;
+      }
+      g.fillStyle = "rgba(255,255,255,.85)";
+      g.font = "600 24px ui-monospace, Consolas, monospace";
+      g.fillText(kicker.toUpperCase(), 72, 110);
+      g.fillStyle = "#fff";
+      var size = title.length > 70 ? 54 : 64;
+      g.font = "700 " + size + "px 'Segoe UI', system-ui, sans-serif";
+      wrapText(g, title, textW, 4).forEach(function (l, i) { g.fillText(l, 68, 190 + i * size * 1.15); });
+      g.font = "700 28px 'Segoe UI', system-ui, sans-serif";
+      g.fillStyle = "rgba(255,255,255,.18)";
+      var name = form.dataset.site || "";
+      var nw = g.measureText(name).width + 48;
+      g.beginPath(); g.roundRect ? g.roundRect(72, 532, nw, 52, 26) : g.rect(72, 532, nw, 52); g.fill();
+      g.fillStyle = "#fff"; g.fillText(name, 96, 568);
+      return new Promise(function (resolve) { c.toBlob(resolve, "image/png"); });
+    });
+  }
+  if (form.id === "editor-form" && form.dataset.og === "1") {
+    var ogDone = false;
+    var kinds = { posts: "Blog post", news: "News", projects: "Project", talks: "Talk" };
+    form.addEventListener("submit", function (ev) {
+      var titleEl = form.elements.title;
+      if (ogDone || !titleEl || !titleEl.value.trim()) return;
+      ev.preventDefault();
+      var slugEl = form.elements.slug;
+      var slugVal = (slugEl && slugEl.value.trim()) || slugify(titleEl.value);
+      var cover = (form.elements.img || form.elements.thumbnail || form.elements.image || {}).value || "";
+      shareImage(titleEl.value.trim(), (kinds[form.dataset.type] || "") + " · " + (form.dataset.site || ""), cover)
+        .then(function (blob) {
+          if (!blob) return;
+          var fd = new FormData();
+          fd.append("action", "og_upload");
+          fd.append("csrf", form.dataset.csrf);
+          fd.append("type", form.dataset.type);
+          fd.append("slug", slugVal);
+          fd.append("image", blob, "share.png");
+          return fetch(form.dataset.uploadUrl, { method: "POST", body: fd, credentials: "same-origin" })
+            .then(function (r) { return r.json(); })
+            .then(function (j) { if (j.url) form.elements.og_image.value = j.url; });
+        })
+        .catch(function () { /* the item is saved even if the share image fails */ })
+        .then(function () {
+          ogDone = true;
+          dirty = false;
+          if (mde) mde.codemirror.save();
+          form.submit();
+        });
+    });
+  }
 
   // Slug follows the title until you edit it yourself.
   var title = form.querySelector('[name="title"]');

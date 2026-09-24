@@ -2,23 +2,28 @@
 layout: default
 ---
 {%- comment -%}
-  Homepage. All wording lives in the front matter of _pages/about.md.
-  Projects, news and posts are loaded live from the PHP CMS (assets/js/cms.js).
+  Homepage. Rendered by PHP from cms-data/home.json (Admin -> Homepage) plus live
+  projects, 3D robots, publications, talks, news and posts. $cms comes from
+  cms_render_view('home') at the top of _layouts/default.liquid.
 {%- endcomment -%}
-
+<?php
+$H = $cms['home'];
+$g = function ($path, $default = '') use ($H) { $v = cms_path_get($H, $path); return $v === null ? $default : $v; };
+$user = 'adnan-saood';
+?>
 <section class="hero" aria-labelledby="hero-title">
   <div class="hero__fallback" aria-hidden="true"></div>
   <canvas id="skin" class="hero__canvas" role="img" aria-label="Interactive 3D tactile skin. Move over it or press to touch it."></canvas>
   <div class="hero__content">
-    <p class="kicker reveal">{{ page.hero.kicker }}</p>
-    <h1 class="hero__title split" id="hero-title">{{ page.hero.title }}</h1>
-    <p class="hero__lede reveal">{{ page.hero.lede }}</p>
+    <p class="kicker reveal"><?php echo e($g('hero.kicker')); ?></p>
+    <h1 class="hero__title split" id="hero-title"><?php echo cms_home_title($g('hero.title')); ?></h1>
+    <p class="hero__lede reveal"><?php echo e($g('hero.lede')); ?></p>
     <div class="hero__actions reveal">
-      <a class="btn btn--primary magnetic" href="{{ '/projects/' | relative_url }}">Explore my work <i class="ti ti-arrow-right" aria-hidden="true"></i></a>
-      <a class="btn btn--ghost magnetic" href="{{ '/publications/' | relative_url }}">Publications</a>
+      <a class="btn btn--primary magnetic" href="<?php echo e(cms_url('projects/')); ?>"><?php echo e(cms_t('Explore my work')); ?> <i class="ti ti-arrow-right" aria-hidden="true"></i></a>
+      <a class="btn btn--ghost magnetic" href="<?php echo e(cms_url('publications/')); ?>"><?php echo e(cms_t('Publications')); ?></a>
     </div>
   </div>
-  <p class="hero__hint" aria-hidden="true">touch the skin &rarr;</p>
+  <p class="hero__hint" aria-hidden="true"><?php echo e(cms_t('touch the skin')); ?> &rarr;</p>
   <div class="hero__readout" data-skin-readout aria-hidden="true"></div>
   <span class="hero__scroll" aria-hidden="true"></span>
 </section>
@@ -27,105 +32,136 @@ layout: default
 <section class="section" aria-labelledby="about-title">
   <div class="about">
     <div class="portrait tilt reveal">
-      <img src="{{ page.about.image | relative_url }}" alt="Portrait of {{ site.first_name }} {{ site.last_name }}" loading="lazy">
+      <img src="<?php echo e(cms_asset_url($g('about.image', 'assets/img/prof_pic_color.png'))); ?>" alt="Portrait of <?php echo e(cms_config('site_name')); ?>" loading="lazy">
     </div>
     <div class="about__text">
-      <p class="kicker reveal" id="about-title">About</p>
-      <p class="lead-in split">{{ page.about.lead }}</p>
-      {% for paragraph in page.about.body %}
-        <p class="reveal">{{ paragraph }}</p>
-      {% endfor %}
+      <p class="kicker reveal" id="about-title"><?php echo e(cms_t('About')); ?></p>
+      <p class="lead-in split"><?php echo e($g('about.lead')); ?></p>
+      <?php foreach ((array) $g('about.body', array()) as $para): ?>
+        <p class="reveal"><?php echo e($para); ?></p>
+      <?php endforeach; ?>
       <ul class="facts reveal">
-        {% for fact in page.facts %}
-          <li><span>{{ fact.label }}</span><b>{{ fact.value }}</b></li>
-        {% endfor %}
+        <?php foreach ((array) $g('facts', array()) as $f): ?>
+          <li><span><?php echo e($f['label']); ?></span><b><?php echo e($f['value']); ?></b></li>
+        <?php endforeach; ?>
       </ul>
     </div>
   </div>
 </section>
 
+<?php $kw = (array) $g('keywords', array()); if ($kw): ?>
 <div class="marquee" aria-hidden="true">
   <div class="marquee__track">
-    {% for k in page.keywords %}<span>{{ k }}</span>{% endfor %}
-    {% for k in page.keywords %}<span>{{ k }}</span>{% endfor %}
+    <?php for ($i = 0; $i < 2; $i++) foreach ($kw as $k) echo '<span>' . e($k) . '</span>'; ?>
   </div>
 </div>
+<?php endif; ?>
 
 <section class="section" aria-labelledby="research-title">
   <div class="section__head">
     <div>
-      <p class="kicker">Research</p>
-      <h2 class="section__title split" id="research-title">{{ page.research_title }}</h2>
+      <p class="kicker"><?php echo e(cms_t('Research')); ?></p>
+      <h2 class="section__title split" id="research-title"><?php echo cms_home_title($g('research_title')); ?></h2>
     </div>
   </div>
   <div class="pillars">
-    {% for p in page.pillars %}
+    <?php $pillars = (array) $g('pillars', array()); foreach ($pillars as $i => $p): ?>
       <article class="pillar tilt reveal">
-        <span class="pillar__num">0{{ forloop.index }} / 0{{ forloop.length }}</span>
-        <span class="pillar__icon" aria-hidden="true"><i class="ti {{ p.icon }}"></i></span>
-        <h3>{{ p.title }}</h3>
-        <p>{{ p.text }}</p>
+        <span class="pillar__num">0<?php echo $i + 1; ?> / 0<?php echo count($pillars); ?></span>
+        <span class="pillar__icon" aria-hidden="true"><i class="ti <?php echo e($p['icon']); ?>"></i></span>
+        <h3><?php echo e($p['title']); ?></h3>
+        <p><?php echo e($p['text']); ?></p>
       </article>
-    {% endfor %}
+    <?php endforeach; ?>
   </div>
 </section>
+
+<?php $robots = cms_models_showcase(6); if ($robots !== ''): ?>
+<section class="section" aria-labelledby="robots-title">
+  <div class="section__head">
+    <div>
+      <p class="kicker"><?php echo e(cms_t('Robots in 3D')); ?></p>
+      <h2 class="section__title split" id="robots-title"><?php echo cms_home_title($g('robots_title', "Robots I've designed, in 3D.")); ?></h2>
+    </div>
+  </div>
+  <?php echo $robots; ?>
+</section>
+<?php endif; ?>
 
 <section class="section" aria-labelledby="work-title">
   <div class="section__head">
     <div>
-      <p class="kicker">Selected work</p>
-      <h2 class="section__title split" id="work-title">Things I've built, measured and shipped.</h2>
+      <p class="kicker"><?php echo e(cms_t('Selected work')); ?></p>
+      <h2 class="section__title split" id="work-title"><?php echo cms_home_title($g('work_title')); ?></h2>
     </div>
-    <a class="section__more" href="{{ '/projects/' | relative_url }}">All projects <i class="ti ti-arrow-right" aria-hidden="true"></i></a>
+    <a class="section__more" href="<?php echo e(cms_url('projects/')); ?>"><?php echo e(cms_t('All projects')); ?> <i class="ti ti-arrow-right" aria-hidden="true"></i></a>
   </div>
-  <div class="project-grid" data-cms-fragment="projects" data-limit="4">
-    {% for i in (1..3) %}
-      <div class="project-card"><div class="project-card__media"></div><div class="project-card__body"><span class="cms-skeleton"></span><span class="cms-skeleton short"></span></div></div>
-    {% endfor %}
+  <div class="project-grid">
+    <?php
+    $projects = cms_list_items('projects');
+    $featured = array_values(array_filter($projects, function ($p) { return $p['featured']; }));
+    $others = array_values(array_filter($projects, function ($p) { return !$p['featured']; }));
+    echo cms_project_cards(array_slice(array_merge($featured, $others), 0, 4), true);
+    ?>
   </div>
-  <noscript><p><a href="{{ '/projects/' | relative_url }}">See all projects</a></p></noscript>
 </section>
 
-<section class="section" aria-label="Highlights">
+<section class="section" aria-label="<?php echo e(cms_t('Highlights')); ?>">
   <div class="stats">
-    {% for s in page.stats %}
-      {%- assign value = s.value -%}
+    <?php foreach ((array) $g('stats', array()) as $s): ?>
       <div class="stat reveal">
-        {%- if s.value == 'repos' -%}
-        <b data-gh-repos="{{ site.data.repositories.github_users.first | default: 'adnan-saood' }}">–</b>
-        {%- else -%}
-        <b data-count="{{ value }}">{{ value }}</b>
-        {%- endif -%}
-        <span>{{ s.label }}</span>
+        <?php if ($s['value'] === 'repos'): ?>
+          <b data-gh-repos="<?php echo e($user); ?>">–</b>
+        <?php else: ?>
+          <b data-count="<?php echo e($s['value']); ?>"><?php echo e($s['value']); ?></b>
+        <?php endif; ?>
+        <span><?php echo e($s['label']); ?></span>
       </div>
-    {% endfor %}
+    <?php endforeach; ?>
   </div>
 </section>
 
-{% if page.selected_papers %}
-  <section class="section" aria-labelledby="papers-title">
-    <div class="section__head">
-      <div>
-        <p class="kicker">Publications</p>
-        <h2 class="section__title split" id="papers-title">Selected papers.</h2>
-      </div>
-      <a class="section__more" href="{{ '/publications/' | relative_url }}">All publications <i class="ti ti-arrow-right" aria-hidden="true"></i></a>
+<?php $pubs = cms_selected_publications(6); if ($pubs): ?>
+<section class="section" aria-labelledby="papers-title">
+  <div class="section__head">
+    <div>
+      <p class="kicker"><?php echo e(cms_t('Publications')); ?></p>
+      <h2 class="section__title split" id="papers-title"><?php echo cms_home_title($g('papers_title')); ?></h2>
     </div>
-    <ol class="pubs pubs--home" data-cms-fragment="publications" data-limit="6">
-      <li class="pub"><span class="cms-skeleton"></span><span class="cms-skeleton short"></span></li>
-    </ol>
-  </section>
-{% endif %}
+    <a class="section__more" href="<?php echo e(cms_url('publications/')); ?>"><?php echo e(cms_t('All publications')); ?> <i class="ti ti-arrow-right" aria-hidden="true"></i></a>
+  </div>
+  <ol class="pubs pubs--home"><?php foreach ($pubs as $p) echo cms_publication_row($p); ?></ol>
+</section>
+<?php endif; ?>
+
+<?php $talks = array_slice(array_values(array_filter(cms_list_items('talks'), function ($t) { return $t['featured']; })), 0, 3); if ($talks): ?>
+<section class="section" aria-labelledby="talks-title">
+  <div class="section__head">
+    <div>
+      <p class="kicker"><?php echo e(cms_t('Talks & media')); ?></p>
+      <h2 class="section__title split" id="talks-title"><?php echo cms_home_title($g('talks_title', 'Talks, workshops & media.')); ?></h2>
+    </div>
+    <a class="section__more" href="<?php echo e(cms_url('talks/')); ?>"><?php echo e(cms_t('All talks')); ?> <i class="ti ti-arrow-right" aria-hidden="true"></i></a>
+  </div>
+  <div class="talk-list talk-list--home"><?php foreach ($talks as $t) echo cms_talk_card($t, true); ?></div>
+</section>
+<?php endif; ?>
 
 <section class="section" aria-label="News and blog">
   <div class="feeds">
     <div class="reveal">
-      <h3>News <a href="{{ '/news/' | relative_url }}">All news &rarr;</a></h3>
-      {% include news.liquid limit=true %}
+      <h3><?php echo e(cms_t('News')); ?> <a href="<?php echo e(cms_url('news/')); ?>"><?php echo e(cms_t('All news')); ?> &rarr;</a></h3>
+      <div class="news"><table class="table table-sm table-borderless"><tbody>
+        <?php echo cms_news_rows(array_slice(cms_list_items('news'), 0, 6)); ?>
+      </tbody></table></div>
     </div>
     <div class="reveal">
-      <h3>From the blog <a href="{{ '/blog/' | relative_url }}">All posts &rarr;</a></h3>
-      {% include latest_posts.liquid %}
+      <h3><?php echo e(cms_t('From the blog')); ?> <a href="<?php echo e(cms_url('blog/')); ?>"><?php echo e(cms_t('All posts')); ?> &rarr;</a></h3>
+      <div class="news"><table class="table table-sm table-borderless"><tbody>
+        <?php foreach (array_slice(cms_list_items('posts'), 0, 4) as $p): ?>
+          <tr><th scope="row"><?php echo e(cms_date('M j, Y', $p['date'])); ?></th><td><a class="news-title" href="<?php echo e(cms_post_url($p['slug'])); ?>"><?php echo e($p['title']); ?></a></td></tr>
+        <?php endforeach; ?>
+      </tbody></table></div>
     </div>
   </div>
 </section>

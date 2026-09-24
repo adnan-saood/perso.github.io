@@ -13,6 +13,14 @@ header('X-Content-Type-Options: nosniff');
 
 $fragment = isset($_GET['fragment']) ? $_GET['fragment'] : '';
 
+// English -> French interface dictionary for static pages (assets/js/cms.js).
+if (isset($_GET['i18n'])) {
+    header('Content-Type: application/json; charset=utf-8');
+    header('Cache-Control: public, max-age=3600');
+    echo json_encode(cms_i18n_dict(), JSON_UNESCAPED_UNICODE);
+    exit;
+}
+
 $limit = isset($_GET['limit']) ? max(1, min(50, (int) $_GET['limit'])) : 5;
 header('Content-Type: text/html; charset=utf-8');
 header('Cache-Control: public, max-age=60');

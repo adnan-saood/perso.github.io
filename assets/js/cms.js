@@ -120,7 +120,97 @@
     });
   }
 
+  // --- Language: English / French -------------------------------------------------
+  function getLang() {
+    var m = document.cookie.match(/(?:^|; )lang=(en|fr)/);
+    return m ? m[1] : "en";
+  }
+  function language() {
+    var lang = getLang();
+    document.documentElement.lang = lang;
+    var btn = document.getElementById("lang-toggle");
+    if (btn) {
+      btn.querySelector("[data-lang-label]").textContent = lang === "fr" ? "EN" : "FR";
+      btn.title = lang === "fr" ? "Switch to English" : "Passer en français";
+      btn.addEventListener("click", function () {
+        var next = getLang() === "fr" ? "en" : "fr";
+        document.cookie = "lang=" + next + "; path=" + base + "; max-age=31536000; SameSite=Lax";
+        location.reload();
+      });
+    }
+    if (lang !== "fr") return;
+    // Static interface text (menu, footer, static pages); PHP pages translate their own content.
+    var apply = function (dict) {
+      document.querySelectorAll("[data-i18n]").forEach(function (el) {
+        var t = dict[el.getAttribute("data-i18n")];
+        if (t) el.textContent = t;
+      });
+    };
+    var cached = null;
+    try { cached = JSON.parse(localStorage.getItem("cms-i18n") || "null"); } catch (e) { /* ignore */ }
+    if (cached && Date.now() - cached.t < 86400000) return apply(cached.d);
+    fetch(base + "cms/api.php?i18n=1").then(function (r) { return r.json(); }).then(function (d) {
+      apply(d);
+      try { localStorage.setItem("cms-i18n", JSON.stringify({ t: Date.now(), d: d })); } catch (e) { /* ignore */ }
+    }).catch(function () { /* stay in English */ });
+  }
+
+  // --- 3D models (<model-viewer>, loaded only on pages that show a model) -------------
+  function models() {
+    if (!document.querySelector("model-viewer")) return;
+    var s = document.createElement("script");
+    s.type = "module";
+    s.src = "https://cdn.jsdelivr.net/npm/@google/model-viewer@4.3.1/dist/model-viewer.min.js";
+    document.head.appendChild(s);
+    // Hide the custom loading bar once the model is on screen (and show it again when it changes).
+    document.querySelectorAll("model-viewer").forEach(function (mv) {
+      mv.addEventListener("load", function () { mv.classList.add("is-loaded"); });
+    });
+    // Homepage showcase: thumbnails switch the robot on stage.
+    document.querySelectorAll("[data-robots]").forEach(function (box) {
+      var viewer = box.querySelector("model-viewer");
+      box.addEventListener("click", function (ev) {
+        var t = ev.target.closest(".robots__thumb");
+        if (!t) return;
+        box.querySelectorAll(".robots__thumb").forEach(function (b) { b.classList.toggle("is-active", b === t); });
+        box.classList.add("is-switching");
+        setTimeout(function () {
+          if (t.dataset.poster) viewer.setAttribute("poster", t.dataset.poster); else viewer.removeAttribute("poster");
+          viewer.classList.remove("is-loaded");
+          viewer.setAttribute("src", t.dataset.src);
+          viewer.setAttribute("alt", "3D model: " + t.dataset.title);
+          box.querySelector("[data-robot-title]").textContent = t.dataset.title;
+          box.querySelector("[data-robot-cat]").textContent = t.dataset.cat;
+          box.querySelector("[data-robot-text]").textContent = t.dataset.text;
+          box.querySelector("[data-robot-link]").href = t.dataset.link;
+          box.classList.remove("is-switching");
+        }, 250);
+      });
+    });
+  }
+
+  // --- Talks: load the video player only when the visitor clicks play -----------------
+  function talks() {
+    document.addEventListener("click", function (ev) {
+      var btn = ev.target.closest(".talk__video[data-embed]");
+      if (!btn) return;
+      var frame = document.createElement("iframe");
+      frame.src = btn.dataset.embed;
+      frame.title = btn.getAttribute("aria-label") || "Video";
+      frame.allow = "autoplay; encrypted-media; picture-in-picture; fullscreen";
+      frame.allowFullscreen = true;
+      frame.className = "talk__frame";
+      var wrap = document.createElement("div");
+      wrap.className = "talk__media";
+      wrap.appendChild(frame);
+      btn.replaceWith(wrap);
+    });
+  }
+
   document.addEventListener("DOMContentLoaded", function () {
+    language();
+    models();
+    talks();
     loadFragments();
     track();
     publications();

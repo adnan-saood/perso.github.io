@@ -46,7 +46,7 @@ $types = array(
     'xml' => 'application/xml', 'svg' => 'image/svg+xml', 'png' => 'image/png', 'jpg' => 'image/jpeg', 'jpeg' => 'image/jpeg',
     'gif' => 'image/gif', 'webp' => 'image/webp', 'avif' => 'image/avif', 'ico' => 'image/x-icon', 'pdf' => 'application/pdf',
     'woff' => 'font/woff', 'woff2' => 'font/woff2', 'ttf' => 'font/ttf', 'txt' => 'text/plain; charset=utf-8',
-    'bib' => 'text/plain; charset=utf-8', 'mp4' => 'video/mp4', 'webm' => 'video/webm',
+    'bib' => 'text/plain; charset=utf-8', 'glb' => 'model/gltf-binary', 'usdz' => 'model/vnd.usdz+zip', 'mp4' => 'video/mp4', 'webm' => 'video/webm',
 );
 $ext = strtolower(pathinfo($real, PATHINFO_EXTENSION));
 header('Content-Type: ' . (isset($types[$ext]) ? $types[$ext] : 'application/octet-stream'));

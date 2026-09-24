@@ -19,7 +19,7 @@
             {%- if page.url == p.url -%}{%- assign active = true -%}{%- endif -%}
             {%- if url != '/' and page.url contains url -%}{%- assign active = true -%}{%- endif -%}
             <li>
-              <a href="{{ url | relative_url }}" {% if active %}class="is-active" aria-current="page"{% endif %}>
+              <a href="{{ url | relative_url }}" data-i18n="{{ p.title }}" {% if active %}class="is-active" aria-current="page"{% endif %}>
                 {{- p.title -}}
               </a>
             </li>
@@ -34,6 +34,9 @@
           <span class="nav-link"><i class="ti ti-search"></i></span>
         </button>
       {% endif %}
+      <button id="lang-toggle" class="icon-btn lang-toggle" type="button" title="Français / English" aria-label="Switch language">
+        <span data-lang-label>FR</span>
+      </button>
       {% if site.enable_darkmode %}
         <button id="light-toggle" class="icon-btn theme-toggle" title="Switch light / dark">
           <i class="ti ti-moon" aria-hidden="true"></i>

@@ -1,14 +1,14 @@
 {%- assign email = site.data.socials.email | default: 'adnan.saood@ensta.fr' -%}
 <footer class="site-footer" role="contentinfo">
   <div class="site-footer__cta reveal">
-    <p class="kicker">Get in touch</p>
-    <h2 class="site-footer__title">Let's talk <span class="text-gradient">touch</span>.</h2>
-    <p class="site-footer__lede">Collaborations, student projects, talks, or robots that need a sense of touch.</p>
+    <p class="kicker" data-i18n="Get in touch">Get in touch</p>
+    <h2 class="site-footer__title"><span data-i18n="Let's talk">Let's talk</span> <span class="text-gradient" data-i18n="touch">touch</span>.</h2>
+    <p class="site-footer__lede" data-i18n="Collaborations, student projects, talks, or robots that need a sense of touch.">Collaborations, student projects, talks, or robots that need a sense of touch.</p>
     <div class="site-footer__actions">
       <a class="btn btn--primary magnetic" href="mailto:{{ email | encode_email }}">
         <span>{{ email }}</span> <i class="ti ti-arrow-up-right" aria-hidden="true"></i>
       </a>
-      <a class="btn btn--ghost magnetic" href="{{ '/contact/' | relative_url }}">Contact page</a>
+      <a class="btn btn--ghost magnetic" href="{{ '/contact/' | relative_url }}" data-i18n="Contact page">Contact page</a>
     </div>
   </div>
 

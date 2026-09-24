@@ -1,10 +1,10 @@
 ---
 layout: default
-title: Blog
-permalink: /blog/index.php
+title: Talks
+permalink: /talks/index.php
 nav: true
-nav_order: 4
-cms_view: blog
+nav_order: 3
+cms_view: talks
 sitemap: false
 ---
 <?php echo $cms['html']; ?>

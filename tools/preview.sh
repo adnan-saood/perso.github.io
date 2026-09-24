@@ -19,7 +19,7 @@ LISTEN="${LISTEN:-localhost}"
 
 if [[ -n "${WAIT_FOR_BUILD:-}" ]]; then
   echo "Waiting for Jekyll to finish its first build..."
-  until [[ -f _site/blog/index.php && -f _site/index.html ]]; do sleep 2; done
+  until [[ -f _site/blog/index.php && -f _site/index.php ]]; do sleep 2; done
 fi
 if [[ ! -f _site/blog/index.php ]]; then
   echo "_site/ is missing or was built from an older version: run 'bundle exec jekyll build' first." >&2
@@ -28,13 +28,13 @@ fi
 command -v php >/dev/null || { echo "PHP is not installed (Ubuntu/WSL: sudo apt install php-cli)." >&2; exit 1; }
 
 # Use the same base URL the site was built with ("/~saood/" or "/" for the dev config).
-BASE=$(grep -o 'data-baseurl="[^"]*"' _site/index.html | head -1 | cut -d'"' -f2)
+BASE=$(grep -o 'data-baseurl="[^"]*"' _site/blog/index.php | head -1 | cut -d'"' -f2)
 BASE="${BASE:-/}"
 
 DATA="$PWD/.preview-data"
 if [[ ! -d "$DATA" ]]; then
   mkdir -p "$DATA"
-  cp -r cms-seed/posts cms-seed/news cms-seed/projects cms-seed/publications cms-seed/*.json "$DATA/"
+  cp -r cms-seed/posts cms-seed/news cms-seed/projects cms-seed/publications cms-seed/talks cms-seed/*.json "$DATA/"
   echo "preview-setup-token-local" > "$DATA/SETUP_TOKEN"
 fi
 

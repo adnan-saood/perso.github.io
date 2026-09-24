@@ -58,6 +58,25 @@ you wrote in the admin panel.
 - **Analytics**: visitors, page views, time on page, top pages, sources (incl.
   `?utm_source=` links), devices, browsers, time zones. No cookies, no IPs stored; your
   own visits are excluded in any browser where you've opened the admin.
+- **Homepage**: Admin → Homepage. Edit the hero title (wrap a word in `*stars*` to give it
+  the gradient), intro, about text, the scrolling keywords strip, the research pillars,
+  highlight numbers and every section title. The *Français* tab holds the French
+  versions; any field left empty there falls back to English.
+- **Talks & media**: Dashboard → *+ Talk*. Pick the kind (talk, paper presentation,
+  poster, workshop, media...), event, place, and paste a YouTube/Vimeo link: the video
+  only loads when a visitor presses play. Slides/paper/code links become buttons;
+  *Featured* shows the talk on the homepage.
+- **3D robots**: export your model as **GLB** (Blender: File → Export → glTF 2.0, format
+  *glTF Binary*; SolidWorks/Fusion: export STEP/OBJ, open in Blender, export GLB). Keep it
+  under ~15 MB (Blender's *Decimate* modifier helps). In the project editor, upload it in
+  *3D model*; the project page then shows an interactive viewer (drag to rotate, AR on
+  phones), and *Show in 3D on homepage* adds it to the “Robots in 3D” showcase.
+- **French / English**: the FR/EN button in the menu switches the site. Each post,
+  news item, project and talk has a *Français* box (title, summary, text); anything left
+  empty is shown in English.
+- **Share images**: when you save a post, project, news item or talk, the admin draws a
+  1200×630 preview card (title + cover) and uses it when the page is shared on LinkedIn,
+  X, WhatsApp... Stored in `files/og/`.
 - **New news item**: Dashboard → *+ News*. Tick *Short item* for one-liners shown
   directly in the list; untick it to give the item its own page with a headline.
 - **New blog post**: Dashboard → *+ Blog post*. Drag and drop or paste images into the
@@ -98,14 +117,21 @@ Without Docker: `bundle exec jekyll build`, then `bash tools/preview.sh` (needs 
 - Blog: `/blog/`, a post: `/blog/?p=<slug>`, filters: `/blog/?tag=HRI`, `?year=2026`
 - Projects: `/projects/`, a project: `/projects/?p=<slug>`
 - News: `/news/`, a news page: `/news/?n=<slug>`
+- Talks: `/talks/`, one talk: `/talks/#<slug>`
 - RSS feed: `/cms/feed.php`
 - Contact page (your email, office, profiles): `/contact/`
 - Old Jekyll URLs (`/blog/2026/<slug>/`, `/projects/1_project/`, ...) redirect automatically (pages in `_pages/legacy/`).
 
 ## Backups
 
+Settings → *Backup & restore*: **Download backup** gives one `.tar` file with all your
+content, settings and uploads. **Restore** uploads such a file and puts everything back
+(the state just before the restore is kept in `~/cms-data/backups/`, so a wrong restore can
+be undone). Take one before big changes and now and then.
+
 Everything you create lives in `~/cms-data` and `~/public_html/files`. To take a copy
-(tar will warn that it cannot read `settings.json`; that is expected, it only holds the password hash):
+from the command line instead (tar will warn that it cannot read `settings.json`; that is
+expected, it only holds the password hash):
 
 ```bash
 ssh -J saood@relais.ensta.fr saood@salle.ensta.fr "tar czf - cms-data public_html/files" > site-backup-$(date +%F).tgz

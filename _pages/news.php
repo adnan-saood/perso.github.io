@@ -3,7 +3,7 @@ layout: default
 title: News
 permalink: /news/index.php
 nav: true
-nav_order: 4
+nav_order: 5
 cms_view: news
 sitemap: false
 ---

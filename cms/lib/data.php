@@ -127,3 +127,111 @@ function cms_repos_sanitize(array $in)
     }
     return $out;
 }
+
+// ---------------------------------------------------------------------------
+// Homepage texts (cms-data/home.json: {"en": {...}, "fr": {...}})
+// ---------------------------------------------------------------------------
+
+// Field kinds: text, textarea, paragraphs (blank-line separated), list (one per line),
+// image, rows (repeatable groups of text fields).
+function cms_home_schema()
+{
+    return array(
+        'Hero' => array(
+            'hero.kicker' => array('Small line above the title', 'text'),
+            'hero.title' => array('Big title (wrap a word in *stars* for the gradient)', 'text'),
+            'hero.lede' => array('Intro sentence', 'textarea'),
+        ),
+        'About' => array(
+            'about.image' => array('Portrait', 'image'),
+            'about.lead' => array('Lead sentence', 'textarea'),
+            'about.body' => array('Paragraphs (leave an empty line between paragraphs)', 'paragraphs'),
+            'facts' => array('Fact boxes', 'rows', array('label' => 'Label', 'value' => 'Text')),
+        ),
+        'Keywords strip' => array(
+            'keywords' => array('Keywords (one per line)', 'list'),
+        ),
+        'Research' => array(
+            'research_title' => array('Section title', 'text'),
+            'pillars' => array('Research threads', 'rows', array('title' => 'Title', 'icon' => 'Icon (tabler name, e.g. ti-hand-finger)', 'text' => 'Text')),
+        ),
+        'Other section titles' => array(
+            'robots_title' => array('“Robots in 3D” title', 'text'),
+            'work_title' => array('“Selected work” title', 'text'),
+            'papers_title' => array('“Selected papers” title', 'text'),
+            'talks_title' => array('“Talks & media” title', 'text'),
+        ),
+        'Highlights' => array(
+            'stats' => array('Numbers (write “repos” as the value to show your live GitHub repository count)', 'rows', array('value' => 'Number', 'label' => 'Label')),
+        ),
+    );
+}
+
+function cms_path_get(array $a, $path)
+{
+    foreach (explode('.', $path) as $k) {
+        if (!is_array($a) || !isset($a[$k])) return null;
+        $a = $a[$k];
+    }
+    return $a;
+}
+
+function cms_path_set(array &$a, $path, $value)
+{
+    $ref = &$a;
+    foreach (explode('.', $path) as $k) {
+        if (!isset($ref[$k]) || !is_array($ref[$k])) $ref[$k] = array();
+        $ref = &$ref[$k];
+    }
+    $ref = $value;
+}
+
+// Homepage content in the visitor's language (French falls back to English per field).
+function cms_home($lang = null)
+{
+    $doc = cms_doc('home');
+    $en = isset($doc['en']) ? $doc['en'] : array();
+    $lang = $lang ?: cms_lang();
+    if ($lang !== 'fr' || empty($doc['fr'])) return $en;
+    $out = $en;
+    foreach (cms_home_schema() as $fields) {
+        foreach (array_keys($fields) as $path) {
+            $v = cms_path_get($doc['fr'], $path);
+            if ($v !== null && $v !== '' && $v !== array()) cms_path_set($out, $path, $v);
+        }
+    }
+    return $out;
+}
+
+// Cleans one language of the homepage form.
+function cms_home_sanitize(array $in)
+{
+    $out = array();
+    foreach (cms_home_schema() as $fields) {
+        foreach ($fields as $path => $spec) {
+            $key = str_replace('.', '__', $path);
+            $v = isset($in[$key]) ? $in[$key] : '';
+            switch ($spec[1]) {
+                case 'list':
+                    $v = array_values(array_filter(array_map('trim', preg_split('/\r?\n/', (string) $v)), 'strlen'));
+                    break;
+                case 'paragraphs':
+                    $v = array_values(array_filter(array_map('trim', preg_split('/\r?\n\s*\r?\n/', trim((string) $v))), 'strlen'));
+                    break;
+                case 'rows':
+                    $rows = array();
+                    foreach (is_array($v) ? $v : array() as $row) {
+                        $clean = array();
+                        foreach (array_keys($spec[2]) as $f) $clean[$f] = trim((string) (isset($row[$f]) ? $row[$f] : ''));
+                        if (implode('', $clean) !== '') $rows[] = $clean;
+                    }
+                    $v = $rows;
+                    break;
+                default:
+                    $v = trim((string) $v);
+            }
+            cms_path_set($out, $path, $v);
+        }
+    }
+    return $out;
+}

@@ -292,3 +292,12 @@ select { font: inherit; color: var(--text); background: var(--panel); border: 1p
 .stat-table .label { position: relative; z-index: 1; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding-left: .3rem; }
 .spark { display: block; width: 70px; height: 20px; margin-top: .35rem; }
 .spark polyline { fill: none; stroke: var(--accent); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+
+/* Homepage editor & French fields */
+.lang-pane .card { margin-bottom: 1rem; }
+.lang-pane .card h2 { margin-bottom: .25rem; }
+.lang-pane .wide > .top { margin-bottom: .5rem; }
+.fr-card { margin-top: 1rem; }
+.fr-card > summary { cursor: pointer; list-style: none; }
+.fr-card > summary::-webkit-details-marker { display: none; }
+.fr-card > summary::before { content: "🇫🇷 "; }

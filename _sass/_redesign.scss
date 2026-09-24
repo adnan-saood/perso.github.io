@@ -2668,3 +2668,305 @@ ol.cv-timeline::before {
     grid-column: auto;
   }
 }
+
+
+/* ============================ Language switch ============================ */
+
+.lang-toggle span {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+/* ============================ Talks & media ============================== */
+
+.talk-list {
+  display: grid;
+  gap: 1.25rem;
+}
+.talk {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.4fr);
+  gap: 1.5rem;
+  padding: 1.25rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  transition: box-shadow 400ms var(--ease-out), border-color 300ms ease;
+}
+.talk:hover {
+  box-shadow: var(--shadow-lg);
+  border-color: transparent;
+}
+.talk.is-filtered {
+  display: none;
+}
+@media (max-width: 760px) {
+  .talk {
+    grid-template-columns: 1fr;
+  }
+}
+.talk__media {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  border-radius: 14px;
+  overflow: hidden;
+  background: var(--paper-2);
+  border: 0;
+  padding: 0;
+  display: block;
+  width: 100%;
+}
+.talk__media img,
+.talk__media video,
+.talk__frame {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border: 0;
+  display: block;
+}
+.talk__video {
+  cursor: pointer;
+}
+.talk__video img {
+  transition: transform 700ms var(--ease-out), filter 400ms ease;
+}
+.talk__video:hover img {
+  transform: scale(1.04);
+  filter: brightness(0.85);
+}
+.talk__play {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 64px;
+  height: 64px;
+  margin: -32px 0 0 -32px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 1.6rem;
+  color: #fff;
+  background: var(--gradient);
+  box-shadow: 0 12px 30px -8px rgba(0, 0, 0, 0.5);
+  transition: transform 350ms var(--ease-soft);
+}
+.talk__video:hover .talk__play {
+  transform: scale(1.12);
+}
+.talk__tile {
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  text-align: center;
+  color: #fff;
+  background:
+    radial-gradient(120% 90% at 100% 0%, rgba(255, 255, 255, 0.25), transparent 60%),
+    var(--gradient);
+}
+.talk__tile span {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.3rem;
+  color: #fff;
+}
+.talk__title {
+  font-size: 1.25rem !important;
+  line-height: 1.3 !important;
+  margin: 0.2rem 0 0.35rem !important;
+}
+.talk__where {
+  margin: 0 0 0.6rem;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--ink-3);
+}
+.talk__text {
+  color: var(--ink-2);
+  font-size: 0.95rem;
+}
+.talk__text p:last-child {
+  margin-bottom: 0;
+}
+.chip--live {
+  color: #16a34a;
+  border-color: rgba(34, 197, 94, 0.45);
+  background: rgba(34, 197, 94, 0.1);
+}
+.talk-list--home {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+}
+.talk-list--home .talk {
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+/* ============================ 3D robots ================================== */
+
+model-viewer.model {
+  width: 100%;
+  height: 100%;
+  min-height: 320px;
+  display: block;
+  background: radial-gradient(80% 70% at 50% 40%, var(--surface), var(--paper-2));
+  --poster-color: transparent;
+  --progress-bar-color: transparent;
+  border-radius: inherit;
+}
+.model__progress {
+  position: absolute;
+  left: 20%;
+  right: 20%;
+  bottom: 1.2rem;
+  height: 3px;
+  border-radius: 3px;
+  background: var(--line);
+  overflow: hidden;
+}
+.model__progress span {
+  display: block;
+  height: 100%;
+  width: 40%;
+  background: var(--gradient);
+  animation: model-load 1.1s ease-in-out infinite;
+}
+@keyframes model-load {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(250%); }
+}
+.model__progress {
+  transition: opacity 300ms ease;
+}
+model-viewer.is-loaded .model__progress {
+  opacity: 0;
+}
+.model__ar {
+  position: absolute;
+  right: 1rem;
+  bottom: 1rem;
+  padding: 0.45rem 0.9rem;
+  border: 0;
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--paper);
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.project-hero__model {
+  aspect-ratio: 4 / 3;
+  position: relative;
+}
+.project-hero__model model-viewer {
+  position: absolute;
+  inset: 0;
+  min-height: 0;
+}
+.robots__hint {
+  position: absolute;
+  left: 1rem;
+  top: 1rem;
+  z-index: 2;
+  margin: 0;
+  padding: 0.3rem 0.75rem;
+  border-radius: 999px;
+  background: var(--header-bg);
+  backdrop-filter: blur(8px);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--ink-2);
+  pointer-events: none;
+}
+.robots {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+  gap: clamp(1.5rem, 4vw, 3rem);
+  align-items: center;
+}
+@media (max-width: 860px) {
+  .robots {
+    grid-template-columns: 1fr;
+  }
+}
+.robots__stage {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow-lg);
+}
+.robots__stage model-viewer {
+  position: absolute;
+  inset: 0;
+  min-height: 0;
+  transition: opacity 250ms ease;
+}
+.robots.is-switching model-viewer {
+  opacity: 0;
+}
+.robots__info h3 {
+  font-size: clamp(1.4rem, 2.6vw, 2rem) !important;
+  margin: 0 0 0.6rem !important;
+}
+.robots__info > p:not(.kicker) {
+  color: var(--ink-2);
+  margin-bottom: 1.4rem;
+}
+.robots__thumbs {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+  gap: 0.6rem;
+  margin-top: 1.75rem;
+}
+.robots__thumb {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 0.4rem;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--ink-2);
+  font: inherit;
+  font-size: 0.72rem;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 250ms ease, transform 300ms var(--ease-soft);
+}
+.robots__thumb img,
+.robots__thumb i {
+  aspect-ratio: 4 / 3;
+  width: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  font-size: 1.6rem;
+  color: var(--violet);
+  background: var(--paper-2);
+}
+.robots__thumb span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.robots__thumb:hover {
+  transform: translateY(-2px);
+}
+.robots__thumb.is-active {
+  border-color: var(--violet);
+  color: var(--ink);
+}
+.project-card__3d {
+  position: absolute;
+  right: 1rem;
+  top: 1rem;
+  z-index: 1;
+  background: var(--ink);
+  border: 0;
+  color: var(--paper);
+}

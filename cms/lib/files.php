@@ -13,6 +13,7 @@ function cms_allowed_extensions()
         'mp4', 'webm', 'mov', 'mp3', 'wav', 'ogg',
         'doc', 'docx', 'ppt', 'pptx', 'xls', 'xlsx', 'odt', 'odp', 'ods',
         'woff', 'woff2', 'ttf',
+        'glb', 'usdz', // 3D models (glTF binary; USDZ for iPhone AR)
     );
 }
 

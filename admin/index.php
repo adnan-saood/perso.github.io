@@ -1,6 +1,8 @@
 <?php
-// Admin panel: posts, news, files, trash, settings.
-require_once __DIR__ . '/../cms/boot.php';
+// Admin panel: homepage, posts, news, projects, publications, talks, CV, repositories,
+// analytics, files, trash, settings.
+define('CMS_ADMIN', 1);
+require_once __DIR__ . '/../cms/view.php'; // boot + shared renderers (talk kinds, pub types)
 
 header('X-Frame-Options: DENY');
 header("Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; font-src 'self' data: https://cdnjs.cloudflare.com; img-src 'self' data: blob: https:; connect-src 'self' https://api.github.com; frame-ancestors 'none'; form-action 'self'; base-uri 'none'");
@@ -64,6 +66,9 @@ function admin_icon($name)
         'code' => 'M8 8l-4 4 4 4M16 8l4 4-4 4M13 5l-2 14',
         'chart' => 'M4 20V10M10 20V4M16 20v-7M22 20H2',
         'grip' => 'M9 6h.01M15 6h.01M9 12h.01M15 12h.01M9 18h.01M15 18h.01',
+        'layout' => 'M4 4h16v6H4zM4 14h7v6H4zM15 14h5v6h-5z',
+        'mic' => 'M12 3a3 3 0 0 0-3 3v5a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3zM6 11a6 6 0 0 0 12 0M12 17v4M8 21h8',
+        'download' => 'M12 4v12M6 10l6 6 6-6M4 20h16',
     );
     $d = isset($paths[$name]) ? $paths[$name] : '';
     return '<svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="' . $d . '"/></svg>';
@@ -78,7 +83,7 @@ function admin_head($title)
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
 <title><?php echo e($title); ?> · Site admin</title>
-<link rel="stylesheet" href="admin.css?v=5">
+<link rel="stylesheet" href="admin.css?v=6">
 <?php
 }
 
@@ -91,10 +96,12 @@ function admin_layout_start($title, $active)
     }
     $nav = array(
         'dashboard' => array('Dashboard', 'home', array()),
+        'homepage' => array('Homepage', 'layout', array('page' => 'home')),
         'posts' => array('Blog posts', 'posts', array('page' => 'items', 'type' => 'posts')),
         'news' => array('News', 'news', array('page' => 'items', 'type' => 'news')),
         'projects' => array('Projects', 'cube', array('page' => 'items', 'type' => 'projects')),
         'publications' => array('Publications', 'book', array('page' => 'items', 'type' => 'publications')),
+        'talks' => array('Talks & media', 'mic', array('page' => 'items', 'type' => 'talks')),
         'cv' => array('CV', 'id', array('page' => 'cv')),
         'repos' => array('Repositories', 'code', array('page' => 'repos')),
         'analytics' => array('Analytics', 'chart', array('page' => 'analytics')),
@@ -135,7 +142,7 @@ function admin_layout_end($scripts = array())
 {
     echo '</main></div>';
     foreach ($scripts as $s) echo '<script src="' . e($s) . '"></script>';
-    echo '<script src="admin.js?v=5"></script></body></html>';
+    echo '<script src="admin.js?v=6"></script></body></html>';
 }
 
 // ---------------------------------------------------------------------------
@@ -244,7 +251,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 } else {
                     unset($meta['selected'], $meta['home_order']);
                 }
+            } elseif ($type === 'talks') {
+                foreach (array('event', 'location', 'image', 'video', 'slides', 'url', 'code', 'post', 'award') as $k) $meta[$k] = trim(admin_post($k));
+                $meta['kind'] = array_key_exists(admin_post('kind'), cms_talk_kinds_admin()) ? admin_post('kind') : 'talk';
+                $meta['featured'] = !empty($_POST['featured']);
             } elseif ($type === 'projects') {
+                $meta['model'] = trim(admin_post('model'));
+                $meta['model_home'] = !empty($_POST['model_home']);
+                if (!$meta['model_home']) unset($meta['model_home']);
                 $meta['description'] = trim(admin_post('description'));
                 $meta['category'] = trim(admin_post('category'));
                 $meta['img'] = trim(admin_post('img'));
@@ -261,6 +275,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             } else {
                 $meta['inline'] = !empty($_POST['inline']);
             }
+            // Optional French versions and the generated share image.
+            foreach (array('title_fr', 'description_fr', 'event_fr', 'body_fr') as $k) {
+                $v = trim(str_replace("\r\n", "\n", admin_post($k)));
+                if ($v === '') unset($meta[$k]); else $meta[$k] = $v;
+            }
+            if (admin_post('og_image') !== '') $meta['og_image'] = trim(admin_post('og_image'));
             foreach (array('draft', 'featured', 'inline') as $flag) {
                 if (isset($meta[$flag]) && $meta[$flag] === false && $flag !== 'inline') unset($meta[$flag]);
             }
@@ -296,6 +316,47 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         case 'pub_home_order': // AJAX: slugs of homepage publications, in order
             $order = isset($_POST['order']) && is_array($_POST['order']) ? array_map('strval', $_POST['order']) : array();
             admin_json(array('ok' => true, 'saved' => admin_pub_renumber($order)));
+
+        case 'home_save':
+            $doc = array('en' => cms_home_sanitize(isset($_POST['en']) && is_array($_POST['en']) ? $_POST['en'] : array()),
+                         'fr' => cms_home_sanitize(isset($_POST['fr']) && is_array($_POST['fr']) ? $_POST['fr'] : array()));
+            $ok = cms_doc_save('home', $doc);
+            admin_flash($ok ? 'ok' : 'err', $ok ? 'Homepage saved. It is live now.' : 'Could not save the homepage.');
+            admin_redirect(array('page' => 'home', 'lang' => admin_post('lang') === 'fr' ? 'fr' : 'en'));
+
+        case 'og_upload': // AJAX: share image generated in the browser for one item
+            $type = admin_post('type');
+            $slug = cms_slugify(admin_post('slug'));
+            $files = cms_files_from_request('image');
+            if (!isset($types[$type]) || $slug === '' || !$files || $files[0]['error'] !== UPLOAD_ERR_OK) admin_json(array('error' => 'Bad request.'), 400);
+            $info = @getimagesize($files[0]['tmp_name']);
+            if (!$info || $info[2] !== IMAGETYPE_PNG) admin_json(array('error' => 'Not a PNG.'), 400);
+            $dir = cms_files_ensure_dir('og');
+            if (!$dir || !move_uploaded_file($files[0]['tmp_name'], $dir . '/' . $type . '-' . $slug . '.png')) admin_json(array('error' => 'Could not save.'), 500);
+            @chmod($dir . '/' . $type . '-' . $slug . '.png', 0644);
+            admin_json(array('url' => cms_config('files_url') . 'og/' . $type . '-' . $slug . '.png?v=' . time()));
+
+        case 'backup_download':
+            @set_time_limit(300);
+            header('Content-Type: application/x-tar');
+            header('Content-Disposition: attachment; filename="website-backup-' . date('Y-m-d') . '.tar"');
+            header('Cache-Control: no-store');
+            $out = fopen('php://output', 'wb');
+            cms_backup_write($out);
+            fclose($out);
+            exit;
+
+        case 'backup_restore':
+            $files = cms_files_from_request('archive');
+            if (!$files || $files[0]['error'] !== UPLOAD_ERR_OK || !is_uploaded_file($files[0]['tmp_name'])) {
+                admin_flash('err', 'No archive received (the file may be larger than ' . ini_get('upload_max_filesize') . ').');
+                admin_redirect(array('page' => 'settings'));
+            }
+            $safety = cms_backup_snapshot('before-restore');
+            list($n, $errors) = cms_backup_restore($files[0]['tmp_name']);
+            admin_flash($n ? 'ok' : 'err', 'Restored ' . $n . ' files.' . ($safety ? ' The previous state was saved in cms-data/backups/.' : '')
+                . ($errors ? ' ' . count($errors) . ' entries were skipped.' : ''));
+            admin_redirect(array('page' => 'settings'));
 
         case 'cv_save':
             $cv = cms_cv_sanitize(isset($_POST['cv']) && is_array($_POST['cv']) ? $_POST['cv'] : array());
@@ -479,16 +540,21 @@ case 'items':
             <span class="date">#<?php echo (int) $it['importance']; ?></span>
           <?php elseif ($type === 'publications'): ?>
             <span class="date"><?php echo e($it['year']); ?></span>
+          <?php elseif ($type === 'talks'): ?>
+            <span class="date"><?php echo date('M j, Y', $it['date']); ?></span>
           <?php else: ?>
             <span class="date"><?php echo date('M j, Y', $it['date']); ?></span>
           <?php endif; ?>
           <span class="grow"><strong><?php echo e($it['title'] !== '' ? $it['title'] : cms_excerpt($it, 80)); ?></strong>
             <?php if ($it['draft']): ?><em class="pill">draft</em><?php endif; ?>
-            <?php if (!in_array($type, array('projects', 'publications'), true) && $it['date'] > time()): ?><em class="pill blue">scheduled</em><?php endif; ?>
+            <?php if (in_array($type, array('posts', 'news'), true) && $it['date'] > time()): ?><em class="pill blue">scheduled</em><?php endif; ?>
+            <?php if ($type === 'talks' && $it['date'] > time()): ?><em class="pill blue">upcoming</em><?php endif; ?>
+            <?php if (!empty($it['model'])): ?><em class="pill">3D</em><?php endif; ?>
+            <?php if (!empty($it['meta']['title_fr']) || !empty($it['meta']['body_fr'])): ?><em class="pill">FR</em><?php endif; ?>
             <?php if (!empty($it['selected'])): ?><em class="pill gold">homepage #<?php echo (int) $it['home_order']; ?></em><?php endif; ?>
             <?php if (!empty($it['featured'])): ?><em class="pill gold"><?php echo $type === 'projects' ? 'on homepage' : 'featured'; ?></em><?php endif; ?>
           </span>
-          <span class="muted small"><?php echo e($type === 'projects' ? $it['category'] : ($type === 'publications' ? $it['badge'] : implode(', ', $it['tags']))); ?></span>
+          <span class="muted small"><?php echo e($type === 'projects' ? $it['category'] : ($type === 'publications' ? $it['badge'] : ($type === 'talks' ? $it['event'] : implode(', ', $it['tags'])))); ?></span>
         </a>
       <?php endforeach; ?>
     </div>
@@ -505,7 +571,7 @@ case 'edit':
     unset($_SESSION['draft_body']);
     $date = $it ? $it['date'] : time();
     $hasTime = $it && isset($it['meta']['date']) && preg_match('/\d{1,2}:\d{2}/', (string) $it['meta']['date']);
-    $urlFns = array('posts' => 'cms_post_url', 'news' => 'cms_news_url', 'projects' => 'cms_project_url', 'publications' => 'cms_publication_url');
+    $urlFns = array('posts' => 'cms_post_url', 'news' => 'cms_news_url', 'projects' => 'cms_project_url', 'publications' => 'cms_publication_url', 'talks' => 'cms_talk_url');
     $publicUrl = $it ? call_user_func($urlFns[$type], $it['slug']) : '';
     $categories = array();
     if ($type === 'projects') {
@@ -514,11 +580,12 @@ case 'edit':
 
     admin_layout_start($it ? 'Edit ' . $types[$type]['singular'] : 'New ' . $types[$type]['singular'], 'edit');
     ?>
-    <form method="post" class="editor" id="editor-form" data-base="<?php echo e(cms_config('base_url')); ?>" data-upload-url="<?php echo e(admin_url()); ?>" data-csrf="<?php echo e(cms_csrf_token()); ?>">
+    <form method="post" class="editor" id="editor-form" data-type="<?php echo e($type); ?>" data-og="<?php echo $type === 'publications' ? '0' : '1'; ?>" data-site="<?php echo e(cms_config('site_name')); ?>" data-base="<?php echo e(cms_config('base_url')); ?>" data-upload-url="<?php echo e(admin_url()); ?>" data-csrf="<?php echo e(cms_csrf_token()); ?>">
       <?php echo cms_csrf_field(); ?>
       <input type="hidden" name="action" value="save_item">
       <input type="hidden" name="type" value="<?php echo e($type); ?>">
       <input type="hidden" name="orig_slug" value="<?php echo e($slug); ?>">
+      <input type="hidden" name="og_image" value="">
 
       <header class="top">
         <a class="back" href="<?php echo e(admin_url(array('page' => 'items', 'type' => $type))); ?>">&larr; <?php echo e($types[$type]['label']); ?></a>
@@ -560,7 +627,25 @@ case 'edit':
           <label class="toggle"><input type="checkbox" name="selected" value="1" <?php echo $it && $it['selected'] ? 'checked' : ''; ?>> Show on homepage</label>
           <label>Homepage position<input type="number" min="1" name="home_order" value="<?php echo e($it && $it['selected'] ? $it['home_order'] : 1); ?>"></label>
           <label class="wide">BibTeX <small>(shown with a copy button)</small><textarea name="bibtex" rows="6" class="mono"><?php echo $v('bibtex'); ?></textarea></label>
+        <?php elseif ($type === 'talks'): $v = function ($k) use ($it) { return e($it ? $it[$k] : ''); }; ?>
+          <label>Type<select name="kind"><?php foreach (cms_talk_kinds_admin() as $k => $label): ?><option value="<?php echo $k; ?>" <?php echo $it && $it['kind'] === $k ? 'selected' : ''; ?>><?php echo e($label); ?></option><?php endforeach; ?></select></label>
+          <label>Event<input name="event" value="<?php echo $v('event'); ?>" placeholder="e.g. IEEE ICRA 2026"></label>
+          <label>Place<input name="location" value="<?php echo $v('location'); ?>" placeholder="City, country"></label>
+          <label>Award <small>(optional)</small><input name="award" value="<?php echo $v('award'); ?>"></label>
+          <label class="wide">Video <small>(YouTube / Vimeo link, or an .mp4 from the library)</small>
+            <span class="with-btn"><input name="video" id="talkvideo" value="<?php echo $v('video'); ?>"><button type="button" class="btn small" data-library-into="#talkvideo">Library</button></span></label>
+          <label class="wide">Picture <small>(optional; YouTube thumbnails are used automatically)</small>
+            <span class="with-btn"><input name="image" id="talkimg" value="<?php echo $v('image'); ?>"><button type="button" class="btn small" data-library-into="#talkimg">Library</button><button type="button" class="btn small" data-upload-into="#talkimg">Upload</button></span></label>
+          <label class="wide">Slides <small>(PDF or link)</small>
+            <span class="with-btn"><input name="slides" id="talkslides" value="<?php echo $v('slides'); ?>"><button type="button" class="btn small" data-library-into="#talkslides">Library</button><button type="button" class="btn small" data-upload-into="#talkslides" data-accept="application/pdf">Upload</button></span></label>
+          <label>Event page <small>(URL)</small><input name="url" value="<?php echo $v('url'); ?>"></label>
+          <label>Code <small>(URL)</small><input name="code" value="<?php echo $v('code'); ?>"></label>
+          <label>Related blog post <small>(e.g. blog/?p=my-post)</small><input name="post" value="<?php echo $v('post'); ?>"></label>
+          <label class="toggle"><input type="checkbox" name="featured" value="1" <?php echo $it && $it['featured'] ? 'checked' : ''; ?>> Show on homepage</label>
         <?php elseif ($type === 'projects'): ?>
+          <label class="wide">3D model <small>(.glb file — shown as an interactive 3D view on the project page)</small>
+            <span class="with-btn"><input name="model" id="model3d" value="<?php echo e($it ? $it['model'] : ''); ?>" placeholder="files/models/robot.glb"><button type="button" class="btn small" data-library-into="#model3d">Library</button><button type="button" class="btn small" data-upload-into="#model3d" data-accept=".glb,.usdz,model/gltf-binary">Upload</button></span></label>
+          <label class="toggle"><input type="checkbox" name="model_home" value="1" <?php echo $it && $it['model_home'] ? 'checked' : ''; ?>> Show in 3D on homepage</label>
           <label>Category <small>(used for the filter buttons)</small>
             <input name="category" list="project-categories" value="<?php echo e($it ? $it['category'] : ''); ?>">
             <datalist id="project-categories"><?php foreach (array_keys($categories) as $c): ?><option value="<?php echo e($c); ?>"><?php endforeach; ?></datalist>
@@ -590,6 +675,21 @@ case 'edit':
       <?php if ($type === 'publications'): ?><h2 class="editor-label">Abstract</h2><?php endif; ?>
       <textarea name="body" id="body"><?php echo e($body); ?></textarea>
       <p class="muted small">Markdown. Drag &amp; drop or paste images straight into the editor. Ctrl+S saves.</p>
+      <?php if ($type !== 'publications'): $m = $it ? $it['meta'] : array(); ?>
+        <details class="card fr-card" <?php echo !empty($m['title_fr']) || !empty($m['body_fr']) ? 'open' : ''; ?>>
+          <summary><strong>Français</strong> <span class="muted small">— optional; visitors who switch to French see this version (empty fields fall back to English)</span></summary>
+          <div class="grid meta">
+            <label class="wide">Titre<input name="title_fr" value="<?php echo e(isset($m['title_fr']) ? $m['title_fr'] : ''); ?>"></label>
+            <?php if ($type === 'posts' || $type === 'projects'): ?>
+              <label class="wide">Résumé<input name="description_fr" value="<?php echo e(isset($m['description_fr']) ? $m['description_fr'] : ''); ?>"></label>
+            <?php endif; ?>
+            <?php if ($type === 'talks'): ?>
+              <label class="wide">Événement<input name="event_fr" value="<?php echo e(isset($m['event_fr']) ? $m['event_fr'] : ''); ?>"></label>
+            <?php endif; ?>
+            <label class="wide">Texte <small>(Markdown)</small><textarea name="body_fr" rows="10" class="mono"><?php echo e(isset($m['body_fr']) ? $m['body_fr'] : ''); ?></textarea></label>
+          </div>
+        </details>
+      <?php endif; ?>
     </form>
 
     <?php if ($it): ?>
@@ -619,6 +719,44 @@ case 'edit':
     </dialog>
     <?php
     admin_layout_end(array('lib/easymde.min.js'));
+    break;
+
+case 'home':
+    $doc = cms_doc('home');
+    $tab = isset($_GET['lang']) && $_GET['lang'] === 'fr' ? 'fr' : 'en';
+    admin_layout_start('Homepage', 'homepage');
+    ?>
+    <form method="post" class="editor" id="home-form" data-upload-url="<?php echo e(admin_url()); ?>" data-csrf="<?php echo e(cms_csrf_token()); ?>">
+      <?php echo cms_csrf_field(); ?><input type="hidden" name="action" value="home_save"><input type="hidden" name="lang" value="<?php echo $tab; ?>" data-lang-field>
+      <header class="top">
+        <h1>Homepage</h1>
+        <div class="actions">
+          <nav class="tabs" data-lang-tabs>
+            <a href="#en" data-tab="en" class="<?php echo $tab === 'en' ? 'on' : ''; ?>">English</a>
+            <a href="#fr" data-tab="fr" class="<?php echo $tab === 'fr' ? 'on' : ''; ?>">Français</a>
+          </nav>
+          <a class="btn" href="<?php echo e(cms_url()); ?>" target="_blank" rel="noopener"><?php echo admin_icon('ext'); ?> View</a>
+          <button class="btn primary">Save</button>
+        </div>
+      </header>
+      <?php foreach (array('en', 'fr') as $lang): $data = isset($doc[$lang]) ? $doc[$lang] : array(); ?>
+        <div class="lang-pane" data-pane="<?php echo $lang; ?>" <?php echo $lang === $tab ? '' : 'hidden'; ?>>
+          <?php if ($lang === 'fr'): ?><p class="notice">French version. Leave a field empty to show the English text instead.</p><?php endif; ?>
+          <?php foreach (cms_home_schema() as $group => $fields): ?>
+            <section class="card">
+              <h2><?php echo e($group); ?></h2>
+              <div class="grid meta">
+                <?php foreach ($fields as $path => $spec) admin_home_field($lang, $path, $spec, cms_path_get($data, $path)); ?>
+              </div>
+            </section>
+          <?php endforeach; ?>
+        </div>
+      <?php endforeach; ?>
+      <div class="actions"><button class="btn primary">Save</button></div>
+    </form>
+    <?php
+    admin_media_dialog();
+    admin_layout_end();
     break;
 
 case 'cv':
@@ -880,6 +1018,18 @@ case 'settings':
       </form>
 
       <div class="card">
+        <h2>Backup &amp; restore</h2>
+        <p class="muted small">Download everything you created in this admin (posts, news, projects, publications, talks, CV, homepage, uploads, statistics) as one file. Keep a copy on your computer.</p>
+        <form method="post"><?php echo cms_csrf_field(); ?><input type="hidden" name="action" value="backup_download">
+          <button class="btn primary"><?php echo admin_icon('download'); ?> Download backup</button></form>
+        <form method="post" enctype="multipart/form-data" data-confirm="Restore this backup? Files in it replace the current versions. The current state is saved first, so this can be undone.">
+          <?php echo cms_csrf_field(); ?><input type="hidden" name="action" value="backup_restore">
+          <label>Restore from a backup file (.tar)<input type="file" name="archive" accept=".tar" required></label>
+          <div class="actions"><button class="btn danger">Restore</button></div>
+        </form>
+      </div>
+
+      <div class="card">
         <h2>Server status</h2>
         <table class="kv">
           <?php foreach ($checks as $c): ?>
@@ -907,6 +1057,7 @@ default: // dashboard
         <a class="btn primary" href="<?php echo e(admin_url(array('page' => 'edit', 'type' => 'posts'))); ?>"><?php echo admin_icon('plus'); ?> Blog post</a>
         <a class="btn primary" href="<?php echo e(admin_url(array('page' => 'edit', 'type' => 'projects'))); ?>"><?php echo admin_icon('plus'); ?> Project</a>
         <a class="btn primary" href="<?php echo e(admin_url(array('page' => 'items', 'type' => 'publications'))); ?>"><?php echo admin_icon('plus'); ?> Publication</a>
+        <a class="btn primary" href="<?php echo e(admin_url(array('page' => 'edit', 'type' => 'talks'))); ?>"><?php echo admin_icon('plus'); ?> Talk</a>
       </div>
     </header>
     <div class="stats">
@@ -964,6 +1115,65 @@ function admin_pub_renumber(array $first = array(), $winner = null)
         cms_save_item('publications', $pub['slug'], $meta, $pub['body']);
     }
     return count($ordered);
+}
+
+function cms_talk_kinds_admin()
+{
+    return cms_talk_kinds();
+}
+
+function admin_home_field($lang, $path, array $spec, $value)
+{
+    $name = $lang . '[' . str_replace('.', '__', $path) . ']';
+    $label = e($spec[0]);
+    switch ($spec[1]) {
+        case 'text':
+            echo '<label class="wide">' . $label . '<input name="' . e($name) . '" value="' . e((string) $value) . '"></label>';
+            break;
+        case 'textarea':
+            echo '<label class="wide">' . $label . '<textarea name="' . e($name) . '" rows="3">' . e((string) $value) . '</textarea></label>';
+            break;
+        case 'paragraphs':
+            echo '<label class="wide">' . $label . '<textarea name="' . e($name) . '" rows="8">' . e(implode("\n\n", (array) $value)) . '</textarea></label>';
+            break;
+        case 'list':
+            echo '<label class="wide">' . $label . '<textarea name="' . e($name) . '" rows="8">' . e(implode("\n", (array) $value)) . '</textarea></label>';
+            break;
+        case 'image':
+            $id = 'img-' . $lang . '-' . str_replace('.', '-', $path);
+            echo '<label class="wide">' . $label . '<span class="with-btn"><input name="' . e($name) . '" id="' . $id . '" value="' . e((string) $value) . '">'
+                . '<button type="button" class="btn small" data-library-into="#' . $id . '">Library</button>'
+                . '<button type="button" class="btn small" data-upload-into="#' . $id . '">Upload</button></span></label>';
+            break;
+        case 'rows':
+            $key = $lang . '-' . str_replace('.', '-', $path);
+            echo '<div class="wide"><div class="top"><strong>' . $label . '</strong><button type="button" class="btn small" data-add-row="' . e($key) . '">' . admin_icon('plus') . ' Add</button></div>';
+            echo '<div class="rows" data-rows="' . e($key) . '">';
+            foreach ((array) $value as $i => $row) admin_home_row($name, $spec[2], $i, (array) $row);
+            echo '</div><template data-row-template="' . e($key) . '">';
+            admin_home_row($name, $spec[2], '__i__', array(), true);
+            echo '</template></div>';
+            break;
+    }
+}
+
+function admin_home_row($name, array $fields, $i, array $row, $open = false)
+{
+    $first = key($fields);
+    $title = isset($row[$first]) && $row[$first] !== '' ? $row[$first] : 'New entry';
+    echo '<details class="row-edit"' . ($open ? ' open' : '') . '><summary><span class="grow">' . e($title) . '</span><span class="row-tools">'
+        . '<button type="button" class="btn tiny" data-move="-1">↑</button><button type="button" class="btn tiny" data-move="1">↓</button>'
+        . '<button type="button" class="btn tiny danger" data-remove-row>Remove</button></span></summary><div class="grid meta">';
+    foreach ($fields as $f => $label) {
+        $attr = $f === $first ? ' data-row-title' : '';
+        $val = isset($row[$f]) ? $row[$f] : '';
+        if ($f === 'text') {
+            echo '<label class="wide">' . e($label) . '<textarea name="' . e($name . '[' . $i . '][' . $f . ']') . '" rows="3">' . e($val) . '</textarea></label>';
+        } else {
+            echo '<label>' . e($label) . '<input name="' . e($name . '[' . $i . '][' . $f . ']') . '" value="' . e($val) . '"' . $attr . '></label>';
+        }
+    }
+    echo '</div></details>';
 }
 
 function cms_pub_types_admin()
