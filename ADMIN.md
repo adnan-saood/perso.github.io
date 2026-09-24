@@ -52,6 +52,19 @@ you wrote in the admin panel.
   it to 64 MB for the admin panel, and the editor also shrinks big photos in your
   browser before uploading. Settings → Server status shows the limit actually in effect.
 
+## Previewing locally
+
+`jekyll serve` cannot run PHP, so on it the blog/news pages show a folder listing and
+the homepage news box stays empty. To preview with PHP (in WSL, PHP 8 is already there):
+
+```bash
+bundle exec jekyll build
+bash tools/preview.sh
+```
+
+Then open the printed URL (default `http://localhost:8081`). The admin works too
+(setup token `preview-setup-token-local`); preview edits go to `.preview-data/`.
+
 ## URLs
 
 - Blog: `/blog/`, a post: `/blog/?p=<slug>`, filters: `/blog/?tag=HRI`, `?year=2026`

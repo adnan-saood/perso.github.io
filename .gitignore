@@ -14,3 +14,4 @@ vendor
 agents/**
 # PHP CMS: server-specific overrides, never committed
 cms/config.local.php
+.preview-data/

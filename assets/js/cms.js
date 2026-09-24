@@ -11,6 +11,8 @@
       fetch(url, { credentials: "omit" })
         .then(function (r) { if (!r.ok) throw new Error(r.status); return r.text(); })
         .then(function (html) {
+          // Without PHP (e.g. `jekyll serve`) the server returns the script's source; never show that.
+          if (!/^\s*<tr[\s>]/.test(html)) throw new Error("not a fragment");
           el.innerHTML = html;
           el.classList.add("cms-loaded");
           if (window.siteMotionObserve) window.siteMotionObserve(el);
