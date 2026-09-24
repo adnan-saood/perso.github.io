@@ -1,17 +1,15 @@
 ---
-layout: page
 title: COVID-19 Lung CT Image Segmentation using Deep Learning
 description: Comparative study of U-Net versus SegNet architectures for semantic segmentation of COVID-19 infected tissue in CT scans.
 img: assets/img/covid_segmentation.png
-importance: 5
-category: Research
-related_publications: true
 github: https://github.com/adnan-saood/COVID19-DL
+category: "Medical robotics & imaging"
+importance: 10
 ---
 
 ## Project Overview
 
-{% include figure.liquid loading="eager" path="assets/img/covid_segmentation.png" title="COVID-19 lung CT segmentation" class="img-fluid rounded z-depth-1" %}
+
 
 This research project was conducted during the height of the COVID-19 pandemic, addressing the urgent need for automated diagnostic tools to assist healthcare professionals in quickly and accurately identifying COVID-19 infections in lung CT scans. The work compares two leading deep learning architectures — **U-Net** and **SegNet** — for the challenging task of semantic segmentation of infected tissue regions.
 

@@ -1,17 +1,16 @@
 ---
-layout: page
 title: Generative Factorized Model of Action-Conditioned Tactile Affordance
 description: Learning how robots can predict and understand tactile interactions through generative models that condition on actions and prior touch.
 img: assets/img/tactile_affordance.jpg
-importance: 1
-category: Research
-related_publications: true
 github: https://github.com/adnan-saood/fractal_ros2
+category: "Tactile sensing"
+importance: 2
+featured: true
 ---
 
 ## Project Overview
 
-{% include figure.liquid loading="eager" path="assets/img/tactile_affordance.jpg" title="Action-conditioned tactile affordance model" class="img-fluid rounded z-depth-1" %}
+
 
 This is the current flagship direction of my PhD research — developing a **generative, factorized model** of action-conditioned tactile affordances. The goal is to teach robots to predict and understand tactile sensations before and during physical contact, enabling smarter manipulation, safer human-robot interaction, and richer understanding of objects and surfaces.
 

@@ -1,17 +1,15 @@
 ---
-layout: page
 title: Swarm Robot Firmware
 description: Complete embedded C firmware for autonomous mobile swarm robots with advanced control algorithms and multi-robot coordination capabilities
 img: assets/img/swarm_robot.jpg
-importance: 2
-category: Embedded Systems
-related_publications: false
 github: https://github.com/adnan-saood/swarm-robot-firmware
+category: "Swarm robotics"
+importance: 8
 ---
 
 ## Overview
 
-{% include figure.liquid loading="eager" path="assets/img/swarm_robot.jpg" title="Swarm robot firmware platform" class="img-fluid rounded z-depth-1" %}
+
 
 The Swarm Robot Firmware is a comprehensive embedded C operating system designed for autonomous mobile robots in swarm configurations. Built for 8-bit AVR microcontrollers, this firmware provides a complete robotics platform with advanced control algorithms, sensor fusion, and multi-robot coordination capabilities. The system was developed as part of a mechatronics graduation project and represents a full-featured robotics control system optimized for resource-constrained environments.
 

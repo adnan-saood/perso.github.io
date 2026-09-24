@@ -1,0 +1,128 @@
+---
+layout: default
+---
+{%- comment -%}
+  Homepage. All wording lives in the front matter of _pages/about.md.
+  Projects, news and posts are loaded live from the PHP CMS (assets/js/cms.js).
+{%- endcomment -%}
+
+<section class="hero" aria-labelledby="hero-title">
+  <div class="hero__fallback" aria-hidden="true"></div>
+  <canvas id="skin" class="hero__canvas" role="img" aria-label="Interactive 3D tactile skin. Move over it or press to touch it."></canvas>
+  <div class="hero__content">
+    <p class="kicker reveal">{{ page.hero.kicker }}</p>
+    <h1 class="hero__title split" id="hero-title">{{ page.hero.title }}</h1>
+    <p class="hero__lede reveal">{{ page.hero.lede }}</p>
+    <div class="hero__actions reveal">
+      <a class="btn btn--primary magnetic" href="{{ '/projects/' | relative_url }}">Explore my work <i class="ti ti-arrow-right" aria-hidden="true"></i></a>
+      <a class="btn btn--ghost magnetic" href="{{ '/publications/' | relative_url }}">Publications</a>
+    </div>
+  </div>
+  <p class="hero__hint" aria-hidden="true">touch the skin &rarr;</p>
+  <div class="hero__readout" data-skin-readout aria-hidden="true"></div>
+  <span class="hero__scroll" aria-hidden="true"></span>
+</section>
+<div class="touch-cursor" aria-hidden="true"></div>
+
+<section class="section" aria-labelledby="about-title">
+  <div class="about">
+    <div class="portrait tilt reveal">
+      <img src="{{ page.about.image | relative_url }}" alt="Portrait of {{ site.first_name }} {{ site.last_name }}" loading="lazy">
+    </div>
+    <div class="about__text">
+      <p class="kicker reveal" id="about-title">About</p>
+      <p class="lead-in split">{{ page.about.lead }}</p>
+      {% for paragraph in page.about.body %}
+        <p class="reveal">{{ paragraph }}</p>
+      {% endfor %}
+      <ul class="facts reveal">
+        {% for fact in page.facts %}
+          <li><span>{{ fact.label }}</span><b>{{ fact.value }}</b></li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+</section>
+
+<div class="marquee" aria-hidden="true">
+  <div class="marquee__track">
+    {% for k in page.keywords %}<span>{{ k }}</span>{% endfor %}
+    {% for k in page.keywords %}<span>{{ k }}</span>{% endfor %}
+  </div>
+</div>
+
+<section class="section" aria-labelledby="research-title">
+  <div class="section__head">
+    <div>
+      <p class="kicker">Research</p>
+      <h2 class="section__title split" id="research-title">{{ page.research_title }}</h2>
+    </div>
+  </div>
+  <div class="pillars">
+    {% for p in page.pillars %}
+      <article class="pillar tilt reveal">
+        <span class="pillar__num">0{{ forloop.index }} / 0{{ forloop.length }}</span>
+        <span class="pillar__icon" aria-hidden="true"><i class="ti {{ p.icon }}"></i></span>
+        <h3>{{ p.title }}</h3>
+        <p>{{ p.text }}</p>
+      </article>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="section" aria-labelledby="work-title">
+  <div class="section__head">
+    <div>
+      <p class="kicker">Selected work</p>
+      <h2 class="section__title split" id="work-title">Things I've built, measured and shipped.</h2>
+    </div>
+    <a class="section__more" href="{{ '/projects/' | relative_url }}">All projects <i class="ti ti-arrow-right" aria-hidden="true"></i></a>
+  </div>
+  <div class="project-grid" data-cms-fragment="projects" data-limit="4">
+    {% for i in (1..3) %}
+      <div class="project-card"><div class="project-card__media"></div><div class="project-card__body"><span class="cms-skeleton"></span><span class="cms-skeleton short"></span></div></div>
+    {% endfor %}
+  </div>
+  <noscript><p><a href="{{ '/projects/' | relative_url }}">See all projects</a></p></noscript>
+</section>
+
+<section class="section" aria-label="Highlights">
+  <div class="stats">
+    {% for s in page.stats %}
+      {%- assign value = s.value -%}
+      {%- if s.value == 'repos' -%}{%- assign value = site.data.repositories.github_repos | size -%}{%- endif -%}
+      <div class="stat reveal">
+        <b data-count="{{ value }}">{{ value }}</b>
+        <span>{{ s.label }}</span>
+      </div>
+    {% endfor %}
+  </div>
+</section>
+
+{% if page.selected_papers %}
+  <section class="section" aria-labelledby="papers-title">
+    <div class="section__head">
+      <div>
+        <p class="kicker">Publications</p>
+        <h2 class="section__title split" id="papers-title">Selected papers.</h2>
+      </div>
+      <a class="section__more" href="{{ '/publications/' | relative_url }}">All publications <i class="ti ti-arrow-right" aria-hidden="true"></i></a>
+    </div>
+    <div class="publications reveal">
+      {% include selected_papers.liquid %}
+    </div>
+  </section>
+{% endif %}
+
+<section class="section" aria-label="News and blog">
+  <div class="feeds">
+    <div class="reveal">
+      <h3>News <a href="{{ '/news/' | relative_url }}">All news &rarr;</a></h3>
+      {% include news.liquid limit=true %}
+    </div>
+    <div class="reveal">
+      <h3>From the blog <a href="{{ '/blog/' | relative_url }}">All posts &rarr;</a></h3>
+      {% include latest_posts.liquid %}
+    </div>
+  </div>
+</section>

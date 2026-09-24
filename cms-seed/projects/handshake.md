@@ -1,17 +1,16 @@
 ---
-layout: page
 title: Contributing Factors in Human-Robot Handshake
 description: Empirical study of what makes a natural, comfortable handshake between humans and robots — compliance, hand grip, and temporal synchrony.
 img: assets/img/handshake.jpg
-importance: 3
-category: Research
-related_publications: true
 github: https://github.com/adnan-saood/franka_handshake_ros2
+category: "Human–robot interaction"
+importance: 4
+featured: true
 ---
 
 ## Project Overview
 
-{% include figure.liquid loading="eager" path="assets/img/handshake.jpg" title="Human-robot handshake study" class="img-fluid rounded z-depth-1" %}
+
 
 This research explores one of the most fundamental yet understudied interactions between humans and robots: **the handshake**. Beyond its social ritual importance, a handshake encodes rich information about trust, intention, and comfort — tactile signals that robots should understand and reciprocate.
 

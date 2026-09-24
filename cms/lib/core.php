@@ -261,6 +261,7 @@ function cms_types()
     return array(
         'posts' => array('label' => 'Blog posts', 'singular' => 'post'),
         'news' => array('label' => 'News', 'singular' => 'news item'),
+        'projects' => array('label' => 'Projects', 'singular' => 'project'),
     );
 }
 
@@ -293,6 +294,12 @@ function cms_normalise_item($type, $slug, array $meta, $body, $mtime)
         'draft' => !empty($meta['draft']),
         'inline' => !empty($meta['inline']),
         'thumbnail' => isset($meta['thumbnail']) ? (string) $meta['thumbnail'] : '',
+        // Projects
+        'img' => isset($meta['img']) ? (string) $meta['img'] : '',
+        'category' => isset($meta['category']) ? (string) $meta['category'] : '',
+        'importance' => isset($meta['importance']) && is_numeric($meta['importance']) ? (int) $meta['importance'] : 50,
+        'github' => isset($meta['github']) ? (string) $meta['github'] : '',
+        'url' => isset($meta['url']) ? (string) $meta['url'] : '',
         'body' => $body,
         'updated' => $mtime,
         'meta' => $meta,
@@ -300,7 +307,8 @@ function cms_normalise_item($type, $slug, array $meta, $body, $mtime)
     return $item;
 }
 
-// All items of a type, newest first. Drafts excluded unless $withDrafts.
+// All items of a type: posts/news newest first, projects by importance.
+// Drafts excluded unless $withDrafts.
 function cms_list_items($type, $withDrafts = false)
 {
     $dir = cms_data_path($type);
@@ -316,8 +324,15 @@ function cms_list_items($type, $withDrafts = false)
         if (!$withDrafts && $it['date'] > time()) continue;
         $items[] = $it;
     }
-    usort($items, 'cms_cmp_date_desc');
+    usort($items, $type === 'projects' ? 'cms_cmp_importance' : 'cms_cmp_date_desc');
     return $items;
+}
+
+// Lower importance first (1 = most important), then alphabetical.
+function cms_cmp_importance($a, $b)
+{
+    if ($a['importance'] !== $b['importance']) return $a['importance'] < $b['importance'] ? -1 : 1;
+    return strcasecmp($a['title'], $b['title']);
 }
 
 function cms_cmp_date_desc($a, $b)
@@ -474,6 +489,11 @@ function cms_excerpt($item, $len = 180)
 function cms_post_url($slug)
 {
     return cms_url('blog/?p=' . rawurlencode($slug));
+}
+
+function cms_project_url($slug)
+{
+    return cms_url('projects/?p=' . rawurlencode($slug));
 }
 
 function cms_news_url($slug)

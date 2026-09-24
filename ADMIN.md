@@ -1,7 +1,7 @@
 # Site admin (PHP CMS)
 
 The site is still built with Jekyll (layout, publications, CV, projects), but
-**blog posts, news and files are managed live** at
+**projects, blog posts, news and files are managed live** at
 
     https://perso.ensta.fr/~saood/admin/
 
@@ -9,11 +9,12 @@ Changes there are online immediately. No rebuild, no upload.
 
 | What | Where it lives on the server | Edited from |
 |---|---|---|
-| Blog posts, news | `~/cms-data/posts/*.md`, `~/cms-data/news/*.md` | Admin → Blog posts / News |
+| Projects, blog posts, news | `~/cms-data/projects/`, `posts/`, `news/` (Markdown) | Admin → Projects / Blog posts / News |
 | Uploaded files & images | `~/public_html/files/` | Admin → Files, or drag images into the editor |
 | Admin password | `~/cms-data/settings.json` (readable by PHP only) | Admin → Settings |
 | Previous versions / deleted items | `~/cms-data/history/`, `~/cms-data/trash/` | Admin → Trash (restore) |
-| Everything else (pages, CV, publications, look) | this repo | edit + `jekyll build` + `./deploy.sh` |
+| Homepage wording (hero, about, research pillars, stats) | `_pages/about.md` front matter | edit + build + `./deploy.sh` |
+| Everything else (CV, publications, look) | this repo | edit + `jekyll build` + `./deploy.sh` |
 
 `cms-data` sits **outside** `public_html`, so a deploy can never overwrite what
 you wrote in the admin panel.
@@ -38,6 +39,9 @@ you wrote in the admin panel.
 
 ## Everyday use
 
+- **Projects**: Dashboard → *+ Project*. Give it a category (becomes a filter button on
+  the Projects page), a cover image (upload button), an order number (1 = first) and
+  optional GitHub / other links. Tick *Show on homepage* to feature it in "Selected work".
 - **New news item**: Dashboard → *+ News*. Tick *Short item* for one-liners shown
   directly in the list; untick it to give the item its own page with a headline.
 - **New blog post**: Dashboard → *+ Blog post*. Drag and drop or paste images into the
@@ -69,10 +73,11 @@ Without Docker: `bundle exec jekyll build`, then `bash tools/preview.sh` (needs 
 ## URLs
 
 - Blog: `/blog/`, a post: `/blog/?p=<slug>`, filters: `/blog/?tag=HRI`, `?year=2026`
+- Projects: `/projects/`, a project: `/projects/?p=<slug>`
 - News: `/news/`, a news page: `/news/?n=<slug>`
 - RSS feed: `/cms/feed.php`
 - Contact page (your email, office, profiles): `/contact/`
-- Old Jekyll URLs (`/blog/2026/<slug>/`) redirect automatically (pages in `_pages/legacy/`).
+- Old Jekyll URLs (`/blog/2026/<slug>/`, `/projects/1_project/`, ...) redirect automatically (pages in `_pages/legacy/`).
 
 ## Backups
 

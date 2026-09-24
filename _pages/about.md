@@ -1,55 +1,75 @@
 ---
-layout: about
+layout: home
 title: About me
 permalink: /
-subtitle: Doctoral Candidate in Robotics at <a href='https://www.ip-paris.fr/'>Institut Polytechnique de Paris</a>
+description: Adnan Saood, PhD researcher in robotics at ENSTA Paris. Tactile sensing, socio-affective touch and medical robotics.
 
-profile:
-  align: right
-  image: prof_pic.png
-  image_circular: false # crops the image to make it circular
-  more_info: >
-    <p>R.2.19</p>
-    <p>828 Bd. des Maréchaux</p>
-    <p>91762 Palaiseau Cedex</p>
-    <p><a href="mailto:adnan.saood@ip-paris.fr">adnan.saood@ip-paris.fr</a></p>
+# ---------------------------------------------------------------------------
+# All homepage wording lives here. HTML is allowed in these fields.
+# ---------------------------------------------------------------------------
+hero:
+  kicker: PhD researcher · U2IS, ENSTA Paris — IP Paris
+  title: Teaching robots the language of <span class="text-gradient">touch</span>.
+  lede: I build tactile skins, haptic interfaces and real-time models so humanoid robots can feel human touch, and answer it with care.
 
-selected_papers: true # includes a list of papers marked as "selected={true}"
-social: true # includes social icons at the bottom of the page
+about:
+  image: /assets/img/prof_pic_color.png
+  lead: I'm Adnan, a mechatronics engineer who became a roboticist because I wanted machines to be gentler with people.
+  body:
+    - My PhD at U2IS, ENSTA Paris, is about socio-affective touch. I design silicone tactile arrays for humanoid hands and build models that turn raw pressure into meaning, so a robot can tell a reassuring pat from a firm grip.
+    - Before that I worked on medical robotics at the ICube laboratory in Strasbourg, where my Master's work on robot-assisted focused ultrasound became a patent that is now licensed to Therasonic. I still enjoy the hardware side most, from embedded firmware to ROS 2 drivers.
+
+facts:
+  - label: Now
+    value: PhD candidate · U2IS, ENSTA Paris
+  - label: Also
+    value: Engineering consultant · Therasonic
+  - label: Before
+    value: Research engineer · ICube, Strasbourg
+  - label: Studied
+    value: M2 Medical Robotics · Univ. of Strasbourg
+
+keywords:
+  - tactile sensing
+  - socio-affective touch
+  - humanoid hands
+  - soft silicone skins
+  - haptic interfaces
+  - human–robot handshakes
+  - focused ultrasound
+  - ROS 2
+  - generative touch models
+  - swarm robotics
+
+research_title: Three threads, one question — how should a robot touch?
+pillars:
+  - title: Tactile perception
+    icon: ti-hand-finger
+    text: Silicone skins with embedded taxel arrays for humanoid hands, and the signal processing that turns raw pressure into something a robot can reason about.
+  - title: Socio-affective interaction
+    icon: ti-heart-handshake
+    text: What makes a robot's touch feel natural and kind? Handshake studies, soft haptic interfaces that calm, and generative models of touch.
+  - title: Medical robotics
+    icon: ti-activity-heartbeat
+    text: Robot-assisted focused ultrasound to open the blood–brain barrier for drug delivery, now licensed to Therasonic.
+
+stats:
+  - value: 1
+    label: focused-ultrasound patent licensed to Therasonic (2026)
+  - value: 3
+    label: research awards in 2026, including the Fédération Demeny Vaucanson prize
+  - value: 2
+    label: editions of the Beyond Words workshop on touch in social robotics, co-organised
+  - value: repos
+    label: open-source repositories, from ROS 2 drivers to swarm firmware
+
+selected_papers: true
 
 announcements:
-  enabled: true # includes a list of news items
-  scrollable: true # adds a vertical scroll bar if there are more than 3 news items
-  limit: 5 # leave blank to include all the news in the `_news` folder
+  enabled: true
+  limit: 6
 
 latest_posts:
   enabled: true
-  scrollable: true # adds a vertical scroll bar if there are more than 3 new posts items
-  limit: 3 # leave blank to include all the blog posts
+  limit: 4
 ---
-
-<section class="home-intro" aria-labelledby="home-intro-title">
-  <div class="home-field-wrap">
-    <canvas id="tactile-field" class="home-field" aria-label="Interactive tactile sensing field"></canvas>
-    <span class="home-field-label">Move through the field</span>
-    <span class="home-field-meta">touch / signal / response</span>
-  </div>
-  <div class="home-identity">
-    <p class="home-kicker">Mechatronics engineer / medical robotics / PhD researcher</p>
-    <h1 id="home-intro-title">Touch for Humanoid Robots</h1>
-    <p class="home-role">Doctoral researcher in robotics at Institut Polytechnique de Paris - ENSTA.</p>
-    <div class="home-profile">
-      <img src="{{ '/assets/img/prof_pic.png' | relative_url }}" alt="Portrait of Adnan Saood">
-      <span>Adnan Saood<br>ENSTA Paris<br><br>R.2.19<br>828 Bd. des Marechaux<br>91762 Palaiseau Cedex</span>
-    </div>
-  </div>
-  <div class="home-intro-copy">
-    <p class="home-lede">I am a mechatronics engineer with a master's degree in medical robotics, now pursuing a PhD on socio-affective touch, tactile sensing, and real-time estimation for more natural human-robot interaction.</p>
-    <div class="home-signals" aria-label="Research focus">
-      <span><strong>01</strong> Tactile perception</span>
-      <span><strong>02</strong> Medical robotics</span>
-      <span><strong>03</strong> Real-time systems</span>
-    </div>
-  </div>
-  <a class="home-project-link" href="{{ '/projects/' | relative_url }}">Explore the work <span aria-hidden="true">&#8594;</span></a>
-</section>

@@ -1,16 +1,14 @@
 ---
-layout: page
 title: Soft Robotic Haptic Interface for Anxiety Reduction
 description: Wearable haptic interface delivering heart-beat and breathing-pattern stimulation to reduce anxiety and promote calm during human-robot interaction.
 img: assets/img/haptic_interface.jpg
-importance: 4
-category: Research
-related_publications: true
+category: "Human–robot interaction"
+importance: 5
 ---
 
 ## Project Overview
 
-{% include figure.liquid loading="eager" path="assets/img/haptic_interface.jpg" title="Soft robotic haptic interface" class="img-fluid rounded z-depth-1" %}
+
 
 This research addresses a key challenge in socio-affective robotics: **using haptic feedback not just to communicate information, but to regulate human emotional state**. We developed a soft, wearable haptic interface that delivers synchronized **heartbeat and breathing-pattern stimulation** during interactions with a robot, with the goal of reducing anxiety and promoting relaxation.
 

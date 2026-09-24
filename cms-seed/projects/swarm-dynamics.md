@@ -1,17 +1,15 @@
 ---
-layout: page
 title: SWARM Motion Planning via Fluid Dynamics
 description: Novel motion planning algorithm for non-holonomic robot swarms using Navier-Stokes equations with a 15-robot experimental platform.
 img: assets/img/swarm_robots.webp
-importance: 5
-category: Engineering & Open-Source
-related_publications: false
 github: https://github.com/adnan-saood/swarm-robot_firmware
+category: "Swarm robotics"
+importance: 7
 ---
 
 ## Project Overview
 
-{% include figure.liquid loading="eager" path="assets/img/swarm_robots.webp" title="Swarm robot formation" class="img-fluid rounded z-depth-1" %}
+
 
 This undergraduate/early-career project tackles one of robotics' most compelling challenges: **coordinated motion planning for large robot groups**. By drawing inspiration from fluid dynamics and the mathematical elegance of the Navier-Stokes equations, we developed a novel approach to swarm robotics that treats robot formations as fluid flow patterns.
 

@@ -1,16 +1,15 @@
 ---
-layout: page
 title: Robotic Assistance for BBB Opening
 description: Master's thesis work on robot-assisted transcranial focused ultrasound for drug delivery across the blood-brain barrier. Licensed to Therasonic in 2026.
 img: assets/img/bbb_ultrasound.jpg
-importance: 1
-category: Research
-related_publications: true
+category: "Medical robotics & imaging"
+importance: 3
+featured: true
 ---
 
 ## Project Overview
 
-{% include figure.liquid loading="eager" path="assets/img/bbb_ultrasound.jpg" title="Robot-assisted focused ultrasound for BBB opening" class="img-fluid rounded z-depth-1" %}
+
 
 This Master's thesis research at ICube Laboratory (University of Strasbourg) addresses a critical challenge in neuromedicine: **delivering drugs across the blood-brain barrier (BBB)** — a natural protective membrane that blocks most therapeutics from reaching the brain.
 

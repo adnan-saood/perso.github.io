@@ -54,6 +54,7 @@ function admin_icon($name)
         'trash' => 'M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13',
         'gear' => 'M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM19.4 15a1.6 1.6 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-2.7 1.1V21a2 2 0 1 1-4 0v-.1a1.6 1.6 0 0 0-2.7-1.1l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.6 1.6 0 0 0-1.1-2.7H3a2 2 0 1 1 0-4h.1a1.6 1.6 0 0 0 1.1-2.7l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.6 1.6 0 0 0 2.7-1.1V3a2 2 0 1 1 4 0v.1a1.6 1.6 0 0 0 2.7 1.1l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.6 1.6 0 0 0 1.1 2.7H21a2 2 0 1 1 0 4h-.1a1.6 1.6 0 0 0-1.5 1z',
         'plus' => 'M12 5v14M5 12h14',
+        'cube' => 'M12 3l8 4.5v9L12 21l-8-4.5v-9zM12 12l8-4.5M12 12v9M12 12L4 7.5',
         'out' => 'M15 4h4v16h-4M10 8l-4 4 4 4M6 12h11',
         'ext' => 'M14 4h6v6M20 4l-9 9M18 14v6H4V6h6',
         'file' => 'M6 3h8l4 4v14H6zM14 3v4h4',
@@ -87,6 +88,7 @@ function admin_layout_start($title, $active)
         'dashboard' => array('Dashboard', 'home', array()),
         'posts' => array('Blog posts', 'posts', array('page' => 'items', 'type' => 'posts')),
         'news' => array('News', 'news', array('page' => 'items', 'type' => 'news')),
+        'projects' => array('Projects', 'cube', array('page' => 'items', 'type' => 'projects')),
         'files' => array('Files', 'folder', array('page' => 'files')),
         'trash' => array('Trash', 'trash', array('page' => 'trash')),
         'settings' => array('Settings', 'gear', array('page' => 'settings')),
@@ -214,11 +216,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (strtotime($date) === false) $date = date('Y-m-d');
 
             // Keep front-matter keys we don't edit here (layout, giscus_comments, ...).
-            $meta = $existing ? $existing['meta'] : array('layout' => 'post');
+            $meta = $existing ? $existing['meta'] : ($type === 'projects' ? array() : array('layout' => 'post'));
             $meta['title'] = $title;
-            $meta['date'] = $date;
+            if ($type !== 'projects') $meta['date'] = $date;
             $meta['draft'] = !empty($_POST['draft']);
-            if ($type === 'posts') {
+            if ($type === 'projects') {
+                $meta['description'] = trim(admin_post('description'));
+                $meta['category'] = trim(admin_post('category'));
+                $meta['img'] = trim(admin_post('img'));
+                $meta['importance'] = max(1, (int) admin_post('importance', '50'));
+                $meta['github'] = trim(admin_post('github'));
+                $meta['url'] = trim(admin_post('url'));
+                $meta['featured'] = !empty($_POST['featured']);
+            } elseif ($type === 'posts') {
                 $meta['description'] = trim(admin_post('description'));
                 $meta['tags'] = cms_list(admin_post('tags'));
                 $meta['categories'] = cms_list(admin_post('categories'));
@@ -344,18 +354,25 @@ case 'items':
       <h1><?php echo e($types[$type]['label']); ?></h1>
       <a class="btn primary" href="<?php echo e(admin_url(array('page' => 'edit', 'type' => $type))); ?>"><?php echo admin_icon('plus'); ?> New <?php echo e($types[$type]['singular']); ?></a>
     </header>
+    <?php if ($type === 'projects'): ?>
+      <p class="muted small">Projects are shown in order of their number (1 first). Ticked “Show on homepage” projects appear on the homepage.</p>
+    <?php endif; ?>
     <input class="search" type="search" placeholder="Filter…" data-filter="#item-list">
     <div class="list" id="item-list">
       <?php if (!$items): ?><p class="empty">Nothing here yet.</p><?php endif; ?>
       <?php foreach ($items as $it): ?>
         <a class="row" href="<?php echo e(admin_url(array('page' => 'edit', 'type' => $type, 'slug' => $it['slug']))); ?>">
-          <span class="date"><?php echo date('M j, Y', $it['date']); ?></span>
+          <?php if ($type === 'projects'): ?>
+            <span class="date">#<?php echo (int) $it['importance']; ?></span>
+          <?php else: ?>
+            <span class="date"><?php echo date('M j, Y', $it['date']); ?></span>
+          <?php endif; ?>
           <span class="grow"><strong><?php echo e($it['title'] !== '' ? $it['title'] : cms_excerpt($it, 80)); ?></strong>
             <?php if ($it['draft']): ?><em class="pill">draft</em><?php endif; ?>
-            <?php if ($it['date'] > time()): ?><em class="pill blue">scheduled</em><?php endif; ?>
-            <?php if (!empty($it['featured'])): ?><em class="pill gold">featured</em><?php endif; ?>
+            <?php if ($type !== 'projects' && $it['date'] > time()): ?><em class="pill blue">scheduled</em><?php endif; ?>
+            <?php if (!empty($it['featured'])): ?><em class="pill gold"><?php echo $type === 'projects' ? 'on homepage' : 'featured'; ?></em><?php endif; ?>
           </span>
-          <span class="muted small"><?php echo e(implode(', ', $it['tags'])); ?></span>
+          <span class="muted small"><?php echo e($type === 'projects' ? $it['category'] : implode(', ', $it['tags'])); ?></span>
         </a>
       <?php endforeach; ?>
     </div>
@@ -372,7 +389,12 @@ case 'edit':
     unset($_SESSION['draft_body']);
     $date = $it ? $it['date'] : time();
     $hasTime = $it && isset($it['meta']['date']) && preg_match('/\d{1,2}:\d{2}/', (string) $it['meta']['date']);
-    $publicUrl = $it ? ($type === 'posts' ? cms_post_url($it['slug']) : cms_news_url($it['slug'])) : '';
+    $urlFns = array('posts' => 'cms_post_url', 'news' => 'cms_news_url', 'projects' => 'cms_project_url');
+    $publicUrl = $it ? call_user_func($urlFns[$type], $it['slug']) : '';
+    $categories = array();
+    if ($type === 'projects') {
+        foreach (cms_list_items('projects', true) as $pr) if ($pr['category'] !== '') $categories[$pr['category']] = true;
+    }
 
     admin_layout_start($it ? 'Edit ' . $types[$type]['singular'] : 'New ' . $types[$type]['singular'], 'edit');
     ?>
@@ -391,14 +413,29 @@ case 'edit':
         </div>
       </header>
 
-      <input class="title-input" name="title" placeholder="<?php echo $type === 'news' ? 'Headline (optional for short items)' : 'Post title'; ?>"
-             value="<?php echo e($it ? $it['title'] : ''); ?>" <?php echo $type === 'posts' ? 'required' : ''; ?> autofocus>
+      <input class="title-input" name="title" placeholder="<?php echo $type === 'news' ? 'Headline (optional for short items)' : ($type === 'projects' ? 'Project name' : 'Post title'); ?>"
+             value="<?php echo e($it ? $it['title'] : ''); ?>" <?php echo $type !== 'news' ? 'required' : ''; ?> autofocus>
 
       <div class="grid meta">
-        <label>Date<input type="date" name="date" value="<?php echo date('Y-m-d', $date); ?>" required></label>
-        <label>Time <small>(optional)</small><input type="time" name="time" value="<?php echo $hasTime ? date('H:i', $date) : ''; ?>"></label>
+        <?php if ($type !== 'projects'): ?>
+          <label>Date<input type="date" name="date" value="<?php echo date('Y-m-d', $date); ?>" required></label>
+          <label>Time <small>(optional)</small><input type="time" name="time" value="<?php echo $hasTime ? date('H:i', $date) : ''; ?>"></label>
+        <?php endif; ?>
         <label>Slug <small>(address)</small><input name="slug" value="<?php echo e($slug); ?>" placeholder="auto from title" pattern="[a-z0-9][a-z0-9-]*"></label>
-        <?php if ($type === 'posts'): ?>
+        <?php if ($type === 'projects'): ?>
+          <label>Category <small>(used for the filter buttons)</small>
+            <input name="category" list="project-categories" value="<?php echo e($it ? $it['category'] : ''); ?>">
+            <datalist id="project-categories"><?php foreach (array_keys($categories) as $c): ?><option value="<?php echo e($c); ?>"><?php endforeach; ?></datalist>
+          </label>
+          <label>Order <small>(1 = first)</small><input type="number" min="1" name="importance" value="<?php echo e($it ? $it['importance'] : 50); ?>"></label>
+          <label class="wide">Short description <small>(shown on the card)</small><input name="description" value="<?php echo e($it ? $it['description'] : ''); ?>"></label>
+          <label class="wide">Cover image
+            <span class="with-btn"><input name="img" id="cover" value="<?php echo e($it ? $it['img'] : ''); ?>" placeholder="assets/img/... or upload"><button type="button" class="btn small" data-upload-into="#cover">Upload</button></span>
+          </label>
+          <label>GitHub repository <small>(optional)</small><input type="url" name="github" value="<?php echo e($it ? $it['github'] : ''); ?>" placeholder="https://github.com/..."></label>
+          <label>Other link <small>(paper, demo, video)</small><input type="url" name="url" value="<?php echo e($it ? $it['url'] : ''); ?>"></label>
+          <label class="toggle"><input type="checkbox" name="featured" value="1" <?php echo $it && $it['featured'] ? 'checked' : ''; ?>> Show on homepage</label>
+        <?php elseif ($type === 'posts'): ?>
           <label class="wide">Summary <small>(shown in lists and search results)</small><input name="description" value="<?php echo e($it ? $it['description'] : ''); ?>"></label>
           <label>Tags <small>(space or comma separated)</small><input name="tags" value="<?php echo e($it ? implode(' ', $it['tags']) : ''); ?>"></label>
           <label>Categories<input name="categories" value="<?php echo e($it ? implode(' ', $it['categories']) : ''); ?>"></label>
@@ -557,18 +594,22 @@ case 'settings':
 default: // dashboard
     $posts = cms_list_items('posts', true);
     $news = cms_list_items('news', true);
-    $drafts = count(array_filter($posts, function ($p) { return $p['draft']; })) + count(array_filter($news, function ($p) { return $p['draft']; }));
+    $projects = cms_list_items('projects', true);
+    $drafts = 0;
+    foreach (array_merge($posts, $news, $projects) as $d) if ($d['draft']) $drafts++;
     admin_layout_start('Dashboard', 'dashboard');
     ?>
     <header class="top"><h1>Hello, <?php echo e(strtok(cms_config('site_name'), ' ')); ?> 👋</h1>
       <div class="actions">
         <a class="btn primary" href="<?php echo e(admin_url(array('page' => 'edit', 'type' => 'news'))); ?>"><?php echo admin_icon('plus'); ?> News</a>
         <a class="btn primary" href="<?php echo e(admin_url(array('page' => 'edit', 'type' => 'posts'))); ?>"><?php echo admin_icon('plus'); ?> Blog post</a>
+        <a class="btn primary" href="<?php echo e(admin_url(array('page' => 'edit', 'type' => 'projects'))); ?>"><?php echo admin_icon('plus'); ?> Project</a>
       </div>
     </header>
     <div class="stats">
       <a class="stat" href="<?php echo e(admin_url(array('page' => 'items', 'type' => 'posts'))); ?>"><b><?php echo count($posts); ?></b><span>blog posts</span></a>
       <a class="stat" href="<?php echo e(admin_url(array('page' => 'items', 'type' => 'news'))); ?>"><b><?php echo count($news); ?></b><span>news items</span></a>
+      <a class="stat" href="<?php echo e(admin_url(array('page' => 'items', 'type' => 'projects'))); ?>"><b><?php echo count($projects); ?></b><span>projects</span></a>
       <div class="stat"><b><?php echo $drafts; ?></b><span>drafts</span></div>
     </div>
     <div class="cards">
@@ -576,11 +617,11 @@ default: // dashboard
         <h2>Recently edited</h2>
         <div class="list compact">
           <?php
-          $recent = array_merge($posts, $news);
+          $recent = array_merge($posts, $news, $projects);
           usort($recent, function ($a, $b) { return $b['updated'] - $a['updated']; });
           foreach (array_slice($recent, 0, 6) as $it): ?>
             <a class="row" href="<?php echo e(admin_url(array('page' => 'edit', 'type' => $it['type'], 'slug' => $it['slug']))); ?>">
-              <span class="pill <?php echo $it['type'] === 'news' ? 'blue' : ''; ?>"><?php echo $it['type'] === 'news' ? 'news' : 'post'; ?></span>
+              <span class="pill <?php echo $it['type'] === 'news' ? 'blue' : ($it['type'] === 'projects' ? 'gold' : ''); ?>"><?php echo array('news' => 'news', 'posts' => 'post', 'projects' => 'project')[$it['type']]; ?></span>
               <span class="grow"><?php echo e($it['title'] !== '' ? $it['title'] : cms_excerpt($it, 60)); ?></span>
             </a>
           <?php endforeach; ?>

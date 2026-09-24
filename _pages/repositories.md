@@ -2,9 +2,10 @@
 layout: page
 permalink: /repositories/
 title: Repositories
-description: My repos
+description: Open-source code — ROS 2 drivers, robot descriptions, firmware and research tools.
+kicker: Open source
 nav: true
-nav_order: 4
+nav_order: 6
 ---
 
 {% if site.data.repositories.github_users %}

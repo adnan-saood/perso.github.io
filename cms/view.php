@@ -73,8 +73,9 @@ function cms_view_blog()
 
     ob_start();
     echo '<div class="post cms-blog">';
-    echo '<header class="cms-page-header reveal"><h1 class="post-title">' . ($filter !== '' ? 'Posts: ' . e($filter) : 'Blog') . '</h1>';
-    echo '<p class="post-description">Research notes, conference recaps and news from the lab.</p>';
+    echo '<header class="cms-page-header"><p class="kicker reveal">Blog</p>';
+    echo '<h1 class="post-title split">' . ($filter !== '' ? 'Posts: ' . e($filter) : 'Notes from the lab.') . '</h1>';
+    echo '<p class="post-description reveal">Research notes, conference recaps and the stories behind the papers.</p>';
     if ($filter !== '') echo '<p><a href="' . e(cms_url('blog/')) . '">&larr; All posts</a></p>';
     echo '</header>';
 
@@ -139,7 +140,8 @@ function cms_view_post($slug)
 
     ob_start();
     echo '<div class="post cms-post">';
-    echo '<header class="post-header reveal"><h1 class="post-title">' . e($post['title']) . '</h1>';
+    echo '<a class="cms-back reveal" href="' . e(cms_url('blog/')) . '"><i class="ti ti-arrow-left"></i> All posts</a>';
+    echo '<header class="post-header"><h1 class="post-title split">' . e($post['title']) . '</h1>';
     echo '<p class="post-meta">' . date('F j, Y', $post['date']) . ' &nbsp;&middot;&nbsp; ' . cms_reading_time($post['body']) . ' min read</p>';
     echo '<p class="post-tags">' . cms_tag_links($post) . '</p></header>';
     echo '<article class="post-content"><div id="markdown-content">' . cms_markdown($post['body']) . '</div></article>';
@@ -175,8 +177,8 @@ function cms_view_news()
 {
     if (isset($_GET['n'])) return cms_view_news_item((string) $_GET['n']);
     $items = cms_list_items('news');
-    $html = '<div class="post"><header class="cms-page-header reveal"><h1 class="post-title">News</h1>'
-        . '<p class="post-description">Papers, awards, talks and other updates.</p></header></div>';
+    $html = '<div class="post"><header class="cms-page-header"><p class="kicker reveal">News</p><h1 class="post-title split">What&rsquo;s new.</h1>'
+        . '<p class="post-description reveal">Papers, awards, talks and other updates.</p></header></div>';
     $html .= '<div class="news">';
     $html .= $items
         ? '<div class="table-responsive"><table class="table table-sm table-borderless">' . cms_news_rows($items) . '</table></div>'
@@ -189,9 +191,94 @@ function cms_view_news_item($slug)
 {
     $n = cms_load_item('news', $slug);
     if (!$n || $n['draft'] || $n['date'] > time()) return null;
-    $html = '<div class="post"><header class="post-header reveal"><h1 class="post-title">' . e($n['title'] ?: 'News') . '</h1>'
+    $html = '<div class="post"><a class="cms-back reveal" href="' . e(cms_url('news/')) . '"><i class="ti ti-arrow-left"></i> All news</a>'
+        . '<header class="post-header"><h1 class="post-title split">' . e($n['title'] ?: 'News') . '</h1>'
         . '<p class="post-meta">' . date('F j, Y', $n['date']) . '</p></header>'
         . '<article class="post-content">' . cms_markdown($n['body']) . '</article>'
-        . '<p><a href="' . e(cms_url('news/')) . '">&larr; All news</a></p></div>';
+        . '</div>';
     return array('title' => $n['title'] ?: 'News', 'description' => cms_excerpt($n, 160), 'html' => $html);
+}
+
+// ---------------------------------------------------------------------------
+// Projects
+// ---------------------------------------------------------------------------
+
+// Card markup shared by the projects page and the homepage fragment.
+function cms_project_cards(array $items, $featureFirst = false)
+{
+    $out = '';
+    foreach ($items as $i => $p) {
+        $cls = 'project-card' . ($featureFirst && $i === 0 ? ' is-feature' : '');
+        $out .= '<a class="' . $cls . '" href="' . e(cms_project_url($p['slug'])) . '" data-category="' . e($p['category']) . '">'
+            . '<span class="project-card__media">'
+            . ($p['category'] !== '' ? '<span class="chip project-card__cat">' . e($p['category']) . '</span>' : '')
+            . ($p['img'] !== '' ? '<img src="' . e(cms_asset_url($p['img'])) . '" alt="" loading="lazy">' : '')
+            . '</span>'
+            . '<span class="project-card__body">'
+            . '<span class="project-card__title">' . e($p['title']) . '</span>'
+            . '<span class="project-card__text">' . e(cms_excerpt($p, 170)) . '</span>'
+            . '<span class="project-card__foot"><span>'
+            . ($p['github'] !== '' ? '<i class="ti ti-brand-github"></i> open source' : 'read more')
+            . '</span><span class="go" aria-hidden="true"><i class="ti ti-arrow-right"></i></span></span>'
+            . '</span></a>';
+    }
+    return $out;
+}
+
+function cms_view_projects()
+{
+    if (isset($_GET['p'])) return cms_view_project((string) $_GET['p']);
+    $items = cms_list_items('projects');
+    $cats = array();
+    foreach ($items as $p) {
+        if ($p['category'] !== '') $cats[$p['category']] = true;
+    }
+
+    $html = '<header class="cms-page-header"><p class="kicker reveal">Projects</p>'
+        . '<h1 class="post-title split">Research and engineering, from silicone to software.</h1>'
+        . '<p class="post-description reveal">Tactile skins, haptic interfaces, medical robots, ROS 2 drivers and swarms. Pick a thread.</p></header>';
+    if (count($cats) > 1) {
+        $html .= '<div class="filters reveal" data-filters="#project-grid" role="group" aria-label="Filter projects">'
+            . '<button type="button" class="is-active" data-filter="*">All</button>';
+        foreach (array_keys($cats) as $c) $html .= '<button type="button" data-filter="' . e($c) . '">' . e($c) . '</button>';
+        $html .= '</div>';
+    }
+    $html .= $items
+        ? '<div class="project-grid" id="project-grid">' . cms_project_cards($items, true) . '</div>'
+        : '<p>No projects yet.</p>';
+    return array('title' => 'Projects', 'description' => 'Research and engineering projects by ' . cms_config('site_name') . '.', 'html' => $html);
+}
+
+function cms_view_project($slug)
+{
+    $p = cms_load_item('projects', $slug);
+    if (!$p || $p['draft']) return null;
+    $all = cms_list_items('projects');
+    $next = null;
+    foreach ($all as $i => $it) {
+        if ($it['slug'] === $slug) $next = isset($all[$i + 1]) ? $all[$i + 1] : $all[0];
+    }
+
+    $html = '<a class="cms-back reveal" href="' . e(cms_url('projects/')) . '"><i class="ti ti-arrow-left"></i> All projects</a>';
+    $html .= '<header class="project-hero"><div>';
+    if ($p['category'] !== '') $html .= '<p class="kicker reveal">' . e($p['category']) . '</p>';
+    $html .= '<h1 class="post-title split">' . e($p['title']) . '</h1>';
+    if ($p['description'] !== '') $html .= '<p class="post-description reveal">' . e($p['description']) . '</p>';
+    $links = '';
+    if ($p['github'] !== '') {
+        $links .= '<a class="btn btn--primary magnetic" href="' . e($p['github']) . '" rel="noopener"><i class="ti ti-brand-github"></i> Code on GitHub</a>';
+    }
+    if ($p['url'] !== '') {
+        $links .= '<a class="btn btn--ghost magnetic" href="' . e($p['url']) . '" rel="noopener">Project link <i class="ti ti-arrow-up-right"></i></a>';
+    }
+    if ($links !== '') $html .= '<div class="project-hero__links reveal">' . $links . '</div>';
+    $html .= '</div>';
+    if ($p['img'] !== '') $html .= '<div class="project-hero__media tilt reveal"><img src="' . e(cms_asset_url($p['img'])) . '" alt=""></div>';
+    $html .= '</header>';
+    $html .= '<article class="cms-project-body post-content">' . cms_markdown($p['body']) . '</article>';
+    if ($next && $next['slug'] !== $slug) {
+        $html .= '<nav class="cms-prev-next"><span></span><a class="cms-next" href="' . e(cms_project_url($next['slug'])) . '">'
+            . '<small>Next project &rarr;</small><span>' . e($next['title']) . '</span></a></nav>';
+    }
+    return array('title' => $p['title'], 'description' => cms_excerpt($p, 160), 'html' => $html);
 }

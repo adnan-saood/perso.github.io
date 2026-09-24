@@ -1,30 +1,27 @@
-{% capture footer_contents %}
-  &copy; Copyright {{ site.time | date: '%Y' }}
-  {{ site.first_name }}
-  {{ site.middle_name }}
-  {{ site.last_name }}. {{ site.footer_text }}
-  {% if site.impressum_path %}
-    <a href="{{ site.url }}{{ site.baseurl }}{{ site.impressum_path }}">Impressum</a>.
-  {% endif %}
-  {% if site.last_updated %}
-    Last updated: {{ 'now' | date: '%B %d, %Y' }}.
-  {% endif %}
-{% endcapture %}
-
-{% if site.footer_fixed %}
-  <footer class="fixed-bottom" role="contentinfo">
-    <div class="container mt-0">
-      {{ footer_contents }}
+{%- assign email = site.data.socials.email | default: 'adnan.saood@ensta.fr' -%}
+<footer class="site-footer" role="contentinfo">
+  <div class="site-footer__cta reveal">
+    <p class="kicker">Get in touch</p>
+    <h2 class="site-footer__title">Let's talk <span class="text-gradient">touch</span>.</h2>
+    <p class="site-footer__lede">Collaborations, student projects, talks, or robots that need a sense of touch.</p>
+    <div class="site-footer__actions">
+      <a class="btn btn--primary magnetic" href="mailto:{{ email | encode_email }}">
+        <span>{{ email }}</span> <i class="ti ti-arrow-up-right" aria-hidden="true"></i>
+      </a>
+      <a class="btn btn--ghost magnetic" href="{{ '/contact/' | relative_url }}">Contact page</a>
     </div>
-  </footer>
-{% else %}
-  <footer class="sticky-bottom mt-5" role="contentinfo">
-    {% if site.newsletter.enabled %}
-      {% include newsletter.liquid %}
-    {% endif %}
+  </div>
 
-    <div class="container">
-      {{ footer_contents }}
-    </div>
-  </footer>
-{% endif %}
+  <div class="site-footer__bottom">
+    <nav class="site-footer__social" aria-label="Profiles">
+      {% if site.data.socials.scholar_userid %}<a href="https://scholar.google.com/citations?user={{ site.data.socials.scholar_userid }}" title="Google Scholar"><i class="ai ai-google-scholar"></i></a>{% endif %}
+      {% if site.data.socials.github_username %}<a href="https://github.com/{{ site.data.socials.github_username }}" title="GitHub"><i class="ti ti-brand-github"></i></a>{% endif %}
+      {% if site.data.socials.linkedin_username %}<a href="https://www.linkedin.com/in/{{ site.data.socials.linkedin_username }}" title="LinkedIn"><i class="ti ti-brand-linkedin"></i></a>{% endif %}
+      {% if site.data.socials.orcid_id %}<a href="https://orcid.org/{{ site.data.socials.orcid_id }}" title="ORCID"><i class="ai ai-orcid"></i></a>{% endif %}
+      <a href="{{ '/cms/feed.php' | relative_url }}" title="RSS feed"><i class="ti ti-rss"></i></a>
+    </nav>
+    <p>
+      &copy; {{ site.time | date: '%Y' }} {{ site.first_name }} {{ site.last_name }} · U2IS, ENSTA Paris — Institut Polytechnique de Paris
+    </p>
+  </div>
+</footer>
