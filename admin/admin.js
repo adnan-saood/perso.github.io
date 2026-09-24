@@ -85,7 +85,34 @@
   var form = document.getElementById("editor-form");
   if (!form) return;
 
+  // Big photos are scaled down in the browser (the server has no image library):
+  // max 2400px on the long edge, re-encoded as JPEG (or WebP if it may have transparency).
+  var MAX_EDGE = 2400;
+  function shrink(file) {
+    if (!/^image\/(jpeg|png|webp)$/.test(file.type) || !window.createImageBitmap) return Promise.resolve(file);
+    return createImageBitmap(file).then(function (img) {
+      var scale = Math.min(1, MAX_EDGE / Math.max(img.width, img.height));
+      if (scale === 1 && file.size < 1.5 * 1024 * 1024) return file;
+      var canvas = document.createElement("canvas");
+      canvas.width = Math.round(img.width * scale);
+      canvas.height = Math.round(img.height * scale);
+      canvas.getContext("2d").drawImage(img, 0, 0, canvas.width, canvas.height);
+      var type = file.type === "image/jpeg" ? "image/jpeg" : "image/webp";
+      return new Promise(function (resolve) {
+        canvas.toBlob(function (blob) {
+          if (!blob || blob.size >= file.size) return resolve(file);
+          var name = file.name.replace(/\.[^.]+$/, "") + (type === "image/jpeg" ? ".jpg" : ".webp");
+          resolve(new File([blob], name, { type: type }));
+        }, type, 0.85);
+      });
+    }, function () { return file; });
+  }
+
   function upload(file) {
+    return shrink(file).then(send);
+  }
+
+  function send(file) {
     var fd = new FormData();
     fd.append("action", "upload_image");
     fd.append("csrf", form.dataset.csrf);

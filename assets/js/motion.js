@@ -12,7 +12,7 @@
   var auto = [
     ".post-list > li", ".projects .card", ".publications ol.bibliography > li", ".cv .card",
     ".news tr", ".post-content > h2", ".post-content > figure", ".post-content > .row",
-    ".repositories .repo", ".home-publications", ".contact-form", ".contact-intro",
+    ".repositories .repo", ".home-publications",
   ];
   function tag(scope) {
     auto.forEach(function (sel) {
@@ -81,7 +81,7 @@
     // --- Cursor spotlight on cards ------------------------------------------
     if (!reduce && window.matchMedia("(hover: hover)").matches) {
       document.addEventListener("pointermove", function (ev) {
-        var card = ev.target.closest && ev.target.closest(".card, .cms-card, .contact-form, .home-news");
+        var card = ev.target.closest && ev.target.closest(".card, .cms-card, .contact-card, .home-news");
         if (!card) return;
         var r = card.getBoundingClientRect();
         card.style.setProperty("--mx", ev.clientX - r.left + "px");

@@ -1,7 +1,7 @@
 # Site admin (PHP CMS)
 
 The site is still built with Jekyll (layout, publications, CV, projects), but
-**blog posts, news, contact messages and files are managed live** at
+**blog posts, news and files are managed live** at
 
     https://perso.ensta.fr/~saood/admin/
 
@@ -10,9 +10,8 @@ Changes there are online immediately. No rebuild, no upload.
 | What | Where it lives on the server | Edited from |
 |---|---|---|
 | Blog posts, news | `~/cms-data/posts/*.md`, `~/cms-data/news/*.md` | Admin → Blog posts / News |
-| Contact messages | `~/cms-data/messages/*.json` (+ optional email) | Admin → Messages |
 | Uploaded files & images | `~/public_html/files/` | Admin → Files, or drag images into the editor |
-| Password, email settings | `~/cms-data/settings.json` | Admin → Settings |
+| Admin password | `~/cms-data/settings.json` (readable by PHP only) | Admin → Settings |
 | Previous versions / deleted items | `~/cms-data/history/`, `~/cms-data/trash/` | Admin → Trash (restore) |
 | Everything else (pages, CV, publications, look) | this repo | edit + `jekyll build` + `./deploy.sh` |
 
@@ -25,22 +24,17 @@ you wrote in the admin panel.
    ```bash
    ssh -J saood@relais.ensta.fr saood@salle.ensta.fr rm -f public_html/simple-admin.php
    ```
-2. **Check the server** once: upload `tools/server-check.php`, open
-   `https://perso.ensta.fr/~saood/server-check.php?key=07f837cacfc568e82d364778`,
-   note the *PHP version* and *Runs as user* lines, then delete the file.
-   PHP 7.2+ is required.
+2. The server was checked on 2026-09-24: PHP 8.4 (FPM) running as `www-data`, no
+   local mail. `tools/server-check.php` can re-run the check if the server changes.
 3. **Build and deploy** the site as usual (`bundle exec jekyll build`, then `./deploy.sh`).
    The deploy also deletes stale `blog/index.html`, `news/index.html` and the old
    Netlify `admin/index.html`, which would otherwise hide the new PHP pages.
 4. **Create the data folder** and import the existing posts/news (from `cms-seed/`):
    ```bash
-   PHP_USER=www-data ./deploy.sh init     # use the "Runs as user" value from step 2
+   ./deploy.sh init
    ```
    It prints a one-time **setup token**.
 5. Open `/admin/`, paste the token, choose a password (12+ characters). Done.
-6. In **Settings**, enter the address that should receive contact-form emails and
-   press *Send test email*. If the university mail server refuses, messages are
-   still collected in the admin inbox.
 
 ## Everyday use
 
@@ -54,19 +48,22 @@ you wrote in the admin panel.
 - **Files**: upload by dropping files on the page; create folders, rename, delete
   (goes to Trash). Links are `https://perso.ensta.fr/~saood/files/...`.
   HTML/SVG/JS/PHP uploads are refused on purpose, because they would run on your site.
-- **Messages**: new messages show a badge. *Reply by email* opens your mail client.
+- **Uploads**: the server allows 2 MB per request by default; `admin/.user.ini` raises
+  it to 64 MB for the admin panel, and the editor also shrinks big photos in your
+  browser before uploading. Settings → Server status shows the limit actually in effect.
 
 ## URLs
 
 - Blog: `/blog/`, a post: `/blog/?p=<slug>`, filters: `/blog/?tag=HRI`, `?year=2026`
 - News: `/news/`, a news page: `/news/?n=<slug>`
 - RSS feed: `/cms/feed.php`
-- Contact form: `/contact/`
+- Contact page (your email, office, profiles): `/contact/`
 - Old Jekyll URLs (`/blog/2026/<slug>/`) redirect automatically (pages in `_pages/legacy/`).
 
 ## Backups
 
-Everything you create lives in `~/cms-data` and `~/public_html/files`. To take a copy:
+Everything you create lives in `~/cms-data` and `~/public_html/files`. To take a copy
+(tar will warn that it cannot read `settings.json`; that is expected, it only holds the password hash):
 
 ```bash
 ssh -J saood@relais.ensta.fr saood@salle.ensta.fr "tar czf - cms-data public_html/files" > site-backup-$(date +%F).tgz
@@ -76,8 +73,8 @@ ssh -J saood@relais.ensta.fr saood@salle.ensta.fr "tar czf - cms-data public_htm
 
 - `cms/` is the engine (plain PHP 7.2+, no database): `lib/core.php` (content store,
   Markdown via Parsedown), `lib/auth.php` (login, CSRF, throttling),
-  `lib/messages.php`, `lib/files.php`, `view.php` (public pages), `api.php`
-  (homepage fragments + contact endpoint), `feed.php`.
+  `lib/files.php`, `view.php` (public pages), `api.php` (homepage fragments),
+  `feed.php`. `lib/Parsedown.php` has a small PHP 8.4 compatibility patch (see its header).
 - `admin/` is the panel (`index.php`, `admin.css`, `admin.js`, EasyMDE editor in `admin/lib/`).
 - `_pages/blog.php` and `_pages/news.php` are Jekyll pages that output PHP: Jekyll
   renders the normal theme around them and PHP fills in the content at request time
@@ -92,5 +89,8 @@ ssh -J saood@relais.ensta.fr saood@salle.ensta.fr "tar czf - cms-data public_htm
 
 - Login is rate-limited (5 failures per 15 minutes per IP), sessions expire after
   2 h idle, and changing the password logs out all other sessions.
-- `perso.ensta.fr` hosts many users on the same domain, and PHP typically runs as a
-  shared user. Log out when done, and keep regular backups.
+- PHP runs as the shared `www-data` user, so `deploy.sh init` grants it access to
+  `cms-data` and `files/` with ACLs (or, if the filesystem has none, makes them
+  world-writable and says so). `settings.json` is always written as 0600.
+- `perso.ensta.fr` hosts many users on the same domain. Log out when done, and keep
+  regular backups.

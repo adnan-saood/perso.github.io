@@ -29,7 +29,7 @@ if [[ "${1:-}" == "init" ]]; then
   cat > "$script" <<EOF
 set -e
 DATA="$DATA"; WEB="$WEB"; PHP_USER="$PHP_USER"
-mkdir -p "\$DATA"/posts "\$DATA"/news "\$DATA"/messages "\$DATA"/history "\$DATA"/trash "\$DATA"/sessions "\$DATA"/state "\$WEB/files/uploads"
+mkdir -p "\$DATA"/posts "\$DATA"/news "\$DATA"/history "\$DATA"/trash "\$DATA"/sessions "\$DATA"/state "\$WEB/files/uploads"
 
 # Import existing posts/news without overwriting anything already there.
 tmp=\$(mktemp -d)
@@ -54,7 +54,8 @@ else
   echo "WARNING: no ACL support, so cms-data and files/ were made world-writable for PHP."
 fi
 
-if ! grep -q password_hash "\$DATA/settings.json" 2>/dev/null; then
+# settings.json is private to PHP (0600), so only test whether it exists.
+if [ ! -e "\$DATA/settings.json" ]; then
   head -c 24 /dev/urandom | od -An -tx1 | tr -d ' \n' > "\$DATA/SETUP_TOKEN"
   chmod a+r "\$DATA/SETUP_TOKEN"
   echo

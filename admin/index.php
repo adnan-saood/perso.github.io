@@ -1,5 +1,5 @@
 <?php
-// Admin panel: posts, news, contact messages, files, trash, settings.
+// Admin panel: posts, news, files, trash, settings.
 require_once __DIR__ . '/../cms/boot.php';
 
 header('X-Frame-Options: DENY');
@@ -50,7 +50,6 @@ function admin_icon($name)
         'home' => 'M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z',
         'posts' => 'M5 4h14v16H5zM8 8h8M8 12h8M8 16h5',
         'news' => 'M4 5h13v14H6a2 2 0 0 1-2-2zM17 9h3v8a2 2 0 0 1-2 2M7 9h7M7 13h7',
-        'mail' => 'M3 6h18v12H3zM3 7l9 6 9-6',
         'folder' => 'M3 6a1 1 0 0 1 1-1h5l2 2h9a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z',
         'trash' => 'M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13',
         'gear' => 'M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM19.4 15a1.6 1.6 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-2.7 1.1V21a2 2 0 1 1-4 0v-.1a1.6 1.6 0 0 0-2.7-1.1l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.6 1.6 0 0 0-1.1-2.7H3a2 2 0 1 1 0-4h.1a1.6 1.6 0 0 0 1.1-2.7l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.6 1.6 0 0 0 2.7-1.1V3a2 2 0 1 1 4 0v.1a1.6 1.6 0 0 0 2.7 1.1l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.6 1.6 0 0 0 1.1 2.7H21a2 2 0 1 1 0 4h-.1a1.6 1.6 0 0 0-1.5 1z',
@@ -73,7 +72,7 @@ function admin_head($title)
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
 <title><?php echo e($title); ?> · Site admin</title>
-<link rel="stylesheet" href="admin.css?v=1">
+<link rel="stylesheet" href="admin.css?v=2">
 <?php
 }
 
@@ -84,12 +83,10 @@ function admin_layout_start($title, $active)
         echo '<link rel="stylesheet" href="lib/easymde.min.css">';
         echo '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">';
     }
-    $unread = cms_unread_count();
     $nav = array(
         'dashboard' => array('Dashboard', 'home', array()),
         'posts' => array('Blog posts', 'posts', array('page' => 'items', 'type' => 'posts')),
         'news' => array('News', 'news', array('page' => 'items', 'type' => 'news')),
-        'messages' => array('Messages', 'mail', array('page' => 'messages')),
         'files' => array('Files', 'folder', array('page' => 'files')),
         'trash' => array('Trash', 'trash', array('page' => 'trash')),
         'settings' => array('Settings', 'gear', array('page' => 'settings')),
@@ -104,7 +101,6 @@ function admin_layout_start($title, $active)
       <?php foreach ($nav as $key => $n): ?>
         <a class="<?php echo $active === $key ? 'on' : ''; ?>" href="<?php echo e(admin_url($n[2])); ?>">
           <?php echo admin_icon($n[1]); ?><span><?php echo e($n[0]); ?></span>
-          <?php if ($key === 'messages' && $unread): ?><b class="badge"><?php echo $unread; ?></b><?php endif; ?>
         </a>
       <?php endforeach; ?>
     </nav>
@@ -128,7 +124,7 @@ function admin_layout_end($scripts = array())
 {
     echo '</main></div>';
     foreach ($scripts as $s) echo '<script src="' . e($s) . '"></script>';
-    echo '<script src="admin.js?v=1"></script></body></html>';
+    echo '<script src="admin.js?v=2"></script></body></html>';
 }
 
 // ---------------------------------------------------------------------------
@@ -262,15 +258,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($err) admin_json(array('error' => $err), 400);
             admin_json(array('url' => cms_files_public_url($rel)));
 
-        case 'msg_read':
-        case 'msg_unread':
-            cms_set_message_read(admin_post('id'), $action === 'msg_read');
-            admin_redirect(array('page' => 'messages'));
-
-        case 'msg_delete':
-            if (cms_delete_message(admin_post('id'))) admin_flash('ok', 'Message moved to trash.');
-            admin_redirect(array('page' => 'messages'));
-
         case 'files_upload':
             $dirRel = admin_post('dir');
             $dir = cms_files_resolve($dirRel);
@@ -332,27 +319,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             cms_trash_empty();
             admin_flash('ok', 'Trash emptied.');
             admin_redirect(array('page' => 'trash'));
-
-        case 'settings_mail':
-            $notify = trim(admin_post('notify_email'));
-            $from = trim(admin_post('from_email'));
-            if (($notify !== '' && !filter_var($notify, FILTER_VALIDATE_EMAIL)) || ($from !== '' && !filter_var($from, FILTER_VALIDATE_EMAIL))) {
-                admin_flash('err', 'Please enter valid email addresses.');
-            } else {
-                cms_save_settings(array('notify_email' => $notify, 'from_email' => $from));
-                admin_flash('ok', 'Email settings saved.');
-            }
-            admin_redirect(array('page' => 'settings'));
-
-        case 'settings_testmail':
-            $to = (string) cms_settings('notify_email');
-            if ($to === '') admin_flash('err', 'Set a notification address first.');
-            elseif (cms_send_mail($to, 'Test from your website', "If you can read this, contact-form notifications work.\n")) {
-                admin_flash('ok', 'Test email handed to the mail server. Check your inbox (and spam folder).');
-            } else {
-                admin_flash('err', 'The server refused to send mail. Messages are still saved in the inbox here.');
-            }
-            admin_redirect(array('page' => 'settings'));
 
         case 'settings_password':
             if (admin_post('new') !== admin_post('new2')) $err = 'The new passwords do not match.';
@@ -462,48 +428,6 @@ case 'edit':
     admin_layout_end(array('lib/easymde.min.js'));
     break;
 
-case 'messages':
-    $msgs = cms_list_messages();
-    admin_layout_start('Messages', 'messages');
-    ?>
-    <header class="top"><h1>Messages</h1><span class="muted"><?php echo count($msgs); ?> total</span></header>
-    <input class="search" type="search" placeholder="Filter…" data-filter="#msg-list">
-    <div class="list" id="msg-list">
-      <?php if (!$msgs): ?><p class="empty">No messages yet. They'll appear here when someone uses your contact page.</p><?php endif; ?>
-      <?php foreach ($msgs as $m): ?>
-        <a class="row <?php echo empty($m['read']) ? 'unread' : ''; ?>" href="<?php echo e(admin_url(array('page' => 'message', 'id' => $m['id']))); ?>">
-          <span class="date"><?php echo date('M j, H:i', $m['received']); ?></span>
-          <span class="grow"><strong><?php echo e($m['name']); ?></strong> <span class="muted">— <?php echo e($m['subject'] !== '' ? $m['subject'] : cms_clean_line($m['message'], 90)); ?></span></span>
-        </a>
-      <?php endforeach; ?>
-    </div>
-    <?php
-    admin_layout_end();
-    break;
-
-case 'message':
-    $m = cms_load_message(isset($_GET['id']) ? (string) $_GET['id'] : '');
-    if (!$m) admin_redirect(array('page' => 'messages'));
-    if (empty($m['read'])) cms_set_message_read($m['id'], true);
-    $reply = 'mailto:' . rawurlencode($m['email']) . '?subject=' . rawurlencode('Re: ' . ($m['subject'] !== '' ? $m['subject'] : 'your message'))
-        . '&body=' . rawurlencode("\n\n> " . str_replace("\n", "\n> ", $m['message']));
-    admin_layout_start('Message from ' . $m['name'], 'messages');
-    ?>
-    <header class="top"><a class="back" href="<?php echo e(admin_url(array('page' => 'messages'))); ?>">&larr; Messages</a></header>
-    <article class="card message">
-      <h1><?php echo e($m['subject'] !== '' ? $m['subject'] : 'Message from ' . $m['name']); ?></h1>
-      <p class="muted"><strong><?php echo e($m['name']); ?></strong> &lt;<?php echo e($m['email']); ?>&gt; · <?php echo date('l j F Y, H:i', $m['received']); ?></p>
-      <div class="msg-body"><?php echo nl2br(e($m['message'])); ?></div>
-      <div class="actions">
-        <a class="btn primary" href="<?php echo e($reply); ?>"><?php echo admin_icon('mail'); ?> Reply by email</a>
-        <form method="post"><?php echo cms_csrf_field(); ?><input type="hidden" name="action" value="msg_unread"><input type="hidden" name="id" value="<?php echo e($m['id']); ?>"><button class="btn">Mark unread</button></form>
-        <form method="post" data-confirm="Move this message to the trash?"><?php echo cms_csrf_field(); ?><input type="hidden" name="action" value="msg_delete"><input type="hidden" name="id" value="<?php echo e($m['id']); ?>"><button class="btn danger"><?php echo admin_icon('trash'); ?> Delete</button></form>
-      </div>
-    </article>
-    <?php
-    admin_layout_end();
-    break;
-
 case 'files':
     $dirRel = isset($_GET['dir']) ? (string) $_GET['dir'] : '';
     $abs = cms_files_resolve($dirRel);
@@ -601,23 +525,12 @@ case 'settings':
         array('PHP version', PHP_VERSION, version_compare(PHP_VERSION, '7.2', '>=')),
         array('Data folder writable', cms_data_path(), is_writable(cms_data_path())),
         array('Files folder writable', cms_config('files_dir'), is_writable(cms_config('files_dir'))),
-        array('mail() available', function_exists('mail') ? 'yes' : 'no', function_exists('mail')),
         array('Max upload size', ini_get('upload_max_filesize') . ' (post ' . ini_get('post_max_size') . ')', true),
     );
     admin_layout_start('Settings', 'settings');
     ?>
     <header class="top"><h1>Settings</h1></header>
     <div class="cards">
-      <form method="post" class="card">
-        <h2>Contact form emails</h2>
-        <p class="muted small">Every message is saved in <em>Messages</em>. If you set an address, you also get an email you can reply to directly.</p>
-        <?php echo cms_csrf_field(); ?><input type="hidden" name="action" value="settings_mail">
-        <label>Send notifications to<input type="email" name="notify_email" value="<?php echo e(isset($s['notify_email']) ? $s['notify_email'] : ''); ?>" placeholder="you@example.com"></label>
-        <label>Send from <small>(an address the university mail server accepts, e.g. your @ensta address)</small><input type="email" name="from_email" value="<?php echo e(isset($s['from_email']) ? $s['from_email'] : ''); ?>"></label>
-        <div class="actions"><button class="btn primary">Save</button>
-          <button class="btn" form="testmail">Send test email</button></div>
-      </form>
-      <form method="post" id="testmail"><?php echo cms_csrf_field(); ?><input type="hidden" name="action" value="settings_testmail"></form>
 
       <form method="post" class="card">
         <h2>Change password</h2>
@@ -644,9 +557,7 @@ case 'settings':
 default: // dashboard
     $posts = cms_list_items('posts', true);
     $news = cms_list_items('news', true);
-    $msgs = cms_list_messages();
     $drafts = count(array_filter($posts, function ($p) { return $p['draft']; })) + count(array_filter($news, function ($p) { return $p['draft']; }));
-    $unread = cms_unread_count();
     admin_layout_start('Dashboard', 'dashboard');
     ?>
     <header class="top"><h1>Hello, <?php echo e(strtok(cms_config('site_name'), ' ')); ?> 👋</h1>
@@ -658,21 +569,9 @@ default: // dashboard
     <div class="stats">
       <a class="stat" href="<?php echo e(admin_url(array('page' => 'items', 'type' => 'posts'))); ?>"><b><?php echo count($posts); ?></b><span>blog posts</span></a>
       <a class="stat" href="<?php echo e(admin_url(array('page' => 'items', 'type' => 'news'))); ?>"><b><?php echo count($news); ?></b><span>news items</span></a>
-      <a class="stat <?php echo $unread ? 'hot' : ''; ?>" href="<?php echo e(admin_url(array('page' => 'messages'))); ?>"><b><?php echo $unread; ?></b><span>unread messages</span></a>
       <div class="stat"><b><?php echo $drafts; ?></b><span>drafts</span></div>
     </div>
-    <div class="cards two">
-      <section class="card">
-        <h2>Latest messages</h2>
-        <div class="list compact">
-          <?php if (!$msgs): ?><p class="empty">No messages yet.</p><?php endif; ?>
-          <?php foreach (array_slice($msgs, 0, 5) as $m): ?>
-            <a class="row <?php echo empty($m['read']) ? 'unread' : ''; ?>" href="<?php echo e(admin_url(array('page' => 'message', 'id' => $m['id']))); ?>">
-              <span class="date"><?php echo date('M j', $m['received']); ?></span><span class="grow"><strong><?php echo e($m['name']); ?></strong> <span class="muted"><?php echo e(cms_clean_line($m['subject'] !== '' ? $m['subject'] : $m['message'], 60)); ?></span></span>
-            </a>
-          <?php endforeach; ?>
-        </div>
-      </section>
+    <div class="cards">
       <section class="card">
         <h2>Recently edited</h2>
         <div class="list compact">

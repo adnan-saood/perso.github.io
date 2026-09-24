@@ -2,31 +2,47 @@
 layout: page
 title: Contact
 permalink: /contact/
-description: Questions about my research, collaborations, or student projects? Send me a message.
+description: Questions about my research, a collaboration or a student project? Email me.
 nav: true
 nav_order: 7
 ---
+{% assign email = site.data.socials.email | default: 'adnan.saood@ensta.fr' %}
 
 <div class="contact-wrap">
   <div class="contact-intro reveal">
     <p>Interested in tactile interaction, social robotics, a collaboration or an internship? Drop me a line. I usually reply within a few days.</p>
-    <ul class="contact-facts">
-      <li><i class="fa-solid fa-location-dot"></i> U2IS, ENSTA Paris — R.2.19, 828 Bd des Maréchaux, 91120 Palaiseau</li>
-      <li><i class="fa-solid fa-envelope"></i> {{ site.data.socials.email | default: 'adnan.saood@ensta.fr' }}</li>
-    </ul>
   </div>
 
-  <form class="contact-form reveal" id="contact-form" method="post" action="{{ '/cms/api.php?action=contact' | relative_url }}" novalidate>
-    <div class="cf-row">
-      <label>Name <input name="name" required maxlength="120" autocomplete="name"></label>
-      <label>Email <input name="email" type="email" required maxlength="200" autocomplete="email"></label>
+  <div class="contact-card reveal">
+    <span class="contact-label">Email</span>
+    <a class="contact-email" href="mailto:{{ email | encode_email }}">{{ email }}</a>
+    <div class="contact-actions">
+      <a class="cf-submit" href="mailto:{{ email | encode_email }}"><span>Write to me</span> <i class="fa-solid fa-paper-plane"></i></a>
+      <button type="button" class="contact-copy" data-copy-email="{{ email }}"><i class="fa-regular fa-copy"></i> <span>Copy address</span></button>
     </div>
-    <label>Subject <input name="subject" maxlength="200"></label>
-    <label>Message <textarea name="message" rows="7" required maxlength="10000"></textarea></label>
-    <!-- Spam trap: humans never see or fill this field. -->
-    <label class="cf-hp" aria-hidden="true">Website <input name="website" tabindex="-1" autocomplete="off"></label>
-    <input type="hidden" name="t" value="0">
-    <button type="submit" class="btn cf-submit"><span>Send message</span> <i class="fa-solid fa-paper-plane"></i></button>
-    <p class="cf-status" role="status" aria-live="polite"></p>
-  </form>
+
+    <span class="contact-label">Office</span>
+    <p class="contact-address">U2IS, ENSTA Paris — Room R.2.19<br>828 Bd des Maréchaux, 91120 Palaiseau, France</p>
+
+    <span class="contact-label">Elsewhere</span>
+    <p class="contact-links">
+      {% if site.data.socials.scholar_userid %}<a href="https://scholar.google.com/citations?user={{ site.data.socials.scholar_userid }}">Google Scholar</a>{% endif %}
+      {% if site.data.socials.linkedin_username %}<a href="https://www.linkedin.com/in/{{ site.data.socials.linkedin_username }}">LinkedIn</a>{% endif %}
+      {% if site.data.socials.github_username %}<a href="https://github.com/{{ site.data.socials.github_username }}">GitHub</a>{% endif %}
+      {% if site.data.socials.orcid_id %}<a href="https://orcid.org/{{ site.data.socials.orcid_id }}">ORCID</a>{% endif %}
+    </p>
+  </div>
 </div>
+
+<script>
+  document.querySelectorAll("[data-copy-email]").forEach(function (b) {
+    b.addEventListener("click", function () {
+      navigator.clipboard.writeText(b.dataset.copyEmail).then(function () {
+        var label = b.querySelector("span");
+        label.textContent = "Copied!";
+        b.classList.add("copied");
+        setTimeout(function () { label.textContent = "Copy address"; b.classList.remove("copied"); }, 1800);
+      });
+    });
+  });
+</script>

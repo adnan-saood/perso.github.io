@@ -58,7 +58,6 @@ small, .small { font-size: .82rem; }
 }
 .side nav a:hover, .side-foot a:hover, .side-foot .linklike:hover { background: var(--bg); color: var(--text); }
 .side nav a.on { background: var(--accent-soft); color: var(--accent); }
-.badge { margin-left: auto; background: var(--accent); color: #fff; font-size: .75rem; padding: 0 .5rem; border-radius: 99px; }
 .side-foot { margin-top: auto; display: flex; flex-direction: column; gap: 2px; }
 .linklike { background: none; border: 0; font: inherit; cursor: pointer; width: 100%; }
 .main { padding: 2rem clamp(1rem, 3vw, 2.5rem) 4rem; max-width: 1200px; width: 100%; }
@@ -119,8 +118,6 @@ a.row:hover { background: var(--bg); }
 .row .date { color: var(--muted); font-variant-numeric: tabular-nums; min-width: 92px; font-size: .88rem; }
 .row .grow { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .row form { margin: 0; }
-.row.unread strong::before { content: ""; display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); margin-right: .5rem; vertical-align: middle; }
-.row:not(.unread) strong { font-weight: 500; }
 .empty { padding: 2rem; text-align: center; color: var(--muted); margin: 0; }
 .pill { font-style: normal; font-size: .72rem; font-weight: 600; padding: .1rem .5rem; border-radius: 99px; background: var(--accent-soft); color: var(--accent); margin-left: .4rem; }
 .pill.blue { background: #e0f2fe; color: #0369a1; }
@@ -132,7 +129,6 @@ a.row:hover { background: var(--bg); }
 a.stat:hover { transform: translateY(-2px); }
 .stat b { font-size: 2rem; line-height: 1.1; }
 .stat span { color: var(--muted); }
-.stat.hot b { background: linear-gradient(135deg, var(--accent), var(--accent-2)); -webkit-background-clip: text; background-clip: text; color: transparent; }
 
 /* Editor */
 .editor { display: flex; flex-direction: column; gap: 1rem; }
@@ -149,9 +145,6 @@ a.stat:hover { transform: translateY(-2px); }
 .EasyMDEContainer .editor-preview img, .EasyMDEContainer .editor-preview-side img { max-width: 100%; }
 .CodeMirror-cursor { border-color: var(--text) !important; }
 .danger-zone { margin-top: 2rem; display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; }
-
-/* Messages */
-.message .msg-body { white-space: normal; background: var(--bg); border-radius: 10px; padding: 1rem 1.25rem; line-height: 1.65; }
 
 /* Files */
 .crumbs { display: flex; gap: .4rem; align-items: center; flex-wrap: wrap; }

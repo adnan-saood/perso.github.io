@@ -96,7 +96,7 @@ function cms_require_csrf()
 }
 
 // ---------------------------------------------------------------------------
-// Throttling (used for login and the public contact form)
+// Throttling (used for login and first-run setup)
 // ---------------------------------------------------------------------------
 
 function cms_throttle_hit($bucket, $window, $max, $record = true)

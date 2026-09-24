@@ -22,7 +22,7 @@ function cms_config($key = null)
         $cfg = array(
             // URL path of the site root, with trailing slash.
             'base_url' => '/~saood/',
-            // Where posts, news, messages and settings live. Keep it outside
+            // Where posts, news and settings live. Keep it outside
             // public_html so a redeploy can never overwrite it.
             'data_dir' => dirname(CMS_WEB_ROOT) . '/cms-data',
             // Web-visible folder managed by the file manager.
@@ -53,7 +53,7 @@ function cms_url($path = '')
     return cms_config('base_url') . ltrim($path, '/');
 }
 
-// Mutable settings written by the admin panel (password hash, emails...).
+// Mutable settings written by the admin panel (password hash, session epoch).
 function cms_settings($key = null)
 {
     $s = cms_read_json(cms_data_path('settings.json'), array());
@@ -65,7 +65,7 @@ function cms_save_settings(array $changes)
 {
     $s = cms_settings();
     foreach ($changes as $k => $v) $s[$k] = $v;
-    return cms_write_json(cms_data_path('settings.json'), $s);
+    return cms_write_json(cms_data_path('settings.json'), $s, 0600);
 }
 
 // ---------------------------------------------------------------------------
@@ -108,19 +108,21 @@ function cms_read_json($file, $default)
 }
 
 // Atomic write: temp file + rename, so a crash never leaves half a file.
-function cms_write_file($file, $content)
+// $mode: pass 0600 for secrets (settings.json holds the password hash).
+function cms_write_file($file, $content, $mode = null)
 {
     $dir = dirname($file);
     if (!is_dir($dir) && !@mkdir($dir, 0775, true)) return false;
     $tmp = $dir . '/.tmp_' . bin2hex(random_bytes(6));
     if (@file_put_contents($tmp, $content, LOCK_EX) === false) return false;
+    if ($mode !== null) @chmod($tmp, $mode);
     if (!@rename($tmp, $file)) { @unlink($tmp); return false; }
     return true;
 }
 
-function cms_write_json($file, $data)
+function cms_write_json($file, $data, $mode = null)
 {
-    return cms_write_file($file, json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
+    return cms_write_file($file, json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE), $mode);
 }
 
 function cms_client_ip()
@@ -347,7 +349,7 @@ function cms_delete_item($type, $slug)
 
 // Moves a file or folder into the trash and remembers where it came from,
 // so it can be restored from the admin panel.
-// $origin: array('kind' => 'item'|'message'|'file', 'path' => relative path)
+// $origin: array('kind' => 'item'|'file', 'path' => relative path)
 function cms_move_to_trash($path, $name, array $origin = array())
 {
     $trash = cms_data_path('trash');
@@ -387,7 +389,7 @@ function cms_trash_restore($entry)
     $o = $index[$entry];
     if ($o['kind'] === 'file') {
         $dest = cms_files_resolve($o['path'], false);
-    } elseif ($o['kind'] === 'item' || $o['kind'] === 'message') {
+    } elseif ($o['kind'] === 'item') {
         $dest = cms_data_path($o['path']);
     } else {
         $dest = null;
