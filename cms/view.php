@@ -329,7 +329,9 @@ function cms_publication_row(array $p, $compact = false)
     }
     $h .= '</div><div class="pub__body"><div class="pub__meta">';
     if ($p['badge'] !== '') $h .= '<span class="chip chip--badge">' . e($p['badge']) . '</span>';
-    $h .= '<span class="chip">' . e(isset($types[$p['pubtype']]) ? $types[$p['pubtype']] : cms_t('Other')) . '</span>';
+    $typeLabel = isset($types[$p['pubtype']]) ? $types[$p['pubtype']] : cms_t('Other');
+    // No "Patent · Patent": skip the type when the badge already says it.
+    if (strcasecmp($typeLabel, $p['badge']) !== 0) $h .= '<span class="chip">' . e($typeLabel) . '</span>';
     if ($p['award'] !== '') $h .= '<span class="chip chip--award"><i class="ti ti-trophy"></i> ' . e($p['award']) . '</span>';
     $h .= '</div>';
     $title = e($p['title']);
@@ -436,7 +438,10 @@ function cms_cv_entry($title, $sub, $dates, $url, $summary, array $bullets)
     if ($summary !== '') $h .= '<p>' . e($summary) . '</p>';
     if ($bullets) {
         $h .= '<ul>';
-        foreach ($bullets as $b) $h .= '<li>' . e($b) . '</li>';
+        // Plain text, except Markdown links: [label](https://...).
+        foreach ($bullets as $b) {
+            $h .= '<li>' . preg_replace('#\[([^\]]+)\]\((https?://[^)\s]+)\)#', '<a href="$2" rel="noopener">$1</a>', e($b)) . '</li>';
+        }
         $h .= '</ul>';
     }
     return $h . '</div></li>';

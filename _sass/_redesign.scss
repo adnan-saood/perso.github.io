@@ -2543,7 +2543,25 @@ html[data-theme="dark"] .chip--award {
 @media (max-width: 640px) {
   .pubs--compact .pub,
   .pubs--home .pub {
-    grid-template-columns: 80px minmax(0, 1fr);
+    grid-template-columns: 72px minmax(0, 1fr);
+    gap: 0.9rem;
+    padding-inline: 0;
+  }
+  // Small tiles: short label on one line ("Journal", not "Jour/nal").
+  .pubs--compact .pub__tile,
+  .pubs--home .pub__tile {
+    padding: 0.5rem;
+  }
+  .pubs--compact .pub__tile span,
+  .pubs--home .pub__tile span {
+    font-size: 0.78rem;
+    word-break: normal;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .pub__title {
+    font-size: 1.02rem !important;
   }
 }
 .pub-empty {
@@ -2585,6 +2603,22 @@ html[data-theme="dark"] .chip--award {
   -webkit-backdrop-filter: blur(12px);
   width: max-content;
   max-width: 100%;
+}
+@media (max-width: 700px) {
+  // One swipeable row on phones instead of a big wrapped box floating over the text.
+  .cv-index {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    width: auto;
+    scrollbar-width: none;
+  }
+  .cv-index::-webkit-scrollbar {
+    display: none;
+  }
+  .cv-index a {
+    flex: none;
+    white-space: nowrap;
+  }
 }
 .cv-index a {
   padding: 0.35rem 0.9rem;
@@ -2651,6 +2685,8 @@ ol.cv-timeline::before {
 }
 .cv-entry__what {
   padding-left: 0.5rem;
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 .cv-entry__what h3 {
   font-size: 1.15rem !important;
@@ -2676,7 +2712,7 @@ ol.cv-timeline::before {
     left: 0.35rem;
   }
   .cv-entry {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr); // a long link must not widen the page
     gap: 0.2rem;
     padding-left: 1.6rem;
   }
@@ -3466,5 +3502,103 @@ html[data-theme="dark"] .fx--soft {
   }
   .fx-ring {
     display: none;
+  }
+}
+
+/* ============================ Phones ===================================== */
+
+@media (max-width: 700px) {
+  // The hero grows with its content instead of being squeezed into one screen
+  // (with the content pinned to the bottom, its top slid under the menu bar).
+  .hero {
+    min-height: 0;
+    align-items: flex-start;
+    padding-top: 5.5rem;
+  }
+  .hero__content {
+    padding-bottom: 2.5rem;
+  }
+  .hero__scroll {
+    display: none;
+  }
+  .hero__title {
+    margin-bottom: 1.1rem;
+  }
+  .hero__lede {
+    margin-bottom: 1.5rem;
+  }
+  .hero__actions {
+    gap: 0.6rem;
+  }
+  .hero__actions .btn {
+    flex: 1 1 auto;
+    justify-content: center;
+    padding: 0.8rem 1.1rem;
+  }
+  .hero__strip {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.6rem;
+    margin-top: 1.4rem;
+  }
+  // Proof badges: one row you can swipe, instead of four stacked lines.
+  .proof {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    margin-right: calc(-1 * var(--gutter));
+    padding: 0 var(--gutter) 0.3rem 0;
+    scrollbar-width: none;
+    -webkit-mask-image: linear-gradient(90deg, #000 85%, transparent);
+    mask-image: linear-gradient(90deg, #000 85%, transparent);
+  }
+  .proof::-webkit-scrollbar {
+    display: none;
+  }
+  .proof li {
+    flex: none;
+  }
+  // Long chips (awards) wrap instead of running out of their card.
+  .chip {
+    white-space: normal;
+    text-align: left;
+  }
+  .section {
+    padding-block: clamp(3.25rem, 12vw, 4.5rem);
+  }
+  .section__head {
+    margin-bottom: 1.6rem;
+  }
+  .portrait {
+    max-width: 280px;
+    margin-inline: auto;
+  }
+  .stat b {
+    font-size: 2.4rem;
+  }
+  .now__tile {
+    min-height: 0;
+  }
+  .robots__stage {
+    aspect-ratio: 1;
+  }
+}
+
+// Reduced motion: the keyword strip becomes a compact cloud, not a tall list.
+@media (prefers-reduced-motion: reduce) {
+  .marquee__track {
+    justify-content: center;
+    gap: 0.5rem 1.4rem;
+    padding: 0 var(--gutter);
+  }
+  .marquee__track span {
+    font-size: clamp(1rem, 2.4vw, 1.3rem);
+    gap: 1.4rem;
+  }
+  .marquee__track span.dup {
+    display: none; // the strip holds the keywords twice for the loop
+  }
+  .marquee {
+    -webkit-mask-image: none;
+    mask-image: none;
   }
 }

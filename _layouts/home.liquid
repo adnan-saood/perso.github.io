@@ -115,7 +115,7 @@ $block = function ($id) use (&$blocks, &$current) {
 <?php $kw = (array) $g('keywords', array()); if ($kw): ?>
 <div class="marquee" aria-hidden="true">
   <div class="marquee__track">
-    <?php for ($i = 0; $i < 2; $i++) foreach ($kw as $k) echo '<span>' . e($k) . '</span>'; ?>
+    <?php for ($i = 0; $i < 2; $i++) foreach ($kw as $k) echo '<span' . ($i ? ' class="dup"' : '') . '>' . e($k) . '</span>'; ?>
   </div>
 </div>
 <?php endif; ?>
