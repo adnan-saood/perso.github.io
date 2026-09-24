@@ -458,27 +458,44 @@ body.home-page {
   transform: translate(3px, -3px) rotate(-8deg);
 }
 
-/* ---------- Respect reduced motion ---------- */
+/* ---------- Reduced motion ----------
+ * Visitors who ask for less motion (e.g. Windows "Animation effects" off) still get
+ * fades, glows, colour and hover feedback; only movement is removed: sliding,
+ * lifting, drifting, shimmering and the hiding navbar.
+ */
+@keyframes vt-fade-only-out {
+  to { opacity: 0; }
+}
+@keyframes vt-fade-only-in {
+  from { opacity: 0; }
+}
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.001ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.001ms !important;
-    scroll-behavior: auto !important;
+  html {
+    scroll-behavior: auto;
+  }
+  ::view-transition-old(root) {
+    animation-name: vt-fade-only-out;
+  }
+  ::view-transition-new(root) {
+    animation-name: vt-fade-only-in;
   }
   .js-motion .reveal {
-    opacity: 1;
+    transform: none;
+    transition: opacity 600ms ease;
+    transition-delay: var(--reveal-delay, 0ms);
+  }
+  .card.hoverable:hover,
+  .cms-card:hover,
+  .cms-prev-next a:hover,
+  .cf-submit:hover,
+  .card.hoverable:hover img.card-img-top,
+  .cf-submit:hover i {
     transform: none;
   }
   body.home-page::before,
-  body.home-page::after {
-    display: none;
-  }
-  .home-intro h1 {
+  body.home-page::after,
+  .home-intro h1,
+  .cms-skeleton {
     animation: none;
-    -webkit-text-fill-color: currentColor;
-    background: none;
   }
 }

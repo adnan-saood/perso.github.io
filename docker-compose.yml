@@ -1,4 +1,10 @@
-# this file uses prebuilt image in dockerhub
+# Local development: `docker compose up`, then open http://localhost:8080
+#
+#   jekyll  rebuilds _site/ whenever you edit a file (and live-reloads the browser)
+#   php     serves _site/ with PHP 8.4, the same version as perso.ensta.fr, so the
+#           blog, news and /admin/ work locally (jekyll's own server can't run PHP).
+#           Preview content lives in .preview-data/ (admin setup token:
+#           preview-setup-token-local).
 services:
   jekyll:
     image: amirpourmand/al-folio:v0.14.6
@@ -13,9 +19,26 @@ services:
     #     USERID: # id -u
     #     USERNAME: # echo $USER
     ports:
-      - 8080:8080
+      # Jekyll's own static server stays reachable on 4000 for debugging.
+      - 4000:8080
       - 35729:35729
     volumes:
       - .:/srv/jekyll
     environment:
       - JEKYLL_ENV=development
+
+  php:
+    image: php:8.4-cli
+    user: "1000:1000"
+    working_dir: /srv/jekyll
+    volumes:
+      - .:/srv/jekyll
+    environment:
+      - LISTEN=0.0.0.0
+      - PORT=8080
+      - WAIT_FOR_BUILD=1
+    command: bash tools/preview.sh
+    ports:
+      - 8080:8080
+    depends_on:
+      - jekyll

@@ -1,5 +1,6 @@
 // Site-wide motion: scroll reveals, glass navbar, reading progress, card spotlight.
-// Everything is progressive: without JS (or with reduced motion) content is simply static.
+// Everything is progressive: without JS content is simply static; with reduced motion
+// only movement is dropped (see _motion.scss).
 (function () {
   "use strict";
   var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -24,7 +25,8 @@
   function observe(scope) {
     tag(scope);
     var els = (scope || document).querySelectorAll(".reveal:not(.is-visible)");
-    if (reduce || !("IntersectionObserver" in window)) {
+    // Reduced motion still gets the fade (CSS drops the slide), so no early exit for it.
+    if (!("IntersectionObserver" in window)) {
       els.forEach(function (el) { el.classList.add("is-visible"); });
       return;
     }
@@ -79,7 +81,8 @@
     onScroll();
 
     // --- Cursor spotlight on cards ------------------------------------------
-    if (!reduce && window.matchMedia("(hover: hover)").matches) {
+    // Pointer-driven, so fine under reduced motion too.
+    if (window.matchMedia("(hover: hover)").matches) {
       document.addEventListener("pointermove", function (ev) {
         var card = ev.target.closest && ev.target.closest(".card, .cms-card, .contact-card, .home-news");
         if (!card) return;

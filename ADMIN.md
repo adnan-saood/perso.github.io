@@ -54,16 +54,17 @@ you wrote in the admin panel.
 
 ## Previewing locally
 
-`jekyll serve` cannot run PHP, so on it the blog/news pages show a folder listing and
-the homepage news box stays empty. To preview with PHP (in WSL, PHP 8 is already there):
-
 ```bash
-bundle exec jekyll build
-bash tools/preview.sh
+docker compose up
 ```
 
-Then open the printed URL (default `http://localhost:8081`). The admin works too
-(setup token `preview-setup-token-local`); preview edits go to `.preview-data/`.
+Open http://localhost:8080. Jekyll rebuilds on every save, and a PHP 8.4 container
+(same version as perso.ensta.fr) serves the result, so the blog, news and `/admin/`
+work like on the server. Admin setup token for the preview: `preview-setup-token-local`;
+preview edits go to `.preview-data/` (delete it to start over from `cms-seed/`).
+Jekyll's own server, without PHP, is still on port 4000.
+
+Without Docker: `bundle exec jekyll build`, then `bash tools/preview.sh` (needs `php`).
 
 ## URLs
 
