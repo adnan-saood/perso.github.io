@@ -12,3 +12,5 @@ node_modules/
 vendor
 .idea
 agents/**
+# PHP CMS: server-specific overrides, never committed
+cms/config.local.php

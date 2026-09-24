@@ -1,0 +1,710 @@
+<?php
+// Admin panel: posts, news, contact messages, files, trash, settings.
+require_once __DIR__ . '/../cms/boot.php';
+
+header('X-Frame-Options: DENY');
+header("Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; font-src 'self' data: https://cdnjs.cloudflare.com; img-src 'self' data: blob: https:; frame-ancestors 'none'; form-action 'self'; base-uri 'none'");
+header('Referrer-Policy: same-origin');
+header('X-Content-Type-Options: nosniff');
+header('Cache-Control: no-store');
+
+$page = isset($_GET['page']) && is_string($_GET['page']) ? $_GET['page'] : 'dashboard';
+$types = cms_types();
+
+// ---------------------------------------------------------------------------
+// Helpers
+// ---------------------------------------------------------------------------
+
+function admin_url(array $q = array())
+{
+    return cms_url('admin/') . ($q ? '?' . http_build_query($q) : '');
+}
+
+function admin_redirect(array $q = array())
+{
+    header('Location: ' . admin_url($q), true, 303);
+    exit;
+}
+
+function admin_flash($type, $msg)
+{
+    $_SESSION['flash'][] = array($type, $msg);
+}
+
+function admin_post($key, $default = '')
+{
+    return isset($_POST[$key]) && is_string($_POST[$key]) ? $_POST[$key] : $default;
+}
+
+function admin_json($data, $status = 200)
+{
+    http_response_code($status);
+    header('Content-Type: application/json; charset=utf-8');
+    echo json_encode($data);
+    exit;
+}
+
+function admin_icon($name)
+{
+    $paths = array(
+        'home' => 'M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z',
+        'posts' => 'M5 4h14v16H5zM8 8h8M8 12h8M8 16h5',
+        'news' => 'M4 5h13v14H6a2 2 0 0 1-2-2zM17 9h3v8a2 2 0 0 1-2 2M7 9h7M7 13h7',
+        'mail' => 'M3 6h18v12H3zM3 7l9 6 9-6',
+        'folder' => 'M3 6a1 1 0 0 1 1-1h5l2 2h9a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z',
+        'trash' => 'M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13',
+        'gear' => 'M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM19.4 15a1.6 1.6 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-2.7 1.1V21a2 2 0 1 1-4 0v-.1a1.6 1.6 0 0 0-2.7-1.1l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.6 1.6 0 0 0-1.1-2.7H3a2 2 0 1 1 0-4h.1a1.6 1.6 0 0 0 1.1-2.7l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.6 1.6 0 0 0 2.7-1.1V3a2 2 0 1 1 4 0v.1a1.6 1.6 0 0 0 2.7 1.1l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.6 1.6 0 0 0 1.1 2.7H21a2 2 0 1 1 0 4h-.1a1.6 1.6 0 0 0-1.5 1z',
+        'plus' => 'M12 5v14M5 12h14',
+        'out' => 'M15 4h4v16h-4M10 8l-4 4 4 4M6 12h11',
+        'ext' => 'M14 4h6v6M20 4l-9 9M18 14v6H4V6h6',
+        'file' => 'M6 3h8l4 4v14H6zM14 3v4h4',
+        'up' => 'M12 19V5M5 12l7-7 7 7',
+    );
+    $d = isset($paths[$name]) ? $paths[$name] : '';
+    return '<svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="' . $d . '"/></svg>';
+}
+
+function admin_head($title)
+{
+    ?><!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title><?php echo e($title); ?> · Site admin</title>
+<link rel="stylesheet" href="admin.css?v=1">
+<?php
+}
+
+function admin_layout_start($title, $active)
+{
+    admin_head($title);
+    if ($active === 'edit') {
+        echo '<link rel="stylesheet" href="lib/easymde.min.css">';
+        echo '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">';
+    }
+    $unread = cms_unread_count();
+    $nav = array(
+        'dashboard' => array('Dashboard', 'home', array()),
+        'posts' => array('Blog posts', 'posts', array('page' => 'items', 'type' => 'posts')),
+        'news' => array('News', 'news', array('page' => 'items', 'type' => 'news')),
+        'messages' => array('Messages', 'mail', array('page' => 'messages')),
+        'files' => array('Files', 'folder', array('page' => 'files')),
+        'trash' => array('Trash', 'trash', array('page' => 'trash')),
+        'settings' => array('Settings', 'gear', array('page' => 'settings')),
+    );
+    ?>
+</head>
+<body>
+<div class="shell">
+  <aside class="side">
+    <a class="brand" href="<?php echo e(admin_url()); ?>"><span class="dot"></span><?php echo e(cms_config('site_name')); ?></a>
+    <nav>
+      <?php foreach ($nav as $key => $n): ?>
+        <a class="<?php echo $active === $key ? 'on' : ''; ?>" href="<?php echo e(admin_url($n[2])); ?>">
+          <?php echo admin_icon($n[1]); ?><span><?php echo e($n[0]); ?></span>
+          <?php if ($key === 'messages' && $unread): ?><b class="badge"><?php echo $unread; ?></b><?php endif; ?>
+        </a>
+      <?php endforeach; ?>
+    </nav>
+    <div class="side-foot">
+      <a href="<?php echo e(cms_url()); ?>" target="_blank" rel="noopener"><?php echo admin_icon('ext'); ?><span>View site</span></a>
+      <form method="post" action="<?php echo e(admin_url()); ?>">
+        <?php echo cms_csrf_field(); ?><input type="hidden" name="action" value="logout">
+        <button class="linklike"><?php echo admin_icon('out'); ?><span>Log out</span></button>
+      </form>
+    </div>
+  </aside>
+  <main class="main">
+    <?php
+    if (!empty($_SESSION['flash'])) {
+        foreach ($_SESSION['flash'] as $f) echo '<div class="flash ' . e($f[0]) . '">' . e($f[1]) . '</div>';
+        $_SESSION['flash'] = array();
+    }
+}
+
+function admin_layout_end($scripts = array())
+{
+    echo '</main></div>';
+    foreach ($scripts as $s) echo '<script src="' . e($s) . '"></script>';
+    echo '<script src="admin.js?v=1"></script></body></html>';
+}
+
+// ---------------------------------------------------------------------------
+// Preconditions: data folder, first-run setup, login
+// ---------------------------------------------------------------------------
+
+$dataDir = cms_data_path();
+if (!is_dir($dataDir) || !is_writable($dataDir)) {
+    admin_head('Setup needed');
+    echo '</head><body class="center"><div class="card narrow"><h1>Almost there</h1>'
+        . '<p>The data folder <code>' . e($dataDir) . '</code> does not exist or PHP cannot write to it.</p>'
+        . '<p>Create it over SSH with the commands in <code>ADMIN.md</code> (section “First-time setup”), then reload this page.</p></div></body></html>';
+    exit;
+}
+
+cms_session_start();
+
+if (!cms_has_password()) {
+    $error = null;
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        cms_require_csrf();
+        if (admin_post('password') !== admin_post('password2')) $error = 'The two passwords do not match.';
+        else $error = cms_complete_setup(admin_post('token'), admin_post('password'));
+        if ($error === null) { admin_flash('ok', 'Welcome! Your admin panel is ready.'); admin_redirect(); }
+    }
+    admin_head('First-time setup');
+    ?></head><body class="center">
+    <form class="card narrow" method="post">
+      <h1>Create your admin password</h1>
+      <p class="muted">Paste the setup token printed by <code>deploy.sh init</code> (it's in <code>cms-data/SETUP_TOKEN</code> on the server).</p>
+      <?php if ($error): ?><div class="flash err"><?php echo e($error); ?></div><?php endif; ?>
+      <?php echo cms_csrf_field(); ?>
+      <label>Setup token<input name="token" required autocomplete="off"></label>
+      <label>New password <small>(12+ characters)</small><input type="password" name="password" minlength="12" required autocomplete="new-password"></label>
+      <label>Repeat password<input type="password" name="password2" minlength="12" required autocomplete="new-password"></label>
+      <button class="btn primary">Save and log in</button>
+    </form></body></html><?php
+    exit;
+}
+
+if (!cms_is_logged_in()) {
+    $error = null;
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && admin_post('action') === 'login') {
+        cms_require_csrf();
+        $error = cms_attempt_login(admin_post('password'));
+        if ($error === null) {
+            $next = isset($_GET['page']) ? $_GET : array();
+            admin_redirect($next);
+        }
+    }
+    admin_head('Log in');
+    ?></head><body class="center">
+    <form class="card narrow login" method="post">
+      <div class="brand big"><span class="dot"></span><?php echo e(cms_config('site_name')); ?></div>
+      <?php if ($error): ?><div class="flash err"><?php echo e($error); ?></div><?php endif; ?>
+      <?php echo cms_csrf_field(); ?><input type="hidden" name="action" value="login">
+      <label>Password<input type="password" name="password" required autofocus autocomplete="current-password"></label>
+      <button class="btn primary">Log in</button>
+    </form></body></html><?php
+    exit;
+}
+
+// ---------------------------------------------------------------------------
+// Actions (POST, CSRF-protected, then redirect)
+// ---------------------------------------------------------------------------
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    cms_require_csrf();
+    $action = admin_post('action');
+
+    switch ($action) {
+        case 'logout':
+            cms_logout();
+            admin_redirect();
+
+        case 'save_item':
+            $type = admin_post('type');
+            if (!isset($types[$type])) admin_redirect();
+            $orig = admin_post('orig_slug');
+            $title = trim(admin_post('title'));
+            $slug = cms_slugify(admin_post('slug') !== '' ? admin_post('slug') : $title);
+            if ($slug === '') $slug = date('Y-m-d') . '-' . $type;
+            $existing = $orig !== '' ? cms_load_item($type, $orig) : null;
+
+            $date = admin_post('date') !== '' ? admin_post('date') : date('Y-m-d');
+            if (admin_post('time') !== '') $date .= ' ' . admin_post('time');
+            if (strtotime($date) === false) $date = date('Y-m-d');
+
+            // Keep front-matter keys we don't edit here (layout, giscus_comments, ...).
+            $meta = $existing ? $existing['meta'] : array('layout' => 'post');
+            $meta['title'] = $title;
+            $meta['date'] = $date;
+            $meta['draft'] = !empty($_POST['draft']);
+            if ($type === 'posts') {
+                $meta['description'] = trim(admin_post('description'));
+                $meta['tags'] = cms_list(admin_post('tags'));
+                $meta['categories'] = cms_list(admin_post('categories'));
+                $meta['thumbnail'] = trim(admin_post('thumbnail'));
+                $meta['featured'] = !empty($_POST['featured']);
+            } else {
+                $meta['inline'] = !empty($_POST['inline']);
+            }
+            foreach (array('draft', 'featured', 'inline') as $flag) {
+                if (isset($meta[$flag]) && $meta[$flag] === false && $flag !== 'inline') unset($meta[$flag]);
+            }
+
+            if ($slug !== $orig && cms_load_item($type, $slug)) {
+                admin_flash('err', 'Another ' . $types[$type]['singular'] . ' already uses the address "' . $slug . '". Choose a different slug.');
+                $_SESSION['draft_body'] = admin_post('body');
+                admin_redirect(array('page' => 'edit', 'type' => $type, 'slug' => $orig));
+            }
+            if (!cms_save_item($type, $slug, $meta, admin_post('body'))) {
+                admin_flash('err', 'Could not save. Is the data folder writable?');
+                admin_redirect(array('page' => 'edit', 'type' => $type, 'slug' => $orig));
+            }
+            if ($orig !== '' && $orig !== $slug) cms_delete_item($type, $orig);
+            admin_flash('ok', 'Saved' . ($meta['draft'] ? ' as draft' : ' and published') . '.');
+            admin_redirect(array('page' => 'edit', 'type' => $type, 'slug' => $slug));
+
+        case 'delete_item':
+            $type = admin_post('type');
+            if (isset($types[$type]) && cms_delete_item($type, admin_post('slug'))) admin_flash('ok', 'Moved to trash.');
+            else admin_flash('err', 'Could not delete.');
+            admin_redirect(array('page' => 'items', 'type' => $type));
+
+        case 'upload_image': // AJAX from the editor
+            $dir = cms_files_ensure_dir('uploads/' . date('Y'));
+            $files = cms_files_from_request('image');
+            if (!$dir || !$files) admin_json(array('error' => 'No file received.'), 400);
+            list($rel, $err) = cms_files_store_upload($files[0], $dir);
+            if ($err) admin_json(array('error' => $err), 400);
+            admin_json(array('url' => cms_files_public_url($rel)));
+
+        case 'msg_read':
+        case 'msg_unread':
+            cms_set_message_read(admin_post('id'), $action === 'msg_read');
+            admin_redirect(array('page' => 'messages'));
+
+        case 'msg_delete':
+            if (cms_delete_message(admin_post('id'))) admin_flash('ok', 'Message moved to trash.');
+            admin_redirect(array('page' => 'messages'));
+
+        case 'files_upload':
+            $dirRel = admin_post('dir');
+            $dir = cms_files_resolve($dirRel);
+            if (!$dir || !is_dir($dir)) admin_redirect(array('page' => 'files'));
+            $ok = 0;
+            foreach (cms_files_from_request('files') as $f) {
+                list($rel, $err) = cms_files_store_upload($f, $dir);
+                if ($err) admin_flash('err', $err); else $ok++;
+            }
+            if ($ok) admin_flash('ok', $ok . ' file' . ($ok > 1 ? 's' : '') . ' uploaded.');
+            if (!$_FILES) admin_flash('err', 'Nothing was uploaded. The files may exceed the server limit (' . ini_get('post_max_size') . ').');
+            admin_redirect(array('page' => 'files', 'dir' => $dirRel));
+
+        case 'files_mkdir':
+            $dirRel = admin_post('dir');
+            $parent = cms_files_resolve($dirRel);
+            $name = cms_safe_filename(admin_post('name'), true);
+            if ($parent && is_dir($parent) && !file_exists($parent . '/' . $name) && @mkdir($parent . '/' . $name, 0775)) {
+                admin_flash('ok', 'Folder "' . $name . '" created.');
+            } else {
+                admin_flash('err', 'Could not create that folder (does it already exist?).');
+            }
+            admin_redirect(array('page' => 'files', 'dir' => $dirRel));
+
+        case 'files_rename':
+            $dirRel = admin_post('dir');
+            $src = cms_files_resolve(admin_post('path'));
+            $isDir = $src && is_dir($src);
+            $name = cms_safe_filename(admin_post('name'), $isDir);
+            if (!$src || $src === cms_files_root() || $name === null) {
+                admin_flash('err', 'Invalid name or file type not allowed.');
+            } elseif (file_exists(dirname($src) . '/' . $name)) {
+                admin_flash('err', 'Something with that name already exists.');
+            } elseif (@rename($src, dirname($src) . '/' . $name)) {
+                admin_flash('ok', 'Renamed to "' . $name . '".');
+            } else {
+                admin_flash('err', 'Rename failed.');
+            }
+            admin_redirect(array('page' => 'files', 'dir' => $dirRel));
+
+        case 'files_delete':
+            $dirRel = admin_post('dir');
+            $paths = isset($_POST['paths']) && is_array($_POST['paths']) ? $_POST['paths'] : array(admin_post('path'));
+            $n = 0;
+            foreach ($paths as $p) {
+                $abs = cms_files_resolve((string) $p);
+                if (!$abs || $abs === cms_files_root()) continue;
+                if (cms_move_to_trash($abs, basename($abs), array('kind' => 'file', 'path' => cms_files_rel($abs)))) $n++;
+            }
+            admin_flash($n ? 'ok' : 'err', $n ? $n . ' item' . ($n > 1 ? 's' : '') . ' moved to trash.' : 'Nothing deleted.');
+            admin_redirect(array('page' => 'files', 'dir' => $dirRel));
+
+        case 'trash_restore':
+            $err = cms_trash_restore(admin_post('entry'));
+            admin_flash($err ? 'err' : 'ok', $err ? $err : 'Restored.');
+            admin_redirect(array('page' => 'trash'));
+
+        case 'trash_empty':
+            cms_trash_empty();
+            admin_flash('ok', 'Trash emptied.');
+            admin_redirect(array('page' => 'trash'));
+
+        case 'settings_mail':
+            $notify = trim(admin_post('notify_email'));
+            $from = trim(admin_post('from_email'));
+            if (($notify !== '' && !filter_var($notify, FILTER_VALIDATE_EMAIL)) || ($from !== '' && !filter_var($from, FILTER_VALIDATE_EMAIL))) {
+                admin_flash('err', 'Please enter valid email addresses.');
+            } else {
+                cms_save_settings(array('notify_email' => $notify, 'from_email' => $from));
+                admin_flash('ok', 'Email settings saved.');
+            }
+            admin_redirect(array('page' => 'settings'));
+
+        case 'settings_testmail':
+            $to = (string) cms_settings('notify_email');
+            if ($to === '') admin_flash('err', 'Set a notification address first.');
+            elseif (cms_send_mail($to, 'Test from your website', "If you can read this, contact-form notifications work.\n")) {
+                admin_flash('ok', 'Test email handed to the mail server. Check your inbox (and spam folder).');
+            } else {
+                admin_flash('err', 'The server refused to send mail. Messages are still saved in the inbox here.');
+            }
+            admin_redirect(array('page' => 'settings'));
+
+        case 'settings_password':
+            if (admin_post('new') !== admin_post('new2')) $err = 'The new passwords do not match.';
+            else $err = cms_change_password(admin_post('current'), admin_post('new'));
+            admin_flash($err ? 'err' : 'ok', $err ? $err : 'Password changed. Other sessions were logged out.');
+            admin_redirect(array('page' => 'settings'));
+    }
+    admin_redirect();
+}
+
+// ---------------------------------------------------------------------------
+// Pages
+// ---------------------------------------------------------------------------
+
+switch ($page) {
+
+case 'items':
+    $type = isset($_GET['type'], $types[$_GET['type']]) ? $_GET['type'] : 'posts';
+    $items = cms_list_items($type, true);
+    admin_layout_start($types[$type]['label'], $type);
+    ?>
+    <header class="top">
+      <h1><?php echo e($types[$type]['label']); ?></h1>
+      <a class="btn primary" href="<?php echo e(admin_url(array('page' => 'edit', 'type' => $type))); ?>"><?php echo admin_icon('plus'); ?> New <?php echo e($types[$type]['singular']); ?></a>
+    </header>
+    <input class="search" type="search" placeholder="Filter…" data-filter="#item-list">
+    <div class="list" id="item-list">
+      <?php if (!$items): ?><p class="empty">Nothing here yet.</p><?php endif; ?>
+      <?php foreach ($items as $it): ?>
+        <a class="row" href="<?php echo e(admin_url(array('page' => 'edit', 'type' => $type, 'slug' => $it['slug']))); ?>">
+          <span class="date"><?php echo date('M j, Y', $it['date']); ?></span>
+          <span class="grow"><strong><?php echo e($it['title'] !== '' ? $it['title'] : cms_excerpt($it, 80)); ?></strong>
+            <?php if ($it['draft']): ?><em class="pill">draft</em><?php endif; ?>
+            <?php if ($it['date'] > time()): ?><em class="pill blue">scheduled</em><?php endif; ?>
+            <?php if (!empty($it['featured'])): ?><em class="pill gold">featured</em><?php endif; ?>
+          </span>
+          <span class="muted small"><?php echo e(implode(', ', $it['tags'])); ?></span>
+        </a>
+      <?php endforeach; ?>
+    </div>
+    <?php
+    admin_layout_end();
+    break;
+
+case 'edit':
+    $type = isset($_GET['type'], $types[$_GET['type']]) ? $_GET['type'] : 'posts';
+    $slug = isset($_GET['slug']) ? (string) $_GET['slug'] : '';
+    $it = $slug !== '' ? cms_load_item($type, $slug) : null;
+    if ($slug !== '' && !$it) { admin_flash('err', 'Not found.'); admin_redirect(array('page' => 'items', 'type' => $type)); }
+    $body = isset($_SESSION['draft_body']) ? $_SESSION['draft_body'] : ($it ? $it['body'] : '');
+    unset($_SESSION['draft_body']);
+    $date = $it ? $it['date'] : time();
+    $hasTime = $it && isset($it['meta']['date']) && preg_match('/\d{1,2}:\d{2}/', (string) $it['meta']['date']);
+    $publicUrl = $it ? ($type === 'posts' ? cms_post_url($it['slug']) : cms_news_url($it['slug'])) : '';
+
+    admin_layout_start($it ? 'Edit ' . $types[$type]['singular'] : 'New ' . $types[$type]['singular'], 'edit');
+    ?>
+    <form method="post" class="editor" id="editor-form" data-upload-url="<?php echo e(admin_url()); ?>" data-csrf="<?php echo e(cms_csrf_token()); ?>">
+      <?php echo cms_csrf_field(); ?>
+      <input type="hidden" name="action" value="save_item">
+      <input type="hidden" name="type" value="<?php echo e($type); ?>">
+      <input type="hidden" name="orig_slug" value="<?php echo e($slug); ?>">
+
+      <header class="top">
+        <a class="back" href="<?php echo e(admin_url(array('page' => 'items', 'type' => $type))); ?>">&larr; <?php echo e($types[$type]['label']); ?></a>
+        <div class="actions">
+          <?php if ($it && !$it['draft']): ?><a class="btn" href="<?php echo e($publicUrl); ?>" target="_blank" rel="noopener"><?php echo admin_icon('ext'); ?> View</a><?php endif; ?>
+          <label class="toggle"><input type="checkbox" name="draft" value="1" <?php echo $it && $it['draft'] ? 'checked' : ''; ?>> Draft</label>
+          <button class="btn primary" accesskey="s">Save</button>
+        </div>
+      </header>
+
+      <input class="title-input" name="title" placeholder="<?php echo $type === 'news' ? 'Headline (optional for short items)' : 'Post title'; ?>"
+             value="<?php echo e($it ? $it['title'] : ''); ?>" <?php echo $type === 'posts' ? 'required' : ''; ?> autofocus>
+
+      <div class="grid meta">
+        <label>Date<input type="date" name="date" value="<?php echo date('Y-m-d', $date); ?>" required></label>
+        <label>Time <small>(optional)</small><input type="time" name="time" value="<?php echo $hasTime ? date('H:i', $date) : ''; ?>"></label>
+        <label>Slug <small>(address)</small><input name="slug" value="<?php echo e($slug); ?>" placeholder="auto from title" pattern="[a-z0-9][a-z0-9-]*"></label>
+        <?php if ($type === 'posts'): ?>
+          <label class="wide">Summary <small>(shown in lists and search results)</small><input name="description" value="<?php echo e($it ? $it['description'] : ''); ?>"></label>
+          <label>Tags <small>(space or comma separated)</small><input name="tags" value="<?php echo e($it ? implode(' ', $it['tags']) : ''); ?>"></label>
+          <label>Categories<input name="categories" value="<?php echo e($it ? implode(' ', $it['categories']) : ''); ?>"></label>
+          <label>Cover image URL <small>(optional)</small>
+            <span class="with-btn"><input name="thumbnail" id="thumb" value="<?php echo e($it ? $it['thumbnail'] : ''); ?>"><button type="button" class="btn small" data-upload-into="#thumb">Upload</button></span>
+          </label>
+          <label class="toggle"><input type="checkbox" name="featured" value="1" <?php echo $it && $it['featured'] ? 'checked' : ''; ?>> Pin as featured</label>
+        <?php else: ?>
+          <label class="toggle wide"><input type="checkbox" name="inline" value="1" <?php echo !$it || $it['inline'] ? 'checked' : ''; ?>>
+            Short item: show the text directly in the news list (untick to link to a full page with the headline)</label>
+        <?php endif; ?>
+      </div>
+
+      <textarea name="body" id="body"><?php echo e($body); ?></textarea>
+      <p class="muted small">Markdown. Drag &amp; drop or paste images straight into the editor. Ctrl+S saves.</p>
+    </form>
+
+    <?php if ($it): ?>
+      <form method="post" class="danger-zone" data-confirm="Move this <?php echo e($types[$type]['singular']); ?> to the trash?">
+        <?php echo cms_csrf_field(); ?>
+        <input type="hidden" name="action" value="delete_item"><input type="hidden" name="type" value="<?php echo e($type); ?>">
+        <input type="hidden" name="slug" value="<?php echo e($slug); ?>">
+        <button class="btn danger"><?php echo admin_icon('trash'); ?> Delete</button>
+        <span class="muted small">Last saved <?php echo date('M j, Y H:i', $it['updated']); ?>. Previous versions are kept in <code>cms-data/history</code>.</span>
+      </form>
+    <?php endif;
+    admin_layout_end(array('lib/easymde.min.js'));
+    break;
+
+case 'messages':
+    $msgs = cms_list_messages();
+    admin_layout_start('Messages', 'messages');
+    ?>
+    <header class="top"><h1>Messages</h1><span class="muted"><?php echo count($msgs); ?> total</span></header>
+    <input class="search" type="search" placeholder="Filter…" data-filter="#msg-list">
+    <div class="list" id="msg-list">
+      <?php if (!$msgs): ?><p class="empty">No messages yet. They'll appear here when someone uses your contact page.</p><?php endif; ?>
+      <?php foreach ($msgs as $m): ?>
+        <a class="row <?php echo empty($m['read']) ? 'unread' : ''; ?>" href="<?php echo e(admin_url(array('page' => 'message', 'id' => $m['id']))); ?>">
+          <span class="date"><?php echo date('M j, H:i', $m['received']); ?></span>
+          <span class="grow"><strong><?php echo e($m['name']); ?></strong> <span class="muted">— <?php echo e($m['subject'] !== '' ? $m['subject'] : cms_clean_line($m['message'], 90)); ?></span></span>
+        </a>
+      <?php endforeach; ?>
+    </div>
+    <?php
+    admin_layout_end();
+    break;
+
+case 'message':
+    $m = cms_load_message(isset($_GET['id']) ? (string) $_GET['id'] : '');
+    if (!$m) admin_redirect(array('page' => 'messages'));
+    if (empty($m['read'])) cms_set_message_read($m['id'], true);
+    $reply = 'mailto:' . rawurlencode($m['email']) . '?subject=' . rawurlencode('Re: ' . ($m['subject'] !== '' ? $m['subject'] : 'your message'))
+        . '&body=' . rawurlencode("\n\n> " . str_replace("\n", "\n> ", $m['message']));
+    admin_layout_start('Message from ' . $m['name'], 'messages');
+    ?>
+    <header class="top"><a class="back" href="<?php echo e(admin_url(array('page' => 'messages'))); ?>">&larr; Messages</a></header>
+    <article class="card message">
+      <h1><?php echo e($m['subject'] !== '' ? $m['subject'] : 'Message from ' . $m['name']); ?></h1>
+      <p class="muted"><strong><?php echo e($m['name']); ?></strong> &lt;<?php echo e($m['email']); ?>&gt; · <?php echo date('l j F Y, H:i', $m['received']); ?></p>
+      <div class="msg-body"><?php echo nl2br(e($m['message'])); ?></div>
+      <div class="actions">
+        <a class="btn primary" href="<?php echo e($reply); ?>"><?php echo admin_icon('mail'); ?> Reply by email</a>
+        <form method="post"><?php echo cms_csrf_field(); ?><input type="hidden" name="action" value="msg_unread"><input type="hidden" name="id" value="<?php echo e($m['id']); ?>"><button class="btn">Mark unread</button></form>
+        <form method="post" data-confirm="Move this message to the trash?"><?php echo cms_csrf_field(); ?><input type="hidden" name="action" value="msg_delete"><input type="hidden" name="id" value="<?php echo e($m['id']); ?>"><button class="btn danger"><?php echo admin_icon('trash'); ?> Delete</button></form>
+      </div>
+    </article>
+    <?php
+    admin_layout_end();
+    break;
+
+case 'files':
+    $dirRel = isset($_GET['dir']) ? (string) $_GET['dir'] : '';
+    $abs = cms_files_resolve($dirRel);
+    if (!$abs || !is_dir($abs)) { admin_flash('err', 'Folder not found.'); admin_redirect(array('page' => 'files')); }
+    $dirRel = cms_files_rel($abs);
+    list($dirs, $files) = cms_files_list($abs);
+    $crumbs = array(array('files', ''));
+    $acc = '';
+    foreach ($dirRel === '' ? array() : explode('/', $dirRel) as $part) {
+        $acc = ltrim($acc . '/' . $part, '/');
+        $crumbs[] = array($part, $acc);
+    }
+    admin_layout_start('Files', 'files');
+    ?>
+    <header class="top">
+      <h1 class="crumbs"><?php foreach ($crumbs as $i => $c): ?><?php if ($i): ?><span>/</span><?php endif; ?><a href="<?php echo e(admin_url(array('page' => 'files', 'dir' => $c[1]))); ?>"><?php echo e($c[0]); ?></a><?php endforeach; ?></h1>
+      <form method="post" class="inline" data-prompt="New folder name" data-prompt-field="name">
+        <?php echo cms_csrf_field(); ?><input type="hidden" name="action" value="files_mkdir"><input type="hidden" name="dir" value="<?php echo e($dirRel); ?>"><input type="hidden" name="name">
+        <button class="btn"><?php echo admin_icon('plus'); ?> New folder</button>
+      </form>
+    </header>
+
+    <form method="post" enctype="multipart/form-data" class="dropzone" id="dropzone">
+      <?php echo cms_csrf_field(); ?><input type="hidden" name="action" value="files_upload"><input type="hidden" name="dir" value="<?php echo e($dirRel); ?>">
+      <input type="file" name="files[]" id="file-input" multiple>
+      <label for="file-input"><?php echo admin_icon('up'); ?><strong>Drop files here</strong> or click to choose · max <?php echo e(ini_get('upload_max_filesize')); ?> each</label>
+    </form>
+
+    <form method="post" id="bulk" data-confirm="Move the selected items to the trash?">
+      <?php echo cms_csrf_field(); ?><input type="hidden" name="action" value="files_delete"><input type="hidden" name="dir" value="<?php echo e($dirRel); ?>">
+      <div class="bulkbar" hidden><span data-count></span> selected <button class="btn danger small"><?php echo admin_icon('trash'); ?> Delete</button></div>
+    </form>
+
+    <div class="files">
+      <?php if ($dirRel !== ''): ?>
+        <a class="file dir" href="<?php echo e(admin_url(array('page' => 'files', 'dir' => dirname($dirRel) === '.' ? '' : dirname($dirRel)))); ?>"><span class="thumb"><?php echo admin_icon('folder'); ?></span><span class="name">..</span></a>
+      <?php endif; ?>
+      <?php foreach ($dirs as $d): ?>
+        <div class="file dir">
+          <input type="checkbox" form="bulk" name="paths[]" value="<?php echo e($d['rel']); ?>" aria-label="Select">
+          <a class="thumb" href="<?php echo e(admin_url(array('page' => 'files', 'dir' => $d['rel']))); ?>"><?php echo admin_icon('folder'); ?></a>
+          <a class="name" href="<?php echo e(admin_url(array('page' => 'files', 'dir' => $d['rel']))); ?>"><?php echo e($d['name']); ?></a>
+          <?php admin_file_menu($d, $dirRel, false); ?>
+        </div>
+      <?php endforeach; ?>
+      <?php foreach ($files as $f): $url = cms_files_public_url($f['rel']); ?>
+        <div class="file">
+          <input type="checkbox" form="bulk" name="paths[]" value="<?php echo e($f['rel']); ?>" aria-label="Select">
+          <a class="thumb" href="<?php echo e($url); ?>" target="_blank" rel="noopener">
+            <?php if (in_array($f['ext'], array('jpg', 'jpeg', 'png', 'gif', 'webp', 'avif', 'ico'), true)): ?>
+              <img src="<?php echo e($url); ?>" alt="" loading="lazy">
+            <?php else: ?><?php echo admin_icon('file'); ?><em><?php echo e($f['ext']); ?></em><?php endif; ?>
+          </a>
+          <span class="name" title="<?php echo e($f['name']); ?>"><?php echo e($f['name']); ?></span>
+          <span class="muted small"><?php echo cms_human_size($f['size']); ?></span>
+          <?php admin_file_menu($f, $dirRel, $url); ?>
+        </div>
+      <?php endforeach; ?>
+    </div>
+    <?php if (!$dirs && !$files): ?><p class="empty">This folder is empty.</p><?php endif; ?>
+    <?php
+    admin_layout_end();
+    break;
+
+case 'trash':
+    $entries = cms_trash_list();
+    admin_layout_start('Trash', 'trash');
+    ?>
+    <header class="top"><h1>Trash</h1>
+      <?php if ($entries): ?>
+        <form method="post" data-confirm="Permanently delete everything in the trash? This cannot be undone.">
+          <?php echo cms_csrf_field(); ?><input type="hidden" name="action" value="trash_empty"><button class="btn danger"><?php echo admin_icon('trash'); ?> Empty trash</button>
+        </form>
+      <?php endif; ?>
+    </header>
+    <div class="list">
+      <?php if (!$entries): ?><p class="empty">The trash is empty.</p><?php endif; ?>
+      <?php foreach ($entries as $t): ?>
+        <div class="row">
+          <span class="date"><?php echo date('M j, H:i', $t['deleted']); ?></span>
+          <span class="grow"><strong><?php echo e($t['name']); ?></strong> <span class="muted small"><?php echo e($t['kind'] === 'file' ? 'files/' . $t['path'] : $t['path']); ?></span></span>
+          <?php if ($t['kind'] !== 'unknown'): ?>
+            <form method="post"><?php echo cms_csrf_field(); ?><input type="hidden" name="action" value="trash_restore"><input type="hidden" name="entry" value="<?php echo e($t['entry']); ?>"><button class="btn small">Restore</button></form>
+          <?php endif; ?>
+        </div>
+      <?php endforeach; ?>
+    </div>
+    <?php
+    admin_layout_end();
+    break;
+
+case 'settings':
+    $s = cms_settings();
+    $checks = array(
+        array('PHP version', PHP_VERSION, version_compare(PHP_VERSION, '7.2', '>=')),
+        array('Data folder writable', cms_data_path(), is_writable(cms_data_path())),
+        array('Files folder writable', cms_config('files_dir'), is_writable(cms_config('files_dir'))),
+        array('mail() available', function_exists('mail') ? 'yes' : 'no', function_exists('mail')),
+        array('Max upload size', ini_get('upload_max_filesize') . ' (post ' . ini_get('post_max_size') . ')', true),
+    );
+    admin_layout_start('Settings', 'settings');
+    ?>
+    <header class="top"><h1>Settings</h1></header>
+    <div class="cards">
+      <form method="post" class="card">
+        <h2>Contact form emails</h2>
+        <p class="muted small">Every message is saved in <em>Messages</em>. If you set an address, you also get an email you can reply to directly.</p>
+        <?php echo cms_csrf_field(); ?><input type="hidden" name="action" value="settings_mail">
+        <label>Send notifications to<input type="email" name="notify_email" value="<?php echo e(isset($s['notify_email']) ? $s['notify_email'] : ''); ?>" placeholder="you@example.com"></label>
+        <label>Send from <small>(an address the university mail server accepts, e.g. your @ensta address)</small><input type="email" name="from_email" value="<?php echo e(isset($s['from_email']) ? $s['from_email'] : ''); ?>"></label>
+        <div class="actions"><button class="btn primary">Save</button>
+          <button class="btn" form="testmail">Send test email</button></div>
+      </form>
+      <form method="post" id="testmail"><?php echo cms_csrf_field(); ?><input type="hidden" name="action" value="settings_testmail"></form>
+
+      <form method="post" class="card">
+        <h2>Change password</h2>
+        <?php echo cms_csrf_field(); ?><input type="hidden" name="action" value="settings_password">
+        <label>Current password<input type="password" name="current" required autocomplete="current-password"></label>
+        <label>New password <small>(12+ characters)</small><input type="password" name="new" minlength="12" required autocomplete="new-password"></label>
+        <label>Repeat new password<input type="password" name="new2" minlength="12" required autocomplete="new-password"></label>
+        <div class="actions"><button class="btn primary">Change password</button></div>
+      </form>
+
+      <div class="card">
+        <h2>Server status</h2>
+        <table class="kv">
+          <?php foreach ($checks as $c): ?>
+            <tr><th><?php echo e($c[0]); ?></th><td><span class="dotstat <?php echo $c[2] ? 'good' : 'bad'; ?>"></span><?php echo e($c[1]); ?></td></tr>
+          <?php endforeach; ?>
+        </table>
+      </div>
+    </div>
+    <?php
+    admin_layout_end();
+    break;
+
+default: // dashboard
+    $posts = cms_list_items('posts', true);
+    $news = cms_list_items('news', true);
+    $msgs = cms_list_messages();
+    $drafts = count(array_filter($posts, function ($p) { return $p['draft']; })) + count(array_filter($news, function ($p) { return $p['draft']; }));
+    $unread = cms_unread_count();
+    admin_layout_start('Dashboard', 'dashboard');
+    ?>
+    <header class="top"><h1>Hello, <?php echo e(strtok(cms_config('site_name'), ' ')); ?> 👋</h1>
+      <div class="actions">
+        <a class="btn primary" href="<?php echo e(admin_url(array('page' => 'edit', 'type' => 'news'))); ?>"><?php echo admin_icon('plus'); ?> News</a>
+        <a class="btn primary" href="<?php echo e(admin_url(array('page' => 'edit', 'type' => 'posts'))); ?>"><?php echo admin_icon('plus'); ?> Blog post</a>
+      </div>
+    </header>
+    <div class="stats">
+      <a class="stat" href="<?php echo e(admin_url(array('page' => 'items', 'type' => 'posts'))); ?>"><b><?php echo count($posts); ?></b><span>blog posts</span></a>
+      <a class="stat" href="<?php echo e(admin_url(array('page' => 'items', 'type' => 'news'))); ?>"><b><?php echo count($news); ?></b><span>news items</span></a>
+      <a class="stat <?php echo $unread ? 'hot' : ''; ?>" href="<?php echo e(admin_url(array('page' => 'messages'))); ?>"><b><?php echo $unread; ?></b><span>unread messages</span></a>
+      <div class="stat"><b><?php echo $drafts; ?></b><span>drafts</span></div>
+    </div>
+    <div class="cards two">
+      <section class="card">
+        <h2>Latest messages</h2>
+        <div class="list compact">
+          <?php if (!$msgs): ?><p class="empty">No messages yet.</p><?php endif; ?>
+          <?php foreach (array_slice($msgs, 0, 5) as $m): ?>
+            <a class="row <?php echo empty($m['read']) ? 'unread' : ''; ?>" href="<?php echo e(admin_url(array('page' => 'message', 'id' => $m['id']))); ?>">
+              <span class="date"><?php echo date('M j', $m['received']); ?></span><span class="grow"><strong><?php echo e($m['name']); ?></strong> <span class="muted"><?php echo e(cms_clean_line($m['subject'] !== '' ? $m['subject'] : $m['message'], 60)); ?></span></span>
+            </a>
+          <?php endforeach; ?>
+        </div>
+      </section>
+      <section class="card">
+        <h2>Recently edited</h2>
+        <div class="list compact">
+          <?php
+          $recent = array_merge($posts, $news);
+          usort($recent, function ($a, $b) { return $b['updated'] - $a['updated']; });
+          foreach (array_slice($recent, 0, 6) as $it): ?>
+            <a class="row" href="<?php echo e(admin_url(array('page' => 'edit', 'type' => $it['type'], 'slug' => $it['slug']))); ?>">
+              <span class="pill <?php echo $it['type'] === 'news' ? 'blue' : ''; ?>"><?php echo $it['type'] === 'news' ? 'news' : 'post'; ?></span>
+              <span class="grow"><?php echo e($it['title'] !== '' ? $it['title'] : cms_excerpt($it, 60)); ?></span>
+            </a>
+          <?php endforeach; ?>
+        </div>
+      </section>
+    </div>
+    <?php
+    admin_layout_end();
+}
+
+function admin_file_menu($f, $dirRel, $url)
+{
+    ?>
+    <div class="file-actions">
+      <?php if ($url): ?><button type="button" class="btn tiny" data-copy="<?php echo e($url); ?>" title="Copy link">Copy link</button><?php endif; ?>
+      <form method="post" data-prompt="Rename to" data-prompt-field="name" data-prompt-default="<?php echo e($f['name']); ?>">
+        <?php echo cms_csrf_field(); ?><input type="hidden" name="action" value="files_rename"><input type="hidden" name="dir" value="<?php echo e($dirRel); ?>">
+        <input type="hidden" name="path" value="<?php echo e($f['rel']); ?>"><input type="hidden" name="name"><button class="btn tiny">Rename</button>
+      </form>
+      <form method="post" data-confirm="Move “<?php echo e($f['name']); ?>” to the trash?">
+        <?php echo cms_csrf_field(); ?><input type="hidden" name="action" value="files_delete"><input type="hidden" name="dir" value="<?php echo e($dirRel); ?>">
+        <input type="hidden" name="path" value="<?php echo e($f['rel']); ?>"><button class="btn tiny danger">Delete</button>
+      </form>
+    </div>
+    <?php
+}

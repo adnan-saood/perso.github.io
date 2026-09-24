@@ -1,1 +1,0 @@
-scp -ro "ProxyJump saood@relais.ensta.fr" ./_site/* saood@salle.ensta.fr:/home/uei/saood/public_html/

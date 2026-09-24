@@ -1,7 +1,11 @@
+{%- if page.cms_view -%}
+<?php require __DIR__ . '/{{ page.cms_root | default: '../' }}cms/view.php'; $cms = cms_render_view('{{ page.cms_view }}'); ?>
+{%- endif -%}
 <!doctype html>
-<html lang="{{ site.lang }}">
+<html lang="{{ site.lang }}" data-baseurl="{{ '/' | relative_url }}">
   <!-- Head -->
   <head>
+    <script>document.documentElement.classList.add("js-motion");</script>
     {% if page.redirect %}
       {% if page.redirect == true %}
         {% assign redirect = site.baseurl | append: '/' %}

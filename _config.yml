@@ -172,6 +172,15 @@ kramdown:
 include: ["_pages", "_scripts"]
 exclude:
   - bin/
+  - tools/
+  - cms-seed/
+  - ADMIN.md
+  - REBUILD_STATUS.md
+  - BLOG_IMAGES_REFERENCE.md
+  - LINKEDIN_BLOG_REFERENCE.md
+  - deploy.sh
+  - deploy_ensta_relais.sh
+  - cms/config.local.php
   - CONTRIBUTING.md
   - CUSTOMIZE.md
   - Dockerfile

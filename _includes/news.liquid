@@ -1,34 +1,22 @@
+{%- comment -%}
+  News now lives in the PHP CMS (edit it at /admin/). This placeholder is filled
+  by assets/js/cms.js from cms/api.php so the homepage stays a static file.
+{%- endcomment -%}
 <div class="news">
-  {% if site.news != blank %}
-    {% assign news_size = site.news | size %}
-    <div
-      class="table-responsive"
-      {% if include.limit and page.announcements.scrollable and news_size > 3 %}
-        style="max-height: 60vw"
-      {% endif %}
-    >
-      <table class="table table-sm table-borderless">
-        {% assign news = site.news | reverse %}
-        {% if include.limit and page.announcements.limit %}
-          {% assign news_limit = page.announcements.limit %}
-        {% else %}
-          {% assign news_limit = news_size %}
-        {% endif %}
-        {% for item in news limit: news_limit %}
-          <tr>
-            <th scope="row" style="width: 20%">{{ item.date | date: '%b %d, %Y' }}</th>
-            <td>
-              {% if item.inline %}
-                {{ item.content | remove: '<p>' | remove: '</p>' | emojify }}
-              {% else %}
-                <a class="news-title" href="{{ item.url | relative_url }}">{{ item.title }}</a>
-              {% endif %}
-            </td>
-          </tr>
-        {% endfor %}
-      </table>
-    </div>
-  {% else %}
-    <p>No news so far...</p>
-  {% endif %}
+  <div
+    class="table-responsive"
+    {% if include.limit and page.announcements.scrollable %}
+      style="max-height: 60vw"
+    {% endif %}
+  >
+    <table class="table table-sm table-borderless">
+      <tbody
+        data-cms-fragment="news"
+        data-limit="{% if include.limit and page.announcements.limit %}{{ page.announcements.limit }}{% else %}50{% endif %}"
+      >
+        <tr class="cms-loading"><td><span class="cms-skeleton"></span><span class="cms-skeleton short"></span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <noscript><p><a href="{{ '/news/' | relative_url }}">See all news</a></p></noscript>
 </div>
