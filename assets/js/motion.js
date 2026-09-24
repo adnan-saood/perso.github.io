@@ -88,12 +88,16 @@
 
   // --- Counters ----------------------------------------------------------------
   function countUp(el) {
-    var target = parseFloat(el.getAttribute("data-count"));
-    if (isNaN(target) || reduce) return;
+    // Keeps any prefix/suffix and decimals of the value typed in the admin ("10+", "3.5", "~40%").
+    var m = String(el.getAttribute("data-count")).match(/^(\D*)(\d+(?:[.,]\d+)?)(.*)$/);
+    if (!m || reduce) return;
+    var target = parseFloat(m[2].replace(",", "."));
+    var decimals = (m[2].split(/[.,]/)[1] || "").length;
     var t0 = performance.now(), dur = 1400;
     (function tick(t) {
       var k = Math.min(1, (t - t0) / dur);
-      el.textContent = Math.round(target * (1 - Math.pow(1 - k, 4)));
+      var v = (target * (1 - Math.pow(1 - k, 4))).toFixed(decimals);
+      el.textContent = m[1] + (m[2].indexOf(",") !== -1 ? v.replace(".", ",") : v) + m[3];
       if (k < 1) requestAnimationFrame(tick);
     })(t0);
   }
