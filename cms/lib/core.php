@@ -42,6 +42,7 @@ function cms_config($key = null)
         // Used by tools/preview.sh for local previews; never set on the server.
         if (getenv('CMS_DATA_DIR')) $cfg['data_dir'] = getenv('CMS_DATA_DIR');
         if (getenv('CMS_BASE_URL') !== false) $cfg['base_url'] = getenv('CMS_BASE_URL');
+        if (getenv('CMS_FILES_DIR')) $cfg['files_dir'] = getenv('CMS_FILES_DIR');
         date_default_timezone_set($cfg['timezone']);
     }
     return $key === null ? $cfg : (isset($cfg[$key]) ? $cfg[$key] : null);

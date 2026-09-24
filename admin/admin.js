@@ -44,6 +44,13 @@
     });
   });
 
+  // Copy a ready-made Markdown snippet (Files page).
+  document.querySelectorAll("[data-copy-text]").forEach(function (b) {
+    b.addEventListener("click", function () {
+      navigator.clipboard.writeText(b.dataset.copyText).then(function () { toast("Markdown copied — paste it into a post or project"); });
+    });
+  });
+
   // File manager: drag & drop uploads and bulk selection.
   var dz = document.getElementById("dropzone");
   if (dz) {
@@ -125,6 +132,156 @@
       });
   }
 
+  // --- Media library picker ---------------------------------------------------
+  // Browse the Files folders, upload by dropping, click to insert or select.
+  var picker = (function () {
+    var dlg = document.getElementById("media");
+    if (!dlg || typeof dlg.showModal !== "function") return null;
+    var grid = dlg.querySelector(".media__grid");
+    var crumbs = dlg.querySelector(".media__crumbs");
+    var status = dlg.querySelector(".media__status");
+    var fileInput = dlg.querySelector(".media__upload input");
+    var current = "";
+    var onPick = null;
+
+    function el(tag, cls, text) {
+      var n = document.createElement(tag);
+      if (cls) n.className = cls;
+      if (text !== undefined) n.textContent = text;
+      return n;
+    }
+
+    function load(dir) {
+      current = dir;
+      status.textContent = "Loading…";
+      fetch(dlg.dataset.listUrl + "&dir=" + encodeURIComponent(dir), { credentials: "same-origin" })
+        .then(function (r) { return r.json(); })
+        .then(render)
+        .catch(function () { status.textContent = "Could not load the files."; });
+    }
+
+    function render(d) {
+      if (d.error) { status.textContent = d.error; return; }
+      status.textContent = "";
+      crumbs.innerHTML = "";
+      var parts = d.dir ? d.dir.split("/") : [];
+      var acc = "";
+      var rootBtn = el("button", "", "files");
+      rootBtn.type = "button";
+      rootBtn.dataset.dir = "";
+      crumbs.appendChild(rootBtn);
+      parts.forEach(function (part) {
+        acc = acc ? acc + "/" + part : part;
+        crumbs.appendChild(document.createTextNode(" / "));
+        var b = el("button", "", part);
+        b.type = "button";
+        b.dataset.dir = acc;
+        crumbs.appendChild(b);
+      });
+
+      grid.innerHTML = "";
+      if (d.parent !== null) {
+        var up = el("button", "media__item is-dir");
+        up.type = "button";
+        up.dataset.dir = d.parent;
+        up.appendChild(el("span", "media__thumb", "↩"));
+        up.appendChild(el("span", "media__name", "Back"));
+        grid.appendChild(up);
+      }
+      d.dirs.forEach(function (f) {
+        var b = el("button", "media__item is-dir");
+        b.type = "button";
+        b.dataset.dir = f.rel;
+        b.appendChild(el("span", "media__thumb", "📁"));
+        b.appendChild(el("span", "media__name", f.name));
+        grid.appendChild(b);
+      });
+      d.files.forEach(function (f) {
+        var b = el("button", "media__item");
+        b.type = "button";
+        b.dataset.path = f.path;
+        b.dataset.name = f.name;
+        b.dataset.image = f.image ? "1" : "";
+        var t = el("span", "media__thumb");
+        if (f.image) {
+          var img = el("img");
+          img.src = f.url;
+          img.alt = "";
+          img.loading = "lazy";
+          t.appendChild(img);
+        } else {
+          t.textContent = (f.name.split(".").pop() || "file").toUpperCase();
+        }
+        b.appendChild(t);
+        b.appendChild(el("span", "media__name", f.name));
+        b.appendChild(el("span", "media__size", f.size));
+        grid.appendChild(b);
+      });
+      if (!d.dirs.length && !d.files.length) {
+        grid.appendChild(el("p", "media__empty", "This folder is empty. Drop pictures here to upload them."));
+      }
+    }
+
+    function uploadFiles(list) {
+      if (!list.length) return;
+      status.textContent = "Uploading " + list.length + " file" + (list.length > 1 ? "s" : "") + "…";
+      Promise.all(Array.prototype.map.call(list, shrink)).then(function (files) {
+        var fd = new FormData();
+        fd.append("action", "media_upload");
+        fd.append("csrf", dlg.dataset.csrf);
+        fd.append("dir", current);
+        files.forEach(function (f) { fd.append("files[]", f, f.name); });
+        return fetch(dlg.dataset.uploadUrl, { method: "POST", body: fd, credentials: "same-origin" });
+      }).then(function (r) { return r.json(); }).then(function (j) {
+        load(current);
+        setTimeout(function () {
+          status.textContent = (j.uploaded && j.uploaded.length ? j.uploaded.length + " uploaded. " : "") + (j.errors || []).join(" ");
+        }, 300);
+      }).catch(function () { status.textContent = "Upload failed."; });
+    }
+
+    dlg.addEventListener("click", function (ev) {
+      if (ev.target === dlg || ev.target.closest("[data-media-close]")) { dlg.close(); return; }
+      var dirBtn = ev.target.closest("[data-dir]");
+      if (dirBtn) { load(dirBtn.dataset.dir); return; }
+      var fileBtn = ev.target.closest("[data-path]");
+      if (fileBtn && onPick) {
+        onPick(fileBtn.dataset.path, fileBtn.dataset.name, fileBtn.dataset.image === "1");
+        dlg.close();
+      }
+    });
+    fileInput.addEventListener("change", function () {
+      uploadFiles(fileInput.files);
+      fileInput.value = "";
+    });
+    ["dragenter", "dragover"].forEach(function (e) {
+      dlg.addEventListener(e, function (ev) { ev.preventDefault(); dlg.classList.add("is-over"); });
+    });
+    dlg.addEventListener("dragleave", function (ev) {
+      if (!ev.relatedTarget || !dlg.contains(ev.relatedTarget)) dlg.classList.remove("is-over");
+    });
+    dlg.addEventListener("drop", function (ev) {
+      ev.preventDefault();
+      dlg.classList.remove("is-over");
+      uploadFiles(ev.dataTransfer.files);
+    });
+
+    return {
+      open: function (cb) {
+        onPick = cb;
+        dlg.showModal();
+        load(current);
+      },
+    };
+  })();
+
+  function insertFile(path, name, isImage) {
+    var label = name.replace(/\.[^.]+$/, "").replace(/[-_]+/g, " ");
+    mde.codemirror.replaceSelection((isImage ? "!" : "") + "[" + label + "](" + path + ")");
+    mde.codemirror.focus();
+    dirty = true;
+  }
+
   var dirty = false;
   var mde = new EasyMDE({
     element: document.getElementById("body"),
@@ -139,7 +296,10 @@
       upload(file).then(onSuccess, function (e) { onError(e.message); });
     },
     toolbar: ["bold", "italic", "heading-2", "heading-3", "|", "quote", "unordered-list", "ordered-list", "|",
-      "link", "upload-image", "table", "code", "horizontal-rule", "|", "preview", "side-by-side", "fullscreen", "|", "guide"],
+      "link", "upload-image",
+      { name: "library", className: "fa fa-folder-open", title: "Insert from media library",
+        action: function () { if (picker) picker.open(insertFile); } },
+      "table", "code", "horizontal-rule", "|", "preview", "side-by-side", "fullscreen", "|", "guide"],
     sideBySideFullscreen: false,
     // Content uses base-free paths ("files/…", "assets/…"); resolve them for the preview.
     previewRender: function (text) {
@@ -172,6 +332,18 @@
     if (slugTouched) return;
     slug.placeholder = title.value.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")
       .replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 80) || "auto from title";
+  });
+
+  // "Library" buttons that fill a URL field from the media library.
+  document.querySelectorAll("[data-library-into]").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      if (!picker) return;
+      picker.open(function (path) {
+        document.querySelector(btn.dataset.libraryInto).value = path;
+        dirty = true;
+        toast("Cover image set");
+      });
+    });
   });
 
   // "Upload" buttons that fill a URL field (cover image).

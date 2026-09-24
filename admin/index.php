@@ -73,7 +73,7 @@ function admin_head($title)
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
 <title><?php echo e($title); ?> · Site admin</title>
-<link rel="stylesheet" href="admin.css?v=2">
+<link rel="stylesheet" href="admin.css?v=3">
 <?php
 }
 
@@ -126,7 +126,7 @@ function admin_layout_end($scripts = array())
 {
     echo '</main></div>';
     foreach ($scripts as $s) echo '<script src="' . e($s) . '"></script>';
-    echo '<script src="admin.js?v=2"></script></body></html>';
+    echo '<script src="admin.js?v=3"></script></body></html>';
 }
 
 // ---------------------------------------------------------------------------
@@ -269,6 +269,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Base-free path so the content works locally and on the server.
             admin_json(array('url' => cms_config('files_url') . $rel));
 
+        case 'media_upload': // AJAX from the media picker
+            $dir = cms_files_resolve(admin_post('dir'));
+            if (!$dir || !is_dir($dir)) admin_json(array('error' => 'Folder not found.'), 400);
+            $done = array();
+            $errors = array();
+            foreach (cms_files_from_request('files') as $f) {
+                list($rel, $err) = cms_files_store_upload($f, $dir);
+                if ($err) $errors[] = $err; else $done[] = $rel;
+            }
+            if (!$done && !$errors) $errors[] = 'Nothing was received. The files may exceed the server limit (' . ini_get('post_max_size') . ').';
+            admin_json(array('uploaded' => $done, 'errors' => $errors), $done ? 200 : 400);
+
         case 'files_upload':
             $dirRel = admin_post('dir');
             $dir = cms_files_resolve($dirRel);
@@ -345,6 +357,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 // ---------------------------------------------------------------------------
 
 switch ($page) {
+
+case 'media': // JSON listing used by the media picker in the editor
+    $abs = cms_files_resolve(isset($_GET['dir']) ? (string) $_GET['dir'] : '');
+    if (!$abs || !is_dir($abs)) admin_json(array('error' => 'Folder not found.'), 404);
+    list($dirs, $files) = cms_files_list($abs);
+    $rel = cms_files_rel($abs);
+    $images = array('jpg', 'jpeg', 'png', 'gif', 'webp', 'avif', 'ico');
+    $out = array('dir' => $rel, 'parent' => $rel === '' ? null : (dirname($rel) === '.' ? '' : dirname($rel)), 'dirs' => array(), 'files' => array());
+    foreach ($dirs as $d) $out['dirs'][] = array('name' => $d['name'], 'rel' => $d['rel']);
+    foreach ($files as $f) {
+        $out['files'][] = array(
+            'name' => $f['name'],
+            'path' => cms_config('files_url') . $f['rel'], // base-free, for content
+            'url' => cms_files_public_url($f['rel']),       // for thumbnails
+            'image' => in_array($f['ext'], $images, true),
+            'size' => cms_human_size($f['size']),
+        );
+    }
+    admin_json($out);
 
 case 'items':
     $type = isset($_GET['type'], $types[$_GET['type']]) ? $_GET['type'] : 'posts';
@@ -431,7 +462,7 @@ case 'edit':
           <label>Order <small>(1 = first)</small><input type="number" min="1" name="importance" value="<?php echo e($it ? $it['importance'] : 50); ?>"></label>
           <label class="wide">Short description <small>(shown on the card)</small><input name="description" value="<?php echo e($it ? $it['description'] : ''); ?>"></label>
           <label class="wide">Cover image
-            <span class="with-btn"><input name="img" id="cover" value="<?php echo e($it ? $it['img'] : ''); ?>" placeholder="assets/img/... or upload"><button type="button" class="btn small" data-upload-into="#cover">Upload</button></span>
+            <span class="with-btn"><input name="img" id="cover" value="<?php echo e($it ? $it['img'] : ''); ?>" placeholder="assets/img/... or upload"><button type="button" class="btn small" data-library-into="#cover">Library</button><button type="button" class="btn small" data-upload-into="#cover">Upload</button></span>
           </label>
           <label>GitHub repository <small>(optional)</small><input type="url" name="github" value="<?php echo e($it ? $it['github'] : ''); ?>" placeholder="https://github.com/..."></label>
           <label>Other link <small>(paper, demo, video)</small><input type="url" name="url" value="<?php echo e($it ? $it['url'] : ''); ?>"></label>
@@ -441,7 +472,7 @@ case 'edit':
           <label>Tags <small>(space or comma separated)</small><input name="tags" value="<?php echo e($it ? implode(' ', $it['tags']) : ''); ?>"></label>
           <label>Categories<input name="categories" value="<?php echo e($it ? implode(' ', $it['categories']) : ''); ?>"></label>
           <label>Cover image URL <small>(optional)</small>
-            <span class="with-btn"><input name="thumbnail" id="thumb" value="<?php echo e($it ? $it['thumbnail'] : ''); ?>"><button type="button" class="btn small" data-upload-into="#thumb">Upload</button></span>
+            <span class="with-btn"><input name="thumbnail" id="thumb" value="<?php echo e($it ? $it['thumbnail'] : ''); ?>"><button type="button" class="btn small" data-library-into="#thumb">Library</button><button type="button" class="btn small" data-upload-into="#thumb">Upload</button></span>
           </label>
           <label class="toggle"><input type="checkbox" name="featured" value="1" <?php echo $it && $it['featured'] ? 'checked' : ''; ?>> Pin as featured</label>
         <?php else: ?>
@@ -463,6 +494,19 @@ case 'edit':
         <span class="muted small">Last saved <?php echo date('M j, Y H:i', $it['updated']); ?>. Previous versions are kept in <code>cms-data/history</code>.</span>
       </form>
     <?php endif;
+    ?>
+    <dialog class="media" id="media" data-list-url="<?php echo e(admin_url(array('page' => 'media'))); ?>" data-csrf="<?php echo e(cms_csrf_token()); ?>" data-upload-url="<?php echo e(admin_url()); ?>">
+      <div class="media__head">
+        <strong class="media__title">Media library</strong>
+        <nav class="media__crumbs" aria-label="Folder"></nav>
+        <label class="btn small media__upload"><?php echo admin_icon('up'); ?> Upload<input type="file" multiple hidden></label>
+        <button type="button" class="btn small" data-media-close aria-label="Close">&times;</button>
+      </div>
+      <p class="media__hint muted small">Click a picture to insert it. Drop files anywhere here to upload them into this folder.</p>
+      <div class="media__grid"></div>
+      <p class="media__status small" role="status"></p>
+    </dialog>
+    <?php
     admin_layout_end(array('lib/easymde.min.js'));
     break;
 
@@ -637,7 +681,11 @@ function admin_file_menu($f, $dirRel, $url)
 {
     ?>
     <div class="file-actions">
-      <?php if ($url): ?><button type="button" class="btn tiny" data-copy="<?php echo e($url); ?>" title="Copy link">Copy link</button><?php endif; ?>
+      <?php if ($url): ?>
+        <?php $isImg = isset($f['ext']) && in_array($f['ext'], array('jpg', 'jpeg', 'png', 'gif', 'webp', 'avif'), true); ?>
+        <button type="button" class="btn tiny" data-copy-text="<?php echo e(($isImg ? '!' : '') . '[' . pathinfo($f['name'], PATHINFO_FILENAME) . '](' . cms_config('files_url') . $f['rel'] . ')'); ?>" title="Copy Markdown to paste into a post or project">Copy Markdown</button>
+        <button type="button" class="btn tiny" data-copy="<?php echo e($url); ?>" title="Copy full link">Copy link</button>
+      <?php endif; ?>
       <form method="post" data-prompt="Rename to" data-prompt-field="name" data-prompt-default="<?php echo e($f['name']); ?>">
         <?php echo cms_csrf_field(); ?><input type="hidden" name="action" value="files_rename"><input type="hidden" name="dir" value="<?php echo e($dirRel); ?>">
         <input type="hidden" name="path" value="<?php echo e($f['rel']); ?>"><input type="hidden" name="name"><button class="btn tiny">Rename</button>

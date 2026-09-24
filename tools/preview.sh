@@ -42,4 +42,5 @@ echo "Site:   http://localhost:$PORT$BASE"
 echo "Admin:  http://localhost:$PORT${BASE}admin/"
 [[ -f "$DATA/SETUP_TOKEN" ]] && echo "        first-time setup token: $(cat "$DATA/SETUP_TOKEN")"
 echo "Ctrl+C to stop."
-CMS_DATA_DIR="$DATA" CMS_BASE_URL="$BASE" exec php -S "$LISTEN:$PORT" tools/preview-router.php
+mkdir -p "$DATA/files"
+CMS_DATA_DIR="$DATA" CMS_FILES_DIR="$DATA/files" CMS_BASE_URL="$BASE" exec php -S "$LISTEN:$PORT" tools/preview-router.php

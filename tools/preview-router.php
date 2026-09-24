@@ -12,6 +12,12 @@ if ($base !== '' && strpos($uri, $base . '/') !== 0) {
 }
 $rel = substr($uri, strlen($base));
 $path = $site . $rel;
+// Uploads live outside _site in the preview (Jekyll rebuilds would delete them).
+$filesDir = getenv('CMS_FILES_DIR');
+if ($filesDir && strpos($rel, '/files/') === 0) {
+    $site = realpath($filesDir);
+    $path = $site . substr($rel, strlen('/files'));
+}
 if (is_dir($path)) {
     if (substr($uri, -1) !== '/') { header('Location: ' . $uri . '/'); return true; }
     // Same order as Apache's DirectoryIndex.
