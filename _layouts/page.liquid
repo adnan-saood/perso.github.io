@@ -15,7 +15,7 @@ layout: default
     {% if page.description %}<p class="post-description reveal">{{ page.description }}</p>{% endif %}
   </header>
 
-  <article>
+  <article{% if page.wide %} class="wide"{% endif %}>
     {{ content }}
   </article>
 

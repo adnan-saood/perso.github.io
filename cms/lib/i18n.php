@@ -62,6 +62,8 @@ function cms_i18n_dict()
         // contact page
         'Email' => 'E-mail', 'Office' => 'Bureau', 'Elsewhere' => 'Ailleurs', 'Write to me' => 'M’écrire', 'Copy address' => 'Copier l’adresse',
         'Copied!' => 'Copié !',
+        'Interested in tactile interaction, social robotics, a collaboration or an internship? Drop me a line.' => 'L’interaction tactile, la robotique sociale, une collaboration ou un stage vous intéressent ? Écrivez-moi.',
+        'I usually reply within a few days.' => 'Je réponds en général sous quelques jours.', 'Open in Maps' => 'Ouvrir dans Maps',
         'Interested in tactile interaction, social robotics, a collaboration or an internship? Drop me a line. I usually reply within a few days.' => 'Intéressé·e par l’interaction tactile, la robotique sociale, une collaboration ou un stage ? Écrivez-moi, je réponds en général sous quelques jours.',
         'Not found' => 'Page introuvable',
         'That page does not exist (anymore).' => 'Cette page n’existe pas (ou plus).', 'Back to the blog' => 'Retour au blog',

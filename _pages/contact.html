@@ -5,33 +5,43 @@ permalink: /contact/
 description: Questions about my research, a collaboration or a student project? Email me.
 nav: true
 nav_order: 8
+wide: true
 ---
 {% assign email = site.data.socials.email | default: 'adnan.saood@ensta.fr' %}
 
-<div class="contact-wrap">
-  <div class="contact-intro reveal">
-    <p data-i18n="Interested in tactile interaction, social robotics, a collaboration or an internship? Drop me a line. I usually reply within a few days.">Interested in tactile interaction, social robotics, a collaboration or an internship? Drop me a line. I usually reply within a few days.</p>
-  </div>
+<div class="contact">
+  <div class="contact__main">
+    <p class="contact__lead reveal" data-i18n="Interested in tactile interaction, social robotics, a collaboration or an internship? Drop me a line.">Interested in tactile interaction, social robotics, a collaboration or an internship? Drop me a line.</p>
 
-  <div class="contact-card reveal">
-    <span class="contact-label" data-i18n="Email">Email</span>
-    <a class="contact-email" href="mailto:{{ email | encode_email }}">{{ email }}</a>
-    <div class="contact-actions">
-      <a class="cf-submit" href="mailto:{{ email | encode_email }}"><span data-i18n="Write to me">Write to me</span> <i class="fa-solid fa-paper-plane"></i></a>
-      <button type="button" class="contact-copy" data-copy-email="{{ email }}"><i class="fa-regular fa-copy"></i> <span data-i18n="Copy address">Copy address</span></button>
+    <a class="contact__email reveal" href="mailto:{{ email | encode_email }}">
+      <span>{{ email }}</span> <i class="ti ti-arrow-up-right" aria-hidden="true"></i>
+    </a>
+
+    <div class="contact__actions reveal">
+      <a class="btn btn--primary magnetic" href="mailto:{{ email | encode_email }}"><span data-i18n="Write to me">Write to me</span> <i class="ti ti-send" aria-hidden="true"></i></a>
+      <button type="button" class="btn btn--ghost magnetic" data-copy-email="{{ email }}"><i class="ti ti-copy" aria-hidden="true"></i> <span data-i18n="Copy address">Copy address</span></button>
     </div>
 
-    <span class="contact-label" data-i18n="Office">Office</span>
-    <p class="contact-address">U2IS, ENSTA Paris — Room R.2.19<br>828 Bd des Maréchaux, 91120 Palaiseau, France</p>
-
-    <span class="contact-label" data-i18n="Elsewhere">Elsewhere</span>
-    <p class="contact-links">
-      {% if site.data.socials.scholar_userid %}<a href="https://scholar.google.com/citations?user={{ site.data.socials.scholar_userid }}">Google Scholar</a>{% endif %}
-      {% if site.data.socials.linkedin_username %}<a href="https://www.linkedin.com/in/{{ site.data.socials.linkedin_username }}">LinkedIn</a>{% endif %}
-      {% if site.data.socials.github_username %}<a href="https://github.com/{{ site.data.socials.github_username }}">GitHub</a>{% endif %}
-      {% if site.data.socials.orcid_id %}<a href="https://orcid.org/{{ site.data.socials.orcid_id }}">ORCID</a>{% endif %}
-    </p>
+    <p class="contact__reply reveal"><i class="pulse" aria-hidden="true"></i> <span data-i18n="I usually reply within a few days.">I usually reply within a few days.</span></p>
   </div>
+
+  <aside class="contact__side">
+    <div class="contact-card reveal">
+      <span class="contact-label"><i class="ti ti-map-pin" aria-hidden="true"></i> <span data-i18n="Office">Office</span></span>
+      <p class="contact-address">U2IS, ENSTA Paris — Room R.2.19<br>828 Bd des Maréchaux<br>91120 Palaiseau, France</p>
+      <a class="contact-pill" href="https://www.google.com/maps/search/?api=1&amp;query=ENSTA%20Paris%2C%20828%20Boulevard%20des%20Mar%C3%A9chaux%2C%2091120%20Palaiseau" rel="noopener"><i class="ti ti-map-2" aria-hidden="true"></i> <span data-i18n="Open in Maps">Open in Maps</span></a>
+    </div>
+
+    <div class="contact-card reveal">
+      <span class="contact-label"><i class="ti ti-world" aria-hidden="true"></i> <span data-i18n="Elsewhere">Elsewhere</span></span>
+      <div class="contact-profiles">
+        {% if site.data.socials.scholar_userid %}<a class="contact-pill" href="https://scholar.google.com/citations?user={{ site.data.socials.scholar_userid }}" rel="noopener"><i class="ai ai-google-scholar" aria-hidden="true"></i> Google Scholar</a>{% endif %}
+        {% if site.data.socials.linkedin_username %}<a class="contact-pill" href="https://www.linkedin.com/in/{{ site.data.socials.linkedin_username }}" rel="noopener"><i class="ti ti-brand-linkedin" aria-hidden="true"></i> LinkedIn</a>{% endif %}
+        {% if site.data.socials.github_username %}<a class="contact-pill" href="https://github.com/{{ site.data.socials.github_username }}" rel="noopener"><i class="ti ti-brand-github" aria-hidden="true"></i> GitHub</a>{% endif %}
+        {% if site.data.socials.orcid_id %}<a class="contact-pill" href="https://orcid.org/{{ site.data.socials.orcid_id }}" rel="noopener"><i class="ai ai-orcid" aria-hidden="true"></i> ORCID</a>{% endif %}
+      </div>
+    </div>
+  </aside>
 </div>
 
 <script>
@@ -39,9 +49,10 @@ nav_order: 8
     b.addEventListener("click", function () {
       navigator.clipboard.writeText(b.dataset.copyEmail).then(function () {
         var label = b.querySelector("span");
-        label.textContent = "Copied!";
+        var before = label.textContent;
+        label.textContent = /(?:^|; )lang=fr/.test(document.cookie) ? "Copié !" : "Copied!";
         b.classList.add("copied");
-        setTimeout(function () { label.textContent = "Copy address"; b.classList.remove("copied"); }, 1800);
+        setTimeout(function () { label.textContent = before; b.classList.remove("copied"); }, 1800);
       });
     });
   });

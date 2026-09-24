@@ -136,7 +136,7 @@
     solid: ".btn--primary",
     fill: ".btn--ghost",
     soft: ".hero__links a, .proof a, .filters button, .section__more, .pub__link, .now__more, .icon-btn, " +
-      ".contact-copy, .site-footer__social a, .robots__thumb, .model__ar, .page-link, .cms-back, .cms-prev-next a, " +
+      ".contact-pill, .site-footer__social a, .robots__thumb, .model__ar, .page-link, .cms-back, .cms-prev-next a, " +
       ".talk__links a, .oss-profile a, .repo-card a.btn",
   };
   function bindFx(scope) {
